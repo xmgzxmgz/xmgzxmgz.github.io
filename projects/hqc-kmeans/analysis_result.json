@@ -1,0 +1,4607 @@
+{
+  "summary": {
+    "total_housing_samples": 1500,
+    "total_job_samples": 1500,
+    "avg_city_rent": 3000.19,
+    "avg_city_salary": 7686.24,
+    "clusters": 5
+  },
+  "district_stats": [
+    {
+      "name": "嘉定区",
+      "avg_rent": 2194.12,
+      "avg_salary": 7164.97,
+      "rent_income_ratio": 0.306
+    },
+    {
+      "name": "宝山区",
+      "avg_rent": 2713.16,
+      "avg_salary": 7043.27,
+      "rent_income_ratio": 0.385
+    },
+    {
+      "name": "徐汇区",
+      "avg_rent": 5141.53,
+      "avg_salary": 9180.27,
+      "rent_income_ratio": 0.56
+    },
+    {
+      "name": "松江区",
+      "avg_rent": 2206.4,
+      "avg_salary": 7364.49,
+      "rent_income_ratio": 0.3
+    },
+    {
+      "name": "浦东新区",
+      "avg_rent": 3550.88,
+      "avg_salary": 8213.72,
+      "rent_income_ratio": 0.432
+    },
+    {
+      "name": "闵行区",
+      "avg_rent": 2868.97,
+      "avg_salary": 7650.1,
+      "rent_income_ratio": 0.375
+    },
+    {
+      "name": "青浦区",
+      "avg_rent": 2093.43,
+      "avg_salary": 7103.6,
+      "rent_income_ratio": 0.295
+    }
+  ],
+  "industry_stats": [
+    {
+      "name": "建筑业",
+      "value": 268
+    },
+    {
+      "name": "餐饮服务",
+      "value": 265
+    },
+    {
+      "name": "网约车/配送",
+      "value": 255
+    },
+    {
+      "name": "制造业",
+      "value": 250
+    },
+    {
+      "name": "家政服务",
+      "value": 246
+    },
+    {
+      "name": "物流仓储",
+      "value": 216
+    }
+  ],
+  "housing_type_stats": [
+    {
+      "value": "床位/宿舍",
+      "count": 313
+    },
+    {
+      "value": "群租房",
+      "count": 310
+    },
+    {
+      "value": "整租-一室",
+      "count": 304
+    },
+    {
+      "value": "合租-次卧",
+      "count": 293
+    },
+    {
+      "value": "合租-主卧",
+      "count": 280
+    }
+  ],
+  "map_data": {
+    "housing": [
+      {
+        "longitude": 121.253379,
+        "latitude": 31.378656,
+        "rent": 1049,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.513243,
+        "latitude": 31.438862,
+        "rent": 2268,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.580255,
+        "latitude": 31.269041,
+        "rent": 2666,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.507302,
+        "latitude": 31.266949,
+        "rent": 2935,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.228125,
+        "latitude": 31.007756,
+        "rent": 1384,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.259276,
+        "latitude": 31.337651,
+        "rent": 1621,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.239458,
+        "latitude": 31.328619,
+        "rent": 1996,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.542555,
+        "latitude": 31.257577,
+        "rent": 2971,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.105565,
+        "latitude": 31.188997,
+        "rent": 2642,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.445624,
+        "latitude": 31.166641,
+        "rent": 4133,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.531742,
+        "latitude": 31.229489,
+        "rent": 3868,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.284669,
+        "latitude": 31.412243,
+        "rent": 4495,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.390301,
+        "latitude": 31.188036,
+        "rent": 4244,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.336581,
+        "latitude": 31.120068,
+        "rent": 3993,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.506569,
+        "latitude": 31.253037,
+        "rent": 2511,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.587253,
+        "latitude": 31.247796,
+        "rent": 5090,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.167432,
+        "latitude": 31.196153,
+        "rent": 2280,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.268531,
+        "latitude": 31.014544,
+        "rent": 1456,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.495015,
+        "latitude": 31.202219,
+        "rent": 3416,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.24334,
+        "latitude": 31.413894,
+        "rent": 1861,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.534305,
+        "latitude": 31.426345,
+        "rent": 4645,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.307818,
+        "latitude": 31.419486,
+        "rent": 1912,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.583077,
+        "latitude": 31.212153,
+        "rent": 3577,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.248495,
+        "latitude": 31.39017,
+        "rent": 1637,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.446485,
+        "latitude": 31.391154,
+        "rent": 1607,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.26465,
+        "latitude": 31.363858,
+        "rent": 2119,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.459149,
+        "latitude": 31.184736,
+        "rent": 3633,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.417823,
+        "latitude": 31.107453,
+        "rent": 3568,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.111201,
+        "latitude": 31.112601,
+        "rent": 3267,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.400781,
+        "latitude": 31.157028,
+        "rent": 2636,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.26632,
+        "latitude": 31.398286,
+        "rent": 4040,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.371798,
+        "latitude": 31.150547,
+        "rent": 4455,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.477601,
+        "latitude": 31.232361,
+        "rent": 4246,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.417555,
+        "latitude": 31.143251,
+        "rent": 1755,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.232569,
+        "latitude": 31.407243,
+        "rent": 2011,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.472383,
+        "latitude": 31.216188,
+        "rent": 4977,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.524375,
+        "latitude": 31.382544,
+        "rent": 5356,
+        "cluster": 3,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.531792,
+        "latitude": 31.236483,
+        "rent": 4401,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.581303,
+        "latitude": 31.25914,
+        "rent": 4230,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.5906,
+        "latitude": 31.254308,
+        "rent": 2913,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.074207,
+        "latitude": 31.118426,
+        "rent": 563,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.488349,
+        "latitude": 31.382194,
+        "rent": 1306,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.52556,
+        "latitude": 31.180222,
+        "rent": 4958,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.450366,
+        "latitude": 31.188509,
+        "rent": 4660,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.114803,
+        "latitude": 31.172853,
+        "rent": 1071,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.139867,
+        "latitude": 31.173754,
+        "rent": 1941,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.442884,
+        "latitude": 31.141298,
+        "rent": 4953,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.372966,
+        "latitude": 31.092337,
+        "rent": 1953,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.368853,
+        "latitude": 31.139076,
+        "rent": 3030,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.443978,
+        "latitude": 31.197716,
+        "rent": 6073,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.485261,
+        "latitude": 31.235459,
+        "rent": 4092,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.396791,
+        "latitude": 31.076344,
+        "rent": 3006,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.427927,
+        "latitude": 31.172827,
+        "rent": 4518,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.120175,
+        "latitude": 31.114895,
+        "rent": 1473,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.415623,
+        "latitude": 31.124035,
+        "rent": 2744,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.400712,
+        "latitude": 31.152372,
+        "rent": 1060,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.2518,
+        "latitude": 31.354022,
+        "rent": 1956,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.466566,
+        "latitude": 31.389445,
+        "rent": 1806,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.502486,
+        "latitude": 31.258566,
+        "rent": 4040,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.399578,
+        "latitude": 31.173919,
+        "rent": 5024,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.58784,
+        "latitude": 31.180405,
+        "rent": 2556,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.543048,
+        "latitude": 31.181044,
+        "rent": 3825,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.391141,
+        "latitude": 31.194416,
+        "rent": 5030,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.174169,
+        "latitude": 31.133438,
+        "rent": 2034,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.571273,
+        "latitude": 31.188752,
+        "rent": 2931,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.426712,
+        "latitude": 31.230336,
+        "rent": 5435,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.213303,
+        "latitude": 30.990156,
+        "rent": 1498,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.387861,
+        "latitude": 31.102542,
+        "rent": 4123,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.544426,
+        "latitude": 31.173914,
+        "rent": 3954,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.465095,
+        "latitude": 31.360785,
+        "rent": 1190,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.241694,
+        "latitude": 31.063711,
+        "rent": 1052,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.200459,
+        "latitude": 31.068816,
+        "rent": 2206,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.415244,
+        "latitude": 31.159881,
+        "rent": 2315,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.218305,
+        "latitude": 30.98847,
+        "rent": 1885,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.485254,
+        "latitude": 31.426095,
+        "rent": 2022,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.391064,
+        "latitude": 31.143265,
+        "rent": 3403,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.388873,
+        "latitude": 31.165306,
+        "rent": 5345,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.271542,
+        "latitude": 31.363259,
+        "rent": 2767,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.523636,
+        "latitude": 31.196957,
+        "rent": 3139,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.16038,
+        "latitude": 31.118875,
+        "rent": 806,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.185502,
+        "latitude": 31.075241,
+        "rent": 2320,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.134628,
+        "latitude": 31.112968,
+        "rent": 726,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.353708,
+        "latitude": 31.094492,
+        "rent": 2538,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.141605,
+        "latitude": 31.11043,
+        "rent": 3582,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.358564,
+        "latitude": 31.119474,
+        "rent": 3228,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.267362,
+        "latitude": 31.394692,
+        "rent": 1825,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.291834,
+        "latitude": 31.337669,
+        "rent": 1454,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.489864,
+        "latitude": 31.366921,
+        "rent": 3382,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.440747,
+        "latitude": 31.391177,
+        "rent": 2555,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.273123,
+        "latitude": 31.345783,
+        "rent": 1779,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.583435,
+        "latitude": 31.2412,
+        "rent": 5231,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.286649,
+        "latitude": 31.350171,
+        "rent": 2234,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.080374,
+        "latitude": 31.110556,
+        "rent": 2010,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.447279,
+        "latitude": 31.158483,
+        "rent": 5571,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.402613,
+        "latitude": 31.068527,
+        "rent": 2406,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.295285,
+        "latitude": 31.375165,
+        "rent": 948,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.161325,
+        "latitude": 31.196606,
+        "rent": 2312,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.250162,
+        "latitude": 31.333272,
+        "rent": 2567,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.171146,
+        "latitude": 31.137758,
+        "rent": 2059,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.266593,
+        "latitude": 31.046862,
+        "rent": 2017,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.565108,
+        "latitude": 31.230225,
+        "rent": 2842,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.075478,
+        "latitude": 31.138012,
+        "rent": 1852,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.442418,
+        "latitude": 31.407072,
+        "rent": 2346,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.181542,
+        "latitude": 31.035308,
+        "rent": 1831,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.395893,
+        "latitude": 31.227564,
+        "rent": 3882,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.576928,
+        "latitude": 31.211399,
+        "rent": 3689,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.55561,
+        "latitude": 31.227382,
+        "rent": 2990,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.534819,
+        "latitude": 31.407638,
+        "rent": 4403,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.586295,
+        "latitude": 31.192174,
+        "rent": 2476,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.146402,
+        "latitude": 31.150372,
+        "rent": 761,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.532245,
+        "latitude": 31.447017,
+        "rent": 1954,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.366473,
+        "latitude": 31.132627,
+        "rent": 3677,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.341692,
+        "latitude": 31.069191,
+        "rent": 2634,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.378759,
+        "latitude": 31.103534,
+        "rent": 1929,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.126456,
+        "latitude": 31.141269,
+        "rent": 2874,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.081069,
+        "latitude": 31.163035,
+        "rent": 1465,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.416537,
+        "latitude": 31.188464,
+        "rent": 5901,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.084523,
+        "latitude": 31.151599,
+        "rent": 3448,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.514881,
+        "latitude": 31.43497,
+        "rent": 1881,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.116248,
+        "latitude": 31.110079,
+        "rent": 1881,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.464803,
+        "latitude": 31.4499,
+        "rent": 1953,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.449084,
+        "latitude": 31.440771,
+        "rent": 2072,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.428544,
+        "latitude": 31.221486,
+        "rent": 6202,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.36768,
+        "latitude": 31.125631,
+        "rent": 2734,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.187785,
+        "latitude": 31.048605,
+        "rent": 3094,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.157096,
+        "latitude": 31.157249,
+        "rent": 1036,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.43825,
+        "latitude": 31.212065,
+        "rent": 4931,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.389289,
+        "latitude": 31.088407,
+        "rent": 2599,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.231013,
+        "latitude": 31.407797,
+        "rent": 3937,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.477807,
+        "latitude": 31.145849,
+        "rent": 7259,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.457872,
+        "latitude": 31.149849,
+        "rent": 4587,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.586864,
+        "latitude": 31.199063,
+        "rent": 3355,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.191133,
+        "latitude": 31.050239,
+        "rent": 3487,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.552805,
+        "latitude": 31.238149,
+        "rent": 5303,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.264736,
+        "latitude": 31.383111,
+        "rent": 1592,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.238043,
+        "latitude": 31.369511,
+        "rent": 1808,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.531835,
+        "latitude": 31.263054,
+        "rent": 3339,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.192682,
+        "latitude": 30.993754,
+        "rent": 1287,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.303314,
+        "latitude": 31.350514,
+        "rent": 4246,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.131987,
+        "latitude": 31.146791,
+        "rent": 2142,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.219217,
+        "latitude": 30.995355,
+        "rent": 2144,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.272757,
+        "latitude": 31.358989,
+        "rent": 3114,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.550759,
+        "latitude": 31.234602,
+        "rent": 2205,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.112615,
+        "latitude": 31.118837,
+        "rent": 762,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.497179,
+        "latitude": 31.201841,
+        "rent": 5494,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.512585,
+        "latitude": 31.194944,
+        "rent": 5095,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.490716,
+        "latitude": 31.389975,
+        "rent": 2395,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.220359,
+        "latitude": 31.013137,
+        "rent": 3129,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.247601,
+        "latitude": 31.031379,
+        "rent": 500,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.173763,
+        "latitude": 31.035402,
+        "rent": 2643,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.344161,
+        "latitude": 31.128266,
+        "rent": 4383,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.444224,
+        "latitude": 31.361738,
+        "rent": 3319,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.221984,
+        "latitude": 31.332996,
+        "rent": 2381,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.388264,
+        "latitude": 31.06377,
+        "rent": 3833,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.078449,
+        "latitude": 31.15596,
+        "rent": 3595,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.402885,
+        "latitude": 31.144507,
+        "rent": 7116,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.187478,
+        "latitude": 31.036991,
+        "rent": 991,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.251095,
+        "latitude": 31.068128,
+        "rent": 1542,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.462797,
+        "latitude": 31.218799,
+        "rent": 6368,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.262432,
+        "latitude": 30.98552,
+        "rent": 4081,
+        "cluster": 1,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.211526,
+        "latitude": 31.021181,
+        "rent": 2858,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.48051,
+        "latitude": 31.200011,
+        "rent": 6817,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.271773,
+        "latitude": 31.337156,
+        "rent": 1856,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.51636,
+        "latitude": 31.435648,
+        "rent": 3146,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.570316,
+        "latitude": 31.174768,
+        "rent": 2401,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.4877,
+        "latitude": 31.396621,
+        "rent": 1940,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.585762,
+        "latitude": 31.245851,
+        "rent": 3437,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.360984,
+        "latitude": 31.126394,
+        "rent": 3189,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.455316,
+        "latitude": 31.149516,
+        "rent": 6442,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.551835,
+        "latitude": 31.265499,
+        "rent": 5535,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.464514,
+        "latitude": 31.235516,
+        "rent": 4352,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.378279,
+        "latitude": 31.161644,
+        "rent": 2557,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.156047,
+        "latitude": 31.195457,
+        "rent": 927,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.251533,
+        "latitude": 31.397548,
+        "rent": 500,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.079839,
+        "latitude": 31.18311,
+        "rent": 792,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.338694,
+        "latitude": 31.152608,
+        "rent": 1335,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.463824,
+        "latitude": 31.361872,
+        "rent": 986,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.525951,
+        "latitude": 31.371442,
+        "rent": 1400,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.467576,
+        "latitude": 31.40981,
+        "rent": 1639,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.534955,
+        "latitude": 31.199735,
+        "rent": 3558,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.461439,
+        "latitude": 31.193441,
+        "rent": 3538,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.264507,
+        "latitude": 31.355147,
+        "rent": 702,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.250063,
+        "latitude": 31.416328,
+        "rent": 2510,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.347414,
+        "latitude": 31.091549,
+        "rent": 3364,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.35268,
+        "latitude": 31.073629,
+        "rent": 3318,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.256472,
+        "latitude": 31.024862,
+        "rent": 2380,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.223133,
+        "latitude": 31.017866,
+        "rent": 1832,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.537024,
+        "latitude": 31.401594,
+        "rent": 1854,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.202701,
+        "latitude": 31.028904,
+        "rent": 1407,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.119767,
+        "latitude": 31.127674,
+        "rent": 2466,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.565642,
+        "latitude": 31.204375,
+        "rent": 2884,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.384162,
+        "latitude": 31.155745,
+        "rent": 3324,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.131476,
+        "latitude": 31.179955,
+        "rent": 1755,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.479009,
+        "latitude": 31.166981,
+        "rent": 3063,
+        "cluster": 1,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.419313,
+        "latitude": 31.087367,
+        "rent": 1689,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.154757,
+        "latitude": 31.15494,
+        "rent": 1514,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.481629,
+        "latitude": 31.148357,
+        "rent": 4726,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.234314,
+        "latitude": 31.070302,
+        "rent": 1423,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.478816,
+        "latitude": 31.367044,
+        "rent": 2503,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.539084,
+        "latitude": 31.414109,
+        "rent": 2312,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.282011,
+        "latitude": 31.330925,
+        "rent": 2363,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.590646,
+        "latitude": 31.174806,
+        "rent": 2913,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.223741,
+        "latitude": 31.003392,
+        "rent": 996,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.592434,
+        "latitude": 31.233722,
+        "rent": 3382,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.49997,
+        "latitude": 31.229319,
+        "rent": 4402,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.412823,
+        "latitude": 31.140683,
+        "rent": 4992,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.220429,
+        "latitude": 31.064701,
+        "rent": 3036,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.200299,
+        "latitude": 31.01604,
+        "rent": 1937,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.472811,
+        "latitude": 31.412109,
+        "rent": 3866,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.445081,
+        "latitude": 31.374548,
+        "rent": 2615,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.270549,
+        "latitude": 31.020283,
+        "rent": 2554,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.507471,
+        "latitude": 31.242769,
+        "rent": 3130,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.315417,
+        "latitude": 31.400892,
+        "rent": 1196,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.085613,
+        "latitude": 31.102314,
+        "rent": 776,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.464423,
+        "latitude": 31.399205,
+        "rent": 4435,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.454521,
+        "latitude": 31.409179,
+        "rent": 4360,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.39658,
+        "latitude": 31.19217,
+        "rent": 4836,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.510523,
+        "latitude": 31.438664,
+        "rent": 2566,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.342535,
+        "latitude": 31.080898,
+        "rent": 3179,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.593064,
+        "latitude": 31.210022,
+        "rent": 2571,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.40458,
+        "latitude": 31.160726,
+        "rent": 4091,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.429341,
+        "latitude": 31.158098,
+        "rent": 2564,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.233418,
+        "latitude": 31.416382,
+        "rent": 1756,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.506589,
+        "latitude": 31.272221,
+        "rent": 4870,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.394291,
+        "latitude": 31.128176,
+        "rent": 4618,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.487707,
+        "latitude": 31.420839,
+        "rent": 3785,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.235097,
+        "latitude": 31.336601,
+        "rent": 2464,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.364548,
+        "latitude": 31.124244,
+        "rent": 3107,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.089014,
+        "latitude": 31.129803,
+        "rent": 2208,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.163822,
+        "latitude": 31.161606,
+        "rent": 500,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.346955,
+        "latitude": 31.078864,
+        "rent": 4137,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.428064,
+        "latitude": 31.235405,
+        "rent": 5406,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.231474,
+        "latitude": 31.061115,
+        "rent": 867,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.168212,
+        "latitude": 31.161879,
+        "rent": 1746,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.26178,
+        "latitude": 31.327083,
+        "rent": 2295,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.195244,
+        "latitude": 31.060042,
+        "rent": 2564,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.394571,
+        "latitude": 31.110752,
+        "rent": 2927,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.491624,
+        "latitude": 31.451237,
+        "rent": 2509,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.297127,
+        "latitude": 31.375333,
+        "rent": 1026,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.152042,
+        "latitude": 31.157976,
+        "rent": 3573,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.499896,
+        "latitude": 31.425345,
+        "rent": 2365,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.408464,
+        "latitude": 31.223137,
+        "rent": 4601,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.390607,
+        "latitude": 31.084505,
+        "rent": 3491,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.514078,
+        "latitude": 31.232255,
+        "rent": 2297,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.183862,
+        "latitude": 31.013368,
+        "rent": 587,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.393621,
+        "latitude": 31.146019,
+        "rent": 2899,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.410986,
+        "latitude": 31.075909,
+        "rent": 1866,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.206557,
+        "latitude": 31.081057,
+        "rent": 1242,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.384412,
+        "latitude": 31.147627,
+        "rent": 2511,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.48064,
+        "latitude": 31.426376,
+        "rent": 4229,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.396498,
+        "latitude": 31.104895,
+        "rent": 5012,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.20888,
+        "latitude": 31.035378,
+        "rent": 2560,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.096384,
+        "latitude": 31.128902,
+        "rent": 1179,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.534037,
+        "latitude": 31.238617,
+        "rent": 3333,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.265893,
+        "latitude": 31.402727,
+        "rent": 2371,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.544689,
+        "latitude": 31.271747,
+        "rent": 3761,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.418378,
+        "latitude": 31.149105,
+        "rent": 7192,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.506981,
+        "latitude": 31.213349,
+        "rent": 4344,
+        "cluster": 3,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.425728,
+        "latitude": 31.098006,
+        "rent": 4558,
+        "cluster": 3,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.189672,
+        "latitude": 31.077181,
+        "rent": 689,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.457828,
+        "latitude": 31.147289,
+        "rent": 5295,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.271461,
+        "latitude": 31.074814,
+        "rent": 2781,
+        "cluster": 1,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.413487,
+        "latitude": 31.147221,
+        "rent": 3119,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.459658,
+        "latitude": 31.139985,
+        "rent": 4965,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.449575,
+        "latitude": 31.143563,
+        "rent": 4387,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.511639,
+        "latitude": 31.396643,
+        "rent": 4399,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.513245,
+        "latitude": 31.373381,
+        "rent": 5228,
+        "cluster": 3,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.245051,
+        "latitude": 31.415585,
+        "rent": 1017,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.176055,
+        "latitude": 30.998855,
+        "rent": 3435,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.236573,
+        "latitude": 31.028227,
+        "rent": 3175,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.244024,
+        "latitude": 31.017015,
+        "rent": 1459,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.089293,
+        "latitude": 31.128824,
+        "rent": 1298,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.246121,
+        "latitude": 31.37907,
+        "rent": 1047,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.346127,
+        "latitude": 31.112227,
+        "rent": 2983,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.300949,
+        "latitude": 31.403718,
+        "rent": 1800,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.22915,
+        "latitude": 31.402481,
+        "rent": 1581,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.289359,
+        "latitude": 31.338155,
+        "rent": 846,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.417487,
+        "latitude": 31.193022,
+        "rent": 5726,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.174551,
+        "latitude": 31.069084,
+        "rent": 1242,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.455545,
+        "latitude": 31.430403,
+        "rent": 3048,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.566963,
+        "latitude": 31.27094,
+        "rent": 3591,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.249969,
+        "latitude": 31.023578,
+        "rent": 2584,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.503684,
+        "latitude": 31.190086,
+        "rent": 1834,
+        "cluster": 1,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.517877,
+        "latitude": 31.432012,
+        "rent": 3407,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.337823,
+        "latitude": 31.141229,
+        "rent": 4062,
+        "cluster": 1,
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.232523,
+        "latitude": 31.060684,
+        "rent": 2397,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.116501,
+        "latitude": 31.113996,
+        "rent": 1287,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.548726,
+        "latitude": 31.256952,
+        "rent": 2479,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.104312,
+        "latitude": 31.159588,
+        "rent": 2471,
+        "cluster": 2,
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.468599,
+        "latitude": 31.169848,
+        "rent": 5207,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.181553,
+        "latitude": 31.043267,
+        "rent": 1719,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.296129,
+        "latitude": 31.402756,
+        "rent": 1319,
+        "cluster": 0,
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.405864,
+        "latitude": 31.180757,
+        "rent": 4937,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.424902,
+        "latitude": 31.139682,
+        "rent": 7190,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.559478,
+        "latitude": 31.217783,
+        "rent": 3402,
+        "cluster": 4,
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.538649,
+        "latitude": 31.44554,
+        "rent": 2453,
+        "cluster": 4,
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.482393,
+        "latitude": 31.160286,
+        "rent": 5506,
+        "cluster": 3,
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.22909,
+        "latitude": 31.064916,
+        "rent": 1720,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.215837,
+        "latitude": 31.035717,
+        "rent": 2184,
+        "cluster": 2,
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.21292,
+        "latitude": 31.042316,
+        "rent": 1835,
+        "cluster": 2,
+        "district": "松江区"
+      }
+    ],
+    "jobs": [
+      {
+        "longitude": 121.210456,
+        "latitude": 31.066,
+        "salary": 9134,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.315069,
+        "latitude": 31.331377,
+        "salary": 7823,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.461655,
+        "latitude": 31.39043,
+        "salary": 6549,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.226653,
+        "latitude": 31.423503,
+        "salary": 7283,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.425816,
+        "latitude": 31.232277,
+        "salary": 9979,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.551163,
+        "latitude": 31.183112,
+        "salary": 7842,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.4318,
+        "latitude": 31.201994,
+        "salary": 9524,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.478348,
+        "latitude": 31.166924,
+        "salary": 9032,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.35536,
+        "latitude": 31.082885,
+        "salary": 6948,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.355459,
+        "latitude": 31.160772,
+        "salary": 7826,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.306191,
+        "latitude": 31.364545,
+        "salary": 7745,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.445919,
+        "latitude": 31.392978,
+        "salary": 6377,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.404179,
+        "latitude": 31.080267,
+        "salary": 7390,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.498446,
+        "latitude": 31.230181,
+        "salary": 8923,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.527469,
+        "latitude": 31.357053,
+        "salary": 5726,
+        "cluster": 0,
+        "industry": "物流仓储",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.216479,
+        "latitude": 31.013841,
+        "salary": 8235,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.162713,
+        "latitude": 31.16477,
+        "salary": 7545,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.077784,
+        "latitude": 31.165784,
+        "salary": 7498,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.079344,
+        "latitude": 31.127298,
+        "salary": 5730,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.302364,
+        "latitude": 31.363154,
+        "salary": 7147,
+        "cluster": 2,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.235876,
+        "latitude": 30.987312,
+        "salary": 8008,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.398338,
+        "latitude": 31.13317,
+        "salary": 8281,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.159581,
+        "latitude": 31.177808,
+        "salary": 6653,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.123475,
+        "latitude": 31.181128,
+        "salary": 7909,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.449196,
+        "latitude": 31.454394,
+        "salary": 8872,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.462551,
+        "latitude": 31.451371,
+        "salary": 8223,
+        "cluster": 0,
+        "industry": "物流仓储",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.180709,
+        "latitude": 31.053559,
+        "salary": 8257,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.469816,
+        "latitude": 31.384843,
+        "salary": 7525,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.104887,
+        "latitude": 31.105686,
+        "salary": 6790,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.424271,
+        "latitude": 31.202713,
+        "salary": 10721,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.224241,
+        "latitude": 31.359972,
+        "salary": 4858,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.40623,
+        "latitude": 31.114589,
+        "salary": 8561,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.395928,
+        "latitude": 31.115726,
+        "salary": 7388,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.164251,
+        "latitude": 31.156032,
+        "salary": 7182,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.40571,
+        "latitude": 31.177422,
+        "salary": 9214,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.247594,
+        "latitude": 31.060138,
+        "salary": 8924,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.280448,
+        "latitude": 31.389385,
+        "salary": 5781,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.426373,
+        "latitude": 31.107317,
+        "salary": 7072,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.267745,
+        "latitude": 31.376989,
+        "salary": 5048,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.485709,
+        "latitude": 31.14998,
+        "salary": 9900,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.127016,
+        "latitude": 31.14746,
+        "salary": 7121,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.42778,
+        "latitude": 31.220425,
+        "salary": 8079,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.406676,
+        "latitude": 31.186042,
+        "salary": 7046,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.581597,
+        "latitude": 31.180651,
+        "salary": 7352,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.346443,
+        "latitude": 31.142797,
+        "salary": 6938,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.091277,
+        "latitude": 31.105393,
+        "salary": 8090,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.131355,
+        "latitude": 31.187695,
+        "salary": 5527,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.267587,
+        "latitude": 31.066011,
+        "salary": 6138,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.216773,
+        "latitude": 31.04635,
+        "salary": 6861,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.421003,
+        "latitude": 31.228158,
+        "salary": 9591,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.555897,
+        "latitude": 31.205654,
+        "salary": 7102,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.24474,
+        "latitude": 31.353006,
+        "salary": 8462,
+        "cluster": 2,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.377674,
+        "latitude": 31.116768,
+        "salary": 8539,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.488884,
+        "latitude": 31.421932,
+        "salary": 8152,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.17465,
+        "latitude": 31.008229,
+        "salary": 6925,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.44271,
+        "latitude": 31.370167,
+        "salary": 8715,
+        "cluster": 0,
+        "industry": "家政服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.466261,
+        "latitude": 31.191636,
+        "salary": 8456,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.083288,
+        "latitude": 31.142677,
+        "salary": 6368,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.514033,
+        "latitude": 31.19455,
+        "salary": 7529,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.5538,
+        "latitude": 31.217447,
+        "salary": 7521,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.549869,
+        "latitude": 31.206702,
+        "salary": 7632,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.405001,
+        "latitude": 31.167281,
+        "salary": 10251,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.423273,
+        "latitude": 31.067628,
+        "salary": 8224,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.23934,
+        "latitude": 31.054626,
+        "salary": 7215,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.454395,
+        "latitude": 31.227216,
+        "salary": 8749,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.267935,
+        "latitude": 31.328,
+        "salary": 8511,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.214859,
+        "latitude": 31.016789,
+        "salary": 7374,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.578811,
+        "latitude": 31.193146,
+        "salary": 8041,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.082812,
+        "latitude": 31.173998,
+        "salary": 5710,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.165205,
+        "latitude": 31.135475,
+        "salary": 8685,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.263231,
+        "latitude": 31.389658,
+        "salary": 7069,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.21574,
+        "latitude": 31.394388,
+        "salary": 6398,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.418335,
+        "latitude": 31.149458,
+        "salary": 7847,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.392816,
+        "latitude": 31.141297,
+        "salary": 10713,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.498515,
+        "latitude": 31.418129,
+        "salary": 7682,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.469333,
+        "latitude": 31.20901,
+        "salary": 9211,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.423701,
+        "latitude": 31.180406,
+        "salary": 8265,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.548074,
+        "latitude": 31.255944,
+        "salary": 7042,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.226436,
+        "latitude": 30.996924,
+        "salary": 7677,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.353314,
+        "latitude": 31.156093,
+        "salary": 8222,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.38553,
+        "latitude": 31.086799,
+        "salary": 10575,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.108212,
+        "latitude": 31.1173,
+        "salary": 6725,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.436,
+        "latitude": 31.1716,
+        "salary": 8350,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.251579,
+        "latitude": 31.406614,
+        "salary": 6773,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.306726,
+        "latitude": 31.345935,
+        "salary": 7720,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.500112,
+        "latitude": 31.422479,
+        "salary": 6360,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.516108,
+        "latitude": 31.447863,
+        "salary": 7487,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.451765,
+        "latitude": 31.17596,
+        "salary": 8093,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.456347,
+        "latitude": 31.39253,
+        "salary": 6986,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.438367,
+        "latitude": 31.177691,
+        "salary": 9286,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.31212,
+        "latitude": 31.367391,
+        "salary": 5722,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.336645,
+        "latitude": 31.149358,
+        "salary": 7852,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.095327,
+        "latitude": 31.120977,
+        "salary": 7589,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.095742,
+        "latitude": 31.180355,
+        "salary": 6494,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.191344,
+        "latitude": 31.077952,
+        "salary": 7276,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.396455,
+        "latitude": 31.177672,
+        "salary": 10260,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.473688,
+        "latitude": 31.427287,
+        "salary": 6857,
+        "cluster": 0,
+        "industry": "网约车/配送",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.353915,
+        "latitude": 31.064126,
+        "salary": 7292,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.397768,
+        "latitude": 31.114167,
+        "salary": 6552,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.307076,
+        "latitude": 31.327508,
+        "salary": 9193,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.483657,
+        "latitude": 31.150071,
+        "salary": 9069,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.414086,
+        "latitude": 31.070895,
+        "salary": 8045,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.14312,
+        "latitude": 31.103416,
+        "salary": 8306,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.421613,
+        "latitude": 31.151462,
+        "salary": 7640,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.505195,
+        "latitude": 31.242334,
+        "salary": 8477,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.21717,
+        "latitude": 31.02004,
+        "salary": 6557,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.240484,
+        "latitude": 31.329962,
+        "salary": 8369,
+        "cluster": 2,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.530797,
+        "latitude": 31.245082,
+        "salary": 9111,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.202165,
+        "latitude": 31.038383,
+        "salary": 7766,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.093153,
+        "latitude": 31.180525,
+        "salary": 7737,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.560322,
+        "latitude": 31.247635,
+        "salary": 7557,
+        "cluster": 1,
+        "industry": "物流仓储",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.143006,
+        "latitude": 31.144976,
+        "salary": 4853,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.574656,
+        "latitude": 31.191112,
+        "salary": 8435,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.517245,
+        "latitude": 31.428247,
+        "salary": 7269,
+        "cluster": 0,
+        "industry": "家政服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.483575,
+        "latitude": 31.447135,
+        "salary": 7359,
+        "cluster": 0,
+        "industry": "物流仓储",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.304144,
+        "latitude": 31.38919,
+        "salary": 6155,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.3095,
+        "latitude": 31.399627,
+        "salary": 7056,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.50677,
+        "latitude": 31.421178,
+        "salary": 5825,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.211176,
+        "latitude": 31.039357,
+        "salary": 6499,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.342286,
+        "latitude": 31.141807,
+        "salary": 7695,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.413745,
+        "latitude": 31.092451,
+        "salary": 8225,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.450933,
+        "latitude": 31.234514,
+        "salary": 9774,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.149587,
+        "latitude": 31.102096,
+        "salary": 6673,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.10262,
+        "latitude": 31.124826,
+        "salary": 8886,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.394765,
+        "latitude": 31.142552,
+        "salary": 6515,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.481594,
+        "latitude": 31.188833,
+        "salary": 8183,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.581194,
+        "latitude": 31.26693,
+        "salary": 8966,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.579988,
+        "latitude": 31.198538,
+        "salary": 8535,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.087484,
+        "latitude": 31.120649,
+        "salary": 7460,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.255112,
+        "latitude": 31.356531,
+        "salary": 7275,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.308109,
+        "latitude": 31.371293,
+        "salary": 4577,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.500881,
+        "latitude": 31.227884,
+        "salary": 6698,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.564591,
+        "latitude": 31.250906,
+        "salary": 8750,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.218374,
+        "latitude": 31.400169,
+        "salary": 5653,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.139229,
+        "latitude": 31.190788,
+        "salary": 6950,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.594491,
+        "latitude": 31.261838,
+        "salary": 7932,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.351436,
+        "latitude": 31.080825,
+        "salary": 6871,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.3981,
+        "latitude": 31.085759,
+        "salary": 8376,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.081537,
+        "latitude": 31.161929,
+        "salary": 6791,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.522192,
+        "latitude": 31.224005,
+        "salary": 9108,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.272019,
+        "latitude": 31.353747,
+        "salary": 8600,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.450898,
+        "latitude": 31.150538,
+        "salary": 7351,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.486918,
+        "latitude": 31.386227,
+        "salary": 8342,
+        "cluster": 0,
+        "industry": "网约车/配送",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.29888,
+        "latitude": 31.352887,
+        "salary": 6221,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.548254,
+        "latitude": 31.190515,
+        "salary": 9631,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.40283,
+        "latitude": 31.106993,
+        "salary": 5909,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.586632,
+        "latitude": 31.227533,
+        "salary": 8395,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.282039,
+        "latitude": 31.409537,
+        "salary": 7841,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.45849,
+        "latitude": 31.139148,
+        "salary": 10159,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.491455,
+        "latitude": 31.435787,
+        "salary": 5886,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.242629,
+        "latitude": 31.024006,
+        "salary": 7641,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.235733,
+        "latitude": 30.998022,
+        "salary": 8178,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.389031,
+        "latitude": 31.20363,
+        "salary": 11989,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.473549,
+        "latitude": 31.432987,
+        "salary": 8752,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.424311,
+        "latitude": 31.161231,
+        "salary": 6529,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.356543,
+        "latitude": 31.094597,
+        "salary": 8922,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.184306,
+        "latitude": 31.035103,
+        "salary": 7652,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.199143,
+        "latitude": 31.043146,
+        "salary": 6830,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.37449,
+        "latitude": 31.119109,
+        "salary": 7908,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.237571,
+        "latitude": 31.022404,
+        "salary": 6150,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.481173,
+        "latitude": 31.418986,
+        "salary": 7318,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.471676,
+        "latitude": 31.377489,
+        "salary": 7854,
+        "cluster": 0,
+        "industry": "家政服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.497939,
+        "latitude": 31.228992,
+        "salary": 6375,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.227683,
+        "latitude": 31.403811,
+        "salary": 7249,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.533863,
+        "latitude": 31.198577,
+        "salary": 8370,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.474758,
+        "latitude": 31.213883,
+        "salary": 9699,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.356979,
+        "latitude": 31.094828,
+        "salary": 6268,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.33951,
+        "latitude": 31.08286,
+        "salary": 10383,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.171839,
+        "latitude": 31.131157,
+        "salary": 5690,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.566782,
+        "latitude": 31.172567,
+        "salary": 9978,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.563837,
+        "latitude": 31.185295,
+        "salary": 9066,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.219824,
+        "latitude": 31.02009,
+        "salary": 5369,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.222176,
+        "latitude": 31.363538,
+        "salary": 8945,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.150659,
+        "latitude": 31.1068,
+        "salary": 7128,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.554008,
+        "latitude": 31.195044,
+        "salary": 7985,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.372459,
+        "latitude": 31.153739,
+        "salary": 5907,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.55598,
+        "latitude": 31.247966,
+        "salary": 7909,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.399623,
+        "latitude": 31.0978,
+        "salary": 9441,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.363105,
+        "latitude": 31.082878,
+        "salary": 7110,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.377175,
+        "latitude": 31.122299,
+        "salary": 7424,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.516306,
+        "latitude": 31.272438,
+        "salary": 7603,
+        "cluster": 1,
+        "industry": "物流仓储",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.26748,
+        "latitude": 31.3743,
+        "salary": 8212,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.08268,
+        "latitude": 31.148989,
+        "salary": 5422,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.265538,
+        "latitude": 31.064739,
+        "salary": 7573,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.200029,
+        "latitude": 30.987537,
+        "salary": 6472,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.459739,
+        "latitude": 31.178817,
+        "salary": 8895,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.394106,
+        "latitude": 31.148996,
+        "salary": 10006,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.397906,
+        "latitude": 31.220834,
+        "salary": 9732,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.221637,
+        "latitude": 31.421673,
+        "salary": 7964,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.120957,
+        "latitude": 31.192794,
+        "salary": 7291,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.398242,
+        "latitude": 31.187108,
+        "salary": 7515,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.500815,
+        "latitude": 31.447908,
+        "salary": 6099,
+        "cluster": 0,
+        "industry": "网约车/配送",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.402524,
+        "latitude": 31.066322,
+        "salary": 6061,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.257021,
+        "latitude": 31.048617,
+        "salary": 8291,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.510242,
+        "latitude": 31.197222,
+        "salary": 9793,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.412906,
+        "latitude": 31.183171,
+        "salary": 9020,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.473505,
+        "latitude": 31.385754,
+        "salary": 7570,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.483596,
+        "latitude": 31.185535,
+        "salary": 9296,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.107206,
+        "latitude": 31.137716,
+        "salary": 7149,
+        "cluster": 3,
+        "industry": "网约车/配送",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.235136,
+        "latitude": 31.341594,
+        "salary": 7192,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.230523,
+        "latitude": 31.404185,
+        "salary": 8283,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.470785,
+        "latitude": 31.376066,
+        "salary": 6903,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.307035,
+        "latitude": 31.355953,
+        "salary": 7341,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.293815,
+        "latitude": 31.403757,
+        "salary": 6757,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.475165,
+        "latitude": 31.414287,
+        "salary": 8255,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.200248,
+        "latitude": 31.017304,
+        "salary": 6608,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.369316,
+        "latitude": 31.14308,
+        "salary": 7686,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.158449,
+        "latitude": 31.111568,
+        "salary": 8721,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.399215,
+        "latitude": 31.214896,
+        "salary": 9857,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.411028,
+        "latitude": 31.149733,
+        "salary": 7493,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.337204,
+        "latitude": 31.131543,
+        "salary": 5097,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.192828,
+        "latitude": 31.013704,
+        "salary": 7103,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.533643,
+        "latitude": 31.211188,
+        "salary": 5995,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.5644,
+        "latitude": 31.203933,
+        "salary": 7343,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.559429,
+        "latitude": 31.255974,
+        "salary": 6915,
+        "cluster": 1,
+        "industry": "家政服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.120356,
+        "latitude": 31.157631,
+        "salary": 6587,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.147622,
+        "latitude": 31.112571,
+        "salary": 6005,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.485442,
+        "latitude": 31.430458,
+        "salary": 8268,
+        "cluster": 0,
+        "industry": "家政服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.308243,
+        "latitude": 31.394799,
+        "salary": 6946,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.508221,
+        "latitude": 31.21843,
+        "salary": 9563,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.463526,
+        "latitude": 31.214475,
+        "salary": 9814,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.462383,
+        "latitude": 31.216995,
+        "salary": 9057,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.265555,
+        "latitude": 31.000242,
+        "salary": 5647,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.242279,
+        "latitude": 31.351,
+        "salary": 6769,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.163095,
+        "latitude": 31.170248,
+        "salary": 7821,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.075667,
+        "latitude": 31.13021,
+        "salary": 6455,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.24267,
+        "latitude": 31.387149,
+        "salary": 7128,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.563937,
+        "latitude": 31.22015,
+        "salary": 7192,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.38838,
+        "latitude": 31.207901,
+        "salary": 7525,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.454303,
+        "latitude": 31.15602,
+        "salary": 8625,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.270703,
+        "latitude": 31.072467,
+        "salary": 8222,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.225909,
+        "latitude": 31.013821,
+        "salary": 5933,
+        "cluster": 3,
+        "industry": "建筑业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.423661,
+        "latitude": 31.1654,
+        "salary": 9360,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.138738,
+        "latitude": 31.101514,
+        "salary": 7234,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.295248,
+        "latitude": 31.385741,
+        "salary": 7966,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.415189,
+        "latitude": 31.155983,
+        "salary": 6905,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.432654,
+        "latitude": 31.154556,
+        "salary": 7435,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.525699,
+        "latitude": 31.364616,
+        "salary": 7262,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.250877,
+        "latitude": 30.99344,
+        "salary": 7221,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.315301,
+        "latitude": 31.337879,
+        "salary": 7608,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.398954,
+        "latitude": 31.178396,
+        "salary": 10888,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.25053,
+        "latitude": 31.339114,
+        "salary": 7640,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.49565,
+        "latitude": 31.355857,
+        "salary": 6154,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.578186,
+        "latitude": 31.204486,
+        "salary": 8244,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.490663,
+        "latitude": 31.369974,
+        "salary": 6598,
+        "cluster": 0,
+        "industry": "建筑业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.097763,
+        "latitude": 31.182804,
+        "salary": 6638,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.171841,
+        "latitude": 31.135557,
+        "salary": 7718,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.433202,
+        "latitude": 31.153168,
+        "salary": 11146,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.286261,
+        "latitude": 31.387051,
+        "salary": 8737,
+        "cluster": 2,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.40906,
+        "latitude": 31.159246,
+        "salary": 7300,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.293479,
+        "latitude": 31.332104,
+        "salary": 8375,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.554558,
+        "latitude": 31.175818,
+        "salary": 8465,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.589668,
+        "latitude": 31.180691,
+        "salary": 7052,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.5182,
+        "latitude": 31.365939,
+        "salary": 8106,
+        "cluster": 0,
+        "industry": "网约车/配送",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.357732,
+        "latitude": 31.14476,
+        "salary": 8513,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.278609,
+        "latitude": 31.328026,
+        "salary": 6497,
+        "cluster": 2,
+        "industry": "网约车/配送",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.171631,
+        "latitude": 31.166764,
+        "salary": 7518,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.287114,
+        "latitude": 31.326289,
+        "salary": 7132,
+        "cluster": 2,
+        "industry": "餐饮服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.302044,
+        "latitude": 31.370478,
+        "salary": 8329,
+        "cluster": 2,
+        "industry": "建筑业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.262177,
+        "latitude": 31.020208,
+        "salary": 8469,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.222098,
+        "latitude": 31.363996,
+        "salary": 5942,
+        "cluster": 2,
+        "industry": "制造业",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.398172,
+        "latitude": 31.22102,
+        "salary": 7736,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.165219,
+        "latitude": 31.194917,
+        "salary": 6201,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.254449,
+        "latitude": 31.004299,
+        "salary": 9404,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.267616,
+        "latitude": 31.345148,
+        "salary": 8453,
+        "cluster": 2,
+        "industry": "物流仓储",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.53614,
+        "latitude": 31.403458,
+        "salary": 7265,
+        "cluster": 0,
+        "industry": "家政服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.481185,
+        "latitude": 31.445198,
+        "salary": 8085,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.334955,
+        "latitude": 31.065516,
+        "salary": 7069,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.41813,
+        "latitude": 31.219817,
+        "salary": 10100,
+        "cluster": 4,
+        "industry": "物流仓储",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.465433,
+        "latitude": 31.183573,
+        "salary": 10731,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.458639,
+        "latitude": 31.186289,
+        "salary": 9632,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.485915,
+        "latitude": 31.205589,
+        "salary": 5489,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.194197,
+        "latitude": 30.990301,
+        "salary": 7847,
+        "cluster": 3,
+        "industry": "物流仓储",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.5258,
+        "latitude": 31.390827,
+        "salary": 6694,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.445678,
+        "latitude": 31.149416,
+        "salary": 10797,
+        "cluster": 4,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.484346,
+        "latitude": 31.387765,
+        "salary": 6340,
+        "cluster": 0,
+        "industry": "制造业",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.496657,
+        "latitude": 31.224898,
+        "salary": 8342,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.573141,
+        "latitude": 31.239403,
+        "salary": 10181,
+        "cluster": 4,
+        "industry": "制造业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.377488,
+        "latitude": 31.142155,
+        "salary": 6976,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.520411,
+        "latitude": 31.23709,
+        "salary": 6743,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.444826,
+        "latitude": 31.421664,
+        "salary": 7864,
+        "cluster": 0,
+        "industry": "餐饮服务",
+        "district": "宝山区"
+      },
+      {
+        "longitude": 121.084138,
+        "latitude": 31.105431,
+        "salary": 6567,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.341551,
+        "latitude": 31.079741,
+        "salary": 8605,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.508124,
+        "latitude": 31.260044,
+        "salary": 7519,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.422509,
+        "latitude": 31.160589,
+        "salary": 4548,
+        "cluster": 1,
+        "industry": "网约车/配送",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.38721,
+        "latitude": 31.081015,
+        "salary": 8044,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.530899,
+        "latitude": 31.214422,
+        "salary": 6397,
+        "cluster": 1,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.308596,
+        "latitude": 31.370067,
+        "salary": 4290,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.219855,
+        "latitude": 31.39174,
+        "salary": 6758,
+        "cluster": 2,
+        "industry": "家政服务",
+        "district": "嘉定区"
+      },
+      {
+        "longitude": 121.420133,
+        "latitude": 31.237812,
+        "salary": 10658,
+        "cluster": 4,
+        "industry": "家政服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.533531,
+        "latitude": 31.216244,
+        "salary": 8697,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.419224,
+        "latitude": 31.217412,
+        "salary": 9340,
+        "cluster": 4,
+        "industry": "建筑业",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.110554,
+        "latitude": 31.175206,
+        "salary": 7949,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.238979,
+        "latitude": 31.017766,
+        "salary": 6676,
+        "cluster": 3,
+        "industry": "家政服务",
+        "district": "松江区"
+      },
+      {
+        "longitude": 121.539271,
+        "latitude": 31.265236,
+        "salary": 9162,
+        "cluster": 4,
+        "industry": "网约车/配送",
+        "district": "浦东新区"
+      },
+      {
+        "longitude": 121.111599,
+        "latitude": 31.13705,
+        "salary": 9144,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.440077,
+        "latitude": 31.196281,
+        "salary": 7516,
+        "cluster": 1,
+        "industry": "餐饮服务",
+        "district": "徐汇区"
+      },
+      {
+        "longitude": 121.404721,
+        "latitude": 31.085315,
+        "salary": 8310,
+        "cluster": 1,
+        "industry": "制造业",
+        "district": "闵行区"
+      },
+      {
+        "longitude": 121.17229,
+        "latitude": 31.125844,
+        "salary": 6036,
+        "cluster": 3,
+        "industry": "餐饮服务",
+        "district": "青浦区"
+      },
+      {
+        "longitude": 121.101533,
+        "latitude": 31.187207,
+        "salary": 6420,
+        "cluster": 3,
+        "industry": "制造业",
+        "district": "青浦区"
+      }
+    ]
+  }
+}

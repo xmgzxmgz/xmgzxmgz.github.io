@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Python 数据可视化：5 种图表玩转 Iris 数据集 — 贵志的猫</title>
+<script src="../auth.js"></script>
+
+<style>@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap");:root{--bg:#f8f6f1;--bg2:#fff;--text:#2c2c2c;--muted:#6b6357;--dim:#a09888;--accent:#c8553d;--accent2:#5a7d6a;--border:#e8e2d8;--serif:"Noto Serif SC","Songti SC",serif;--sans:"Noto Sans SC",-apple-system,"PingFang SC",sans-serif}*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:2}.c{max-width:680px;margin:0 auto;padding:48px 24px}.bk{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;margin-bottom:40px;text-decoration:none;letter-spacing:.5px}h1{font-family:var(--serif);font-size:30px;font-weight:700;margin-bottom:12px;letter-spacing:1px}.m{color:var(--dim);font-size:12px;margin-bottom:40px;display:flex;gap:14px;flex-wrap:wrap}.t{padding:3px 10px;border-radius:16px;background:rgba(200,85,61,.08);color:var(--accent);font-size:10px;font-weight:500}h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:40px 0 14px;letter-spacing:.5px}h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:28px 0 10px}p{margin-bottom:14px;font-size:14px;color:var(--text)}code{background:#f0ece4;padding:2px 6px;border-radius:4px;font-family:"SF Mono",monospace;font-size:12px}pre{background:#2c2c2c;color:#e8e2d8;padding:20px;border-radius:12px;overflow-x:auto;margin:14px 0;font-size:12px;line-height:1.7}pre code{background:transparent;padding:0;color:inherit}ul,ol{padding-left:22px;margin-bottom:14px}li{margin-bottom:5px;font-size:14px}bq{border-left:3px solid var(--sakura,#f4b4c6);padding:14px 20px;background:rgba(244,180,198,.06);margin:16px 0;border-radius:0 10px 10px 0;font-size:14px;color:var(--muted);display:block;font-family:var(--serif)}ft{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--dim);font-size:11px;display:block;letter-spacing:.5px}.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.sb{text-align:center;padding:18px;background:var(--bg2);border:1px solid var(--border);border-radius:12px}.sv{font-size:28px;font-weight:800;color:var(--accent)}.sl{font-size:10px;color:var(--dim);margin-top:3px}.exp{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0}.exp-title{font-weight:600;font-size:13px;margin-bottom:8px;color:var(--accent2,#5a7d6a)}.exp-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border)}.exp-row:last-child{border:none}@media(max-width:640px){.sg{grid-template-columns:1fr}h1{font-size:24px}.c{padding:32px 16px}}</style></head><body><div class="c">
+<a href="../index.html" class="bk">← 返回首页</a>
+<h1>📊 Python 数据可视化：5 种图表玩转 Iris 数据集</h1>
+<div class="m"><span>2025-10-17</span><span class="t">Python</span><span class="t">Matplotlib</span><span class="t">数据可视化</span></div>
+
+<bq>Iris（鸢尾花）数据集是机器学习的 "Hello World"。本文用 5 种图表从不同角度探索这个经典数据集。</bq>
+
+<h2>📊 5 种图表</h2>
+<ol>
+<li><strong>散点图</strong> — 花瓣长度 vs 花瓣宽度，按品种着色</li>
+<li><strong>箱线图</strong> — 各品种花萼宽度的分布</li>
+<li><strong>柱状图 + 饼图</strong> — 各品种数量占比</li>
+<li><strong>散点矩阵</strong> — 所有特征两两对比</li>
+<li><strong>直方图</strong> — 花瓣长度的分布</li>
+</ol>
+
+<h2>任务 1：散点图</h2>
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target_names[iris.target]
+
+# 散点图：花瓣长度 vs 宽度
+fig, ax = plt.subplots(figsize=(8, 6))
+for species in df['species'].unique():
+    subset = df[df['species'] == species]
+    ax.scatter(subset['petal length (cm)'], subset['petal width (cm)'],
+               label=species, alpha=0.7, s=50)
+ax.set_xlabel('花瓣长度 (cm)')
+ax.set_ylabel('花瓣宽度 (cm)')
+ax.set_title('Iris 数据集：花瓣长度 vs 宽度')
+ax.legend()
+plt.tight_layout()
+plt.savefig('scatter_petal.png', dpi=150)</code></pre>
+
+<h2>任务 4：散点矩阵</h2>
+<p>散点矩阵可以一次性看到所有特征之间的关系：</p>
+<pre><code>import seaborn as sns
+
+sns.pairplot(df, hue='species', diag_kind='kde',
+             plot_kws={'alpha': 0.6, 's': 30})
+plt.suptitle('Iris 特征散点矩阵', y=1.02)
+plt.savefig('scatter_matrix.png', dpi=150)</code></pre>
+
+<h2>💡 发现</h2>
+<ul>
+<li>Setosa 品种在所有特征上都与另外两个品种明显分离</li>
+<li>Versicolor 和 Virginica 在花瓣特征上有部分重叠</li>
+<li>花瓣长度和花瓣宽度的相关性最强（r ≈ 0.96）</li>
+<li>散点矩阵是快速了解数据集的最佳工具</li>
+</ul>
+
+<ft><p>© 2026 贵志的猫 · <a href="../index.html">返回首页</a></p></ft>
+</div></body></html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 求职助手 — 简历匹配与职位分析</title>
+  <meta name="description" content="上传简历 PDF，AI 提取亮点，智能匹配职位，评估进面概率">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs" type="module"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-bg: #eef2ff;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --radius: 16px;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.04);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #fdf2f8 100%);
+      color: var(--gray-800);
+      font-family: 'Noto Sans SC', -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .header {
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 56px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .header a { color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .header a:hover { color: var(--primary-light); }
+    .header h1 { font-size: 16px; font-weight: 700; margin-right: auto; }
+    .header .emoji { font-size: 20px; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero h2 { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, var(--primary), #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { color: var(--gray-500); font-size: 16px; margin-top: 8px; }
+
+    /* Steps */
+    .steps { display: flex; justify-content: center; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .step { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; background: var(--gray-100); color: var(--gray-400); transition: all .3s; }
+    .step.active { background: var(--primary-bg); color: var(--primary); }
+    .step.done { background: var(--success-bg); color: var(--success); }
+    .step-arrow { color: var(--gray-300); font-size: 12px; }
+
+    /* Cards */
+    .card { background: #fff; border-radius: var(--radius); border: 1px solid var(--gray-200); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); }
+    .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    /* Upload */
+    .upload-zone {
+      border: 2px dashed var(--gray-300); border-radius: var(--radius); padding: 48px 24px;
+      text-align: center; cursor: pointer; transition: all .3s; background: #fff;
+    }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: var(--primary-bg); }
+    .upload-zone.done { border-color: var(--success); background: var(--success-bg); }
+    .upload-zone.error { border-color: var(--danger); background: var(--danger-bg); }
+    .upload-zone .icon { font-size: 48px; margin-bottom: 12px; }
+    .upload-zone .text { font-size: 16px; font-weight: 600; color: var(--gray-700); }
+    .upload-zone .sub { font-size: 13px; color: var(--gray-400); margin-top: 4px; }
+
+    /* Tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all .2s;
+    }
+    .tag.highlight { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .tag.skill { background: var(--primary-bg); color: var(--primary); border: 1px solid #c7d2fe; }
+    .tag.keyword { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; cursor: pointer; }
+    .tag.keyword:hover { background: #bfdbfe; }
+    .tag.keyword.selected { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+    .tag .remove { font-size: 11px; opacity: .5; margin-left: 2px; }
+    .tag .remove:hover { opacity: 1; }
+
+    /* Input */
+    .input-row { display: flex; gap: 8px; margin-top: 12px; }
+    input[type="text"], textarea {
+      flex: 1; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: 10px;
+      font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s;
+    }
+    input[type="text"]:focus, textarea:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px;
+      border-radius: 10px; font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; border: none; transition: all .2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: #fff; box-shadow: 0 4px 14px rgba(79,70,229,.3); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,70,229,.4); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary { background: var(--gray-100); color: var(--gray-700); }
+    .btn-secondary:hover { background: var(--gray-200); }
+    .btn-lg { padding: 14px 32px; font-size: 16px; border-radius: 14px; }
+
+    /* City selector */
+    .city-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .city-btn {
+      padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 500;
+      background: var(--gray-100); color: var(--gray-600); border: none; cursor: pointer; transition: all .2s;
+    }
+    .city-btn.active { background: var(--primary); color: #fff; }
+    .city-btn:hover:not(.active) { background: var(--gray-200); }
+
+    /* Job card */
+    .job-card {
+      padding: 16px; border-radius: 14px; border: 1px solid var(--gray-200);
+      background: #fff; cursor: pointer; transition: all .2s; margin-bottom: 12px;
+    }
+    .job-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); }
+    .job-card.selected { border-color: var(--primary); background: var(--primary-bg); box-shadow: 0 0 0 3px rgba(79,70,229,.1); }
+    .job-card .title { font-size: 16px; font-weight: 600; }
+    .job-card .company { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .job-card .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--gray-500); }
+    .job-card .score-badge {
+      float: right; padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    }
+    .score-high { background: var(--success-bg); color: var(--success); }
+    .score-mid { background: #dbeafe; color: #2563eb; }
+    .score-low { background: var(--warning-bg); color: var(--warning); }
+    .score-bad { background: var(--danger-bg); color: var(--danger); }
+
+    /* Probability bar */
+    .prob-bar { width: 100%; height: 8px; background: var(--gray-100); border-radius: 4px; margin-top: 6px; overflow: hidden; }
+    .prob-fill { height: 100%; border-radius: 4px; transition: width .8s ease; }
+    .prob-fill.high { background: linear-gradient(90deg, #10b981, #34d399); }
+    .prob-fill.mid { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .prob-fill.low { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+    /* Analysis panel */
+    .analysis-panel { position: sticky; top: 72px; }
+    .dimension { margin-bottom: 14px; }
+    .dimension .label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .dimension .bar { width: 100%; height: 6px; background: var(--gray-100); border-radius: 3px; }
+    .dimension .fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+
+    /* Ring chart */
+    .ring-container { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+    .ring-container .score-text {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .ring-container .score-num { font-size: 32px; font-weight: 700; color: var(--gray-900); }
+    .ring-container .score-label { font-size: 11px; color: var(--gray-400); }
+
+    /* Grid layouts */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .flex-score { display: flex; gap: 24px; align-items: flex-start; }
+
+    /* Insight boxes */
+    .insight { padding: 14px; border-radius: 12px; }
+    .insight-green { background: var(--success-bg); }
+    .insight-green h4 { color: #065f46; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .insight-green li { color: #047857; font-size: 13px; margin-left: 16px; margin-bottom: 2px; }
+    .insight-yellow { background: var(--warning-bg); }
+    .insight-yellow h4 { color: #92400e; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .insight-yellow li { color: #b45309; font-size: 13px; margin-left: 16px; margin-bottom: 2px; }
+    .insight-blue { background: #eff6ff; }
+    .insight-blue h4 { color: #1e40af; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .insight-blue li { color: #2563eb; font-size: 13px; margin-left: 16px; margin-bottom: 2px; }
+    .insight-purple { background: #f5f3ff; border: 1px solid #ddd6fe; }
+    .insight-purple h4 { color: #5b21b6; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .insight-purple p { color: #6d28d9; font-size: 13px; }
+
+    /* Results layout */
+    .results-layout { display: grid; grid-template-columns: 380px 1fr; gap: 24px; }
+    .results-list { max-height: calc(100vh - 140px); overflow-y: auto; padding-right: 8px; }
+    .results-list::-webkit-scrollbar { width: 4px; }
+    .results-list::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+    /* Loading */
+    .loading { text-align: center; padding: 60px 20px; }
+    .spinner { width: 48px; height: 48px; border: 4px solid var(--gray-200); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* API key input */
+    .api-section { margin-bottom: 24px; }
+    .api-section label { font-size: 13px; font-weight: 600; color: var(--gray-600); display: block; margin-bottom: 6px; }
+    .api-section .hint { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+    .api-input { width: 100%; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 14px; font-family: monospace; outline: none; }
+    .api-input:focus { border-color: var(--primary); }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .results-layout { grid-template-columns: 1fr; }
+      .results-list { max-height: none; }
+      .analysis-panel { position: static; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .flex-score { flex-direction: column; align-items: center; }
+      .hero h2 { font-size: 24px; }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      padding: 12px 24px; background: var(--gray-800); color: #fff; border-radius: 12px;
+      font-size: 14px; z-index: 1000; opacity: 0; transition: opacity .3s;
+      box-shadow: var(--shadow-lg);
+    }
+    .toast.show { opacity: 1; }
+
+    /* Job list placeholder */
+    .job-paste-area { margin-top: 12px; }
+    .job-paste-area textarea {
+      width: 100%; min-height: 120px; padding: 12px; border: 1px solid var(--gray-200);
+      border-radius: 10px; font-size: 13px; font-family: inherit; resize: vertical;
+    }
+    .job-item { padding: 12px; border: 1px solid var(--gray-200); border-radius: 10px; margin-bottom: 8px; background: #fff; }
+    .job-item .ji-head { display: flex; justify-content: space-between; align-items: center; }
+    .job-item .ji-title { font-weight: 600; font-size: 14px; }
+    .job-item .ji-company { font-size: 12px; color: var(--gray-500); }
+    .job-item .ji-remove { color: var(--gray-400); cursor: pointer; font-size: 18px; }
+    .job-item .ji-remove:hover { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="emoji">🎯</span>
+    <h1>AI 求职助手</h1>
+    <a href="https://xmgzxmgz.github.io">← 返回主页</a>
+  </div>
+
+  <div class="container">
+    <!-- Hero -->
+    <div class="hero">
+      <h2>AI 简历匹配 · 职位分析 · 进面概率</h2>
+      <p>上传简历 PDF → AI 提取亮点 → 分析职位匹配度与进面概率</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps" id="steps">
+      <div class="step active" id="step1">📄 上传简历</div>
+      <span class="step-arrow">→</span>
+      <div class="step" id="step2">✨ 确认亮点</div>
+      <span class="step-arrow">→</span>
+      <div class="step" id="step3">📋 添加职位</div>
+      <span class="step-arrow">→</span>
+      <div class="step" id="step4">📊 分析结果</div>
+    </div>
+
+    <!-- API Key -->
+    <div class="card api-section" id="apiCard">
+      <h3>🔑 Claude API Key</h3>
+      <input type="password" class="api-input" id="apiKeyInput" placeholder="sk-ant-api03-..." value="">
+      <p class="hint">你的 Key 仅在浏览器本地使用，不会上传到任何服务器。<a href="https://console.anthropic.com/" target="_blank">获取 API Key →</a></p>
+    </div>
+
+    <!-- Step 1: Upload -->
+    <div id="uploadSection">
+      <div class="upload-zone" id="uploadZone">
+        <div class="icon">📄</div>
+        <div class="text">拖拽上传简历 PDF</div>
+        <div class="sub">或点击选择文件 · 支持 PDF · 最大 10MB</div>
+      </div>
+      <input type="file" id="fileInput" accept=".pdf" style="display:none">
+    </div>
+
+    <!-- Step 2: Profile -->
+    <div id="profileSection" class="hidden">
+      <div class="card">
+        <h3>✨ 简历解析结果</h3>
+        <div id="profileSummary" style="margin-bottom:16px;color:var(--gray-600);font-size:14px;"></div>
+
+        <h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">🎯 核心亮点</h4>
+        <div class="tags" id="highlightsTags"></div>
+
+        <h4 style="font-size:14px;font-weight:600;margin:16px 0 8px;">🛠️ 技能栈</h4>
+        <div class="tags" id="skillsTags"></div>
+
+        <h4 style="font-size:14px;font-weight:600;margin:16px 0 8px;">🎓 教育背景</h4>
+        <div id="eduInfo" style="font-size:14px;color:var(--gray-600);"></div>
+
+        <h4 style="font-size:14px;font-weight:600;margin:16px 0 8px;">💼 工作经历</h4>
+        <div id="expInfo" style="font-size:14px;color:var(--gray-600);"></div>
+      </div>
+
+      <div class="card">
+        <h3>🔍 搜索关键词（AI 推荐）</h3>
+        <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">点击关键词可取消选择，也可以添加自定义关键词：</p>
+        <div class="tags" id="keywordsTags"></div>
+        <div class="input-row">
+          <input type="text" id="customKeyword" placeholder="输入自定义关键词...">
+          <button class="btn btn-secondary" onclick="addCustomKeyword()">添加</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:24px 0;">
+        <button class="btn btn-primary btn-lg" onclick="goToStep3()">下一步：添加目标职位 →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Jobs -->
+    <div id="jobsSection" class="hidden">
+      <!-- 使用说明 -->
+      <div class="card" style="border-color:#93c5fd;background:linear-gradient(135deg,#f0f7ff,#faf5ff);">
+        <h3>🔍 从 BOSS 直聘获取职位</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+          <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid var(--gray-200);">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">📋 方法一：批量粘贴（推荐）</div>
+            <ol style="font-size:13px;color:var(--gray-600);padding-left:18px;line-height:2;">
+              <li>打开 <a href="https://www.zhipin.com/web/geek/job" target="_blank" style="color:var(--primary);">BOSS 直聘搜索页</a></li>
+              <li>搜索你想要的岗位关键词</li>
+              <li>鼠标选中页面上的职位列表文字</li>
+              <li>复制后粘贴到下方文本框</li>
+              <li>点击「AI 提取」，自动解析所有职位</li>
+            </ol>
+          </div>
+          <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid var(--gray-200);">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">🔗 方法二：逐条粘贴链接</div>
+            <ol style="font-size:13px;color:var(--gray-600);padding-left:18px;line-height:2;">
+              <li>在 BOSS 直聘打开感兴趣的职位详情页</li>
+              <li>复制整个页面的职位描述文字</li>
+              <li>粘贴到下方文本框</li>
+              <li>每次粘贴一个职位，点「AI 提取」</li>
+            </ol>
+            <p style="font-size:12px;color:var(--gray-400);margin-top:8px;">💡 也可以直接粘贴任何招聘网站的职位信息</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手动粘贴区 -->
+      <div class="card" style="margin-top:16px;">
+        <h3>📋 粘贴职位信息</h3>
+        <div class="job-paste-area">
+          <textarea id="jobPasteInput" placeholder="在此粘贴从 BOSS 直聘复制的职位列表...&#10;&#10;支持的格式：&#10;• 直接选中搜索结果页的职位列表，Ctrl+C 粘贴&#10;• 单个职位详情页的全部文字&#10;• 手动输入：职位名 | 公司 | 薪资 | 城市&#10;&#10;AI 会自动识别并提取所有职位信息"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="parseJobText()">🤖 AI 智能提取</button>
+            <button class="btn btn-secondary" onclick="addJobManually()">✏️ 直接添加</button>
+            <span id="parseStatus" style="font-size:13px;color:var(--gray-500);align-self:center;"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="jobListCard" class="card hidden" style="margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin:0;">📌 已添加的职位 (<span id="jobCount">0</span>)</h3>
+          <button class="btn btn-secondary" onclick="clearAllJobs()" style="font-size:12px;padding:6px 12px;">清空全部</button>
+        </div>
+        <div id="jobList"></div>
+      </div>
+
+      <div style="text-align:center;margin:24px 0;">
+        <button class="btn btn-primary btn-lg" id="startAnalysisBtn" onclick="startAnalysis()" disabled>
+          🚀 开始 AI 匹配分析
+        </button>
+        <p style="font-size:12px;color:var(--gray-400);margin-top:8px;">至少添加 1 个职位才能开始分析</p>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingSection" class="hidden">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p id="loadingText" style="font-size:16px;font-weight:500;color:var(--gray-700);">AI 正在分析匹配度...</p>
+        <p style="font-size:13px;color:var(--gray-400);margin-top:8px;">每个职位约需 10 秒，请耐心等待</p>
+      </div>
+    </div>
+
+    <!-- Step 4: Results -->
+    <div id="resultsSection" class="hidden">
+      <div class="results-layout">
+        <div class="results-list" id="resultsList"></div>
+        <div id="analysisPanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    // === State ===
+    let apiKey = '';
+    let resumeProfile = null;
+    let selectedKeywords = [];
+    let jobList = [];
+    let analysisResults = [];
+    let selectedJobIdx = 0;
+
+    // === Toast ===
+    function showToast(msg, duration = 2500) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration);
+    }
+    window.showToast = showToast;
+
+    // === Steps ===
+    function updateSteps(current) {
+      const ids = ['step1','step2','step3','step4'];
+      const idx = ['upload','profile','jobs','results'].indexOf(current);
+      ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.className = 'step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+      });
+    }
+
+    // === Claude API ===
+    async function callClaude(system, user, maxTokens = 4096) {
+      apiKey = document.getElementById('apiKeyInput').value.trim();
+      if (!apiKey) throw new Error('请先输入 Claude API Key');
+
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: maxTokens,
+          temperature: 0.3,
+          system,
+          messages: [{ role: 'user', content: user }],
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || `API 调用失败 (${resp.status})`);
+      }
+
+      const data = await resp.json();
+      return data.content?.[0]?.text || '';
+    }
+
+    async function callClaudeJson(system, user, maxTokens = 4096) {
+      const raw = await callClaude(system, user, maxTokens);
+      const m = raw.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, raw];
+      const s = (m[1] || raw).trim();
+      try { return JSON.parse(s); } catch {
+        const m2 = s.match(/[\[{][\s\S]*[\]}]/);
+        if (m2) return JSON.parse(m2[0]);
+        throw new Error('AI 返回格式异常');
+      }
+    }
+    window.callClaudeJson = callClaudeJson;
+
+    // === PDF Parse ===
+    async function extractPdfText(buffer) {
+      const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.mjs';
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const tc = await page.getTextContent();
+        text += tc.items.map(item => item.str || '').join(' ') + '\n';
+      }
+      return text.trim();
+    }
+
+    // === Upload ===
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+    async function handleFile(file) {
+      if (!file.name.toLowerCase().endsWith('.pdf')) { showToast('仅支持 PDF 格式'); return; }
+      if (file.size > 10 * 1024 * 1024) { showToast('文件不能超过 10MB'); return; }
+
+      uploadZone.className = 'upload-zone';
+      uploadZone.innerHTML = '<div class="spinner" style="width:32px;height:32px;margin:0 auto 8px;"></div><div class="text">正在解析简历...</div>';
+
+      try {
+        const buf = await file.arrayBuffer();
+        const rawText = await extractPdfText(buf);
+        if (!rawText || rawText.length < 30) throw new Error('无法提取足够文本，请确保不是纯图片 PDF');
+
+        const system = `你是简历解析专家。从简历原文提取结构化 JSON，只返回 JSON：
+{ "name":"姓名", "education":[{"school":"","degree":"","major":"","year":""}], "experience":[{"company":"","position":"","duration":"","achievements":[""],"technologies":[""]}], "skills":["技能"], "highlights":["亮点"], "projects":[{"name":"","description":"","role":"","achievements":[""],"technologies":[""]}], "summary":"50字内核心画像", "suggestedKeywords":["搜索关键词1","关键词2","关键词3"] }
+suggestedKeywords: 3-5个适合招聘平台搜索的岗位关键词。缺失信息用空数组/空字符串。`;
+
+        resumeProfile = await callClaudeJson(system, `简历原文：\n\n${rawText}`);
+        renderProfile();
+        uploadZone.className = 'upload-zone done';
+        uploadZone.innerHTML = '<div class="icon">✅</div><div class="text">解析完成</div><div class="sub">' + file.name + '</div>';
+        document.getElementById('profileSection').classList.remove('hidden');
+        updateSteps('profile');
+        showToast('简历解析完成！');
+      } catch (err) {
+        uploadZone.className = 'upload-zone error';
+        uploadZone.innerHTML = '<div class="icon">❌</div><div class="text">解析失败</div><div class="sub">' + err.message + '</div>';
+        showToast('解析失败：' + err.message);
+      }
+    }
+
+    // === Render Profile ===
+    function renderProfile() {
+      const p = resumeProfile;
+      document.getElementById('profileSummary').innerHTML = `<strong>${p.name || '候选人'}</strong> — ${p.summary || ''}`;
+      document.getElementById('highlightsTags').innerHTML = (p.highlights || []).map(h => `<span class="tag highlight">${h}</span>`).join('');
+      document.getElementById('skillsTags').innerHTML = (p.skills || []).map(s => `<span class="tag skill">${s}</span>`).join('');
+      document.getElementById('eduInfo').innerHTML = (p.education || []).map(e => `<div>${e.school} · ${e.degree} · ${e.major} · ${e.year}</div>`).join('');
+      document.getElementById('expInfo').innerHTML = (p.experience || []).map(e =>
+        `<div style="margin-bottom:8px"><strong>${e.company}</strong> · ${e.position} · ${e.duration}<br><span style="font-size:12px;color:var(--gray-500)">${(e.achievements||[]).join('；')}</span></div>`
+      ).join('');
+
+      selectedKeywords = [...(p.suggestedKeywords || [])];
+      renderKeywords();
+    }
+
+    function renderKeywords() {
+      document.getElementById('keywordsTags').innerHTML = selectedKeywords.map(k =>
+        `<span class="tag keyword selected" onclick="toggleKeyword('${k}')">${k} <span class="remove">✕</span></span>`
+      ).join('');
+    }
+    window.toggleKeyword = function(kw) {
+      selectedKeywords = selectedKeywords.filter(k => k !== kw);
+      renderKeywords();
+    };
+    window.addCustomKeyword = function() {
+      const input = document.getElementById('customKeyword');
+      const kw = input.value.trim();
+      if (kw && !selectedKeywords.includes(kw)) {
+        selectedKeywords.push(kw);
+        renderKeywords();
+        input.value = '';
+      }
+    };
+
+    // === Step 3: Jobs ===
+    window.goToStep3 = function() {
+      if (selectedKeywords.length === 0) { showToast('请至少选择一个关键词'); return; }
+      document.getElementById('profileSection').classList.add('hidden');
+      document.getElementById('jobsSection').classList.remove('hidden');
+      updateSteps('jobs');
+    };
+
+    window.parseJobText = async function() {
+      const text = document.getElementById('jobPasteInput').value.trim();
+      if (!text) { showToast('请粘贴职位信息'); return; }
+
+      const statusEl = document.getElementById('parseStatus');
+      statusEl.textContent = '🤖 AI 正在解析...';
+      statusEl.style.color = 'var(--primary)';
+
+      try {
+        const system = `你是一个职位信息提取专家。从用户粘贴的文本中提取所有职位信息。
+文本可能来自 BOSS 直聘搜索结果页（批量复制）、单个职位详情页、或者其他招聘网站。
+请仔细识别每一个独立的职位，返回 JSON 数组。只返回 JSON：
+[{ "title":"职位名称", "company":"公司名称", "salary":"薪资范围", "location":"工作地点", "experience":"经验要求", "education":"学历要求", "description":"职位描述/要求摘要（100字内）", "requirements":["关键技能要求1","要求2"], "benefits":["福利1"] }]
+注意：
+- 如果文本中包含多个职位，全部提取出来
+- 如果是搜索结果列表，每个条目都是一个职位
+- 字段缺失用空字符串或空数组
+- description 简要概括核心要求即可`;
+        const jobs = await callClaudeJson(system, `以下是用户从招聘网站复制的文本，请提取所有职位信息：\n\n${text}`);
+        const arr = Array.isArray(jobs) ? jobs : [jobs];
+        let added = 0;
+        arr.forEach(j => {
+          if (j.title) {
+            jobList.push({ ...j, id: 'job-' + Date.now() + '-' + Math.random().toString(36).slice(2,6) });
+            added++;
+          }
+        });
+        renderJobList();
+        document.getElementById('jobPasteInput').value = '';
+        statusEl.textContent = `✅ 成功提取 ${added} 个职位`;
+        statusEl.style.color = 'var(--success)';
+        showToast(`已添加 ${added} 个职位`);
+      } catch (err) {
+        statusEl.textContent = `❌ ${err.message}`;
+        statusEl.style.color = 'var(--danger)';
+        showToast('解析失败：' + err.message);
+      }
+    };
+
+    window.addJobManually = function() {
+      const text = document.getElementById('jobPasteInput').value.trim();
+      if (!text) { showToast('请在文本框中输入职位信息'); return; }
+      jobList.push({
+        id: 'job-' + Date.now(),
+        title: text.split('\n')[0].substring(0, 50),
+        company: '', salary: '', location: '', experience: '', education: '',
+        description: text, requirements: [], benefits: [],
+      });
+      renderJobList();
+      document.getElementById('jobPasteInput').value = '';
+    };
+
+    function renderJobList() {
+      const card = document.getElementById('jobListCard');
+      if (jobList.length === 0) { card.classList.add('hidden'); return; }
+      card.classList.remove('hidden');
+      document.getElementById('jobCount').textContent = jobList.length;
+      document.getElementById('jobList').innerHTML = jobList.map((j, i) => {
+        const meta = [j.company, j.salary, j.location, j.experience, j.education].filter(Boolean).join(' · ');
+        const desc = j.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${j.description.substring(0,80)}</div>` : '';
+        return `<div class="job-item">
+          <div class="ji-head">
+            <div style="flex:1;min-width:0;">
+              <div class="ji-title">${j.title}</div>
+              <div class="ji-company">${meta}</div>
+              ${desc}
+            </div>
+            <span class="ji-remove" onclick="removeJob(${i})">×</span>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('startAnalysisBtn').disabled = jobList.length === 0;
+    }
+    window.removeJob = function(i) { jobList.splice(i, 1); renderJobList(); };
+    window.clearAllJobs = function() { jobList = []; renderJobList(); showToast('已清空所有职位'); };
+
+    // === Analysis ===
+    window.startAnalysis = async function() {
+      if (jobList.length === 0) return;
+      document.getElementById('jobsSection').classList.add('hidden');
+      document.getElementById('loadingSection').classList.remove('hidden');
+      updateSteps('results');
+
+      analysisResults = [];
+      for (let i = 0; i < jobList.length; i++) {
+        document.getElementById('loadingText').textContent = `AI 正在分析第 ${i+1}/${jobList.length} 个职位...`;
+        try {
+          const result = await analyzeOneJob(resumeProfile, jobList[i]);
+          analysisResults.push(result);
+        } catch (err) {
+          console.error('Analysis failed for', jobList[i].title, err);
+          analysisResults.push({ jobId: jobList[i].id, overallScore: 0, interviewProbability: 0, error: err.message });
+        }
+      }
+
+      analysisResults.sort((a, b) => (b.overallScore || 0) - (a.overallScore || 0));
+      document.getElementById('loadingSection').classList.add('hidden');
+      document.getElementById('resultsSection').classList.remove('hidden');
+      renderResults();
+    };
+
+    async function analyzeOneJob(resume, job) {
+      const system = `你是资深求职顾问。分析候选人与职位的匹配度。只返回 JSON：
+{
+  "overallScore": 0-100综合匹配分,
+  "dimensions": [
+    {"name":"技能匹配度","score":0-100,"weight":40,"detail":"说明"},
+    {"name":"经验匹配度","score":0-100,"weight":30,"detail":"说明"},
+    {"name":"学历匹配度","score":0-100,"weight":15,"detail":"说明"},
+    {"name":"综合素质","score":0-100,"weight":15,"detail":"说明"}
+  ],
+  "interviewProbability": 0-100进面概率,
+  "probabilityRange": {"low":最低,"high":最高},
+  "strengths": ["优势1","优势2"],
+  "weaknesses": ["短板1"],
+  "suggestions": ["建议1"],
+  "companyHiringInsight": "公司招聘偏好分析",
+  "detailedReasoning": "200字内综合分析"
+}`;
+
+      const user = `## 候选人
+姓名：${resume.name}
+学历：${(resume.education||[]).map(e=>e.school+' '+e.degree+' '+e.major).join('、')}
+经验：${(resume.experience||[]).map(e=>e.company+' '+e.position+' '+e.duration).join('、')}
+技能：${(resume.skills||[]).join('、')}
+亮点：${(resume.highlights||[]).join('、')}
+画像：${resume.summary}
+
+## 目标职位
+职位：${job.title}
+公司：${job.company}（${job.location}）
+薪资：${job.salary}
+经验：${job.experience}  学历：${job.education}
+描述：${job.description}
+要求：${(job.requirements||[]).join('；')}`;
+
+      const r = await callClaudeJson(system, user);
+      r.jobId = job.id;
+      return r;
+    }
+
+    // === Render Results ===
+    function scoreClass(s) { return s >= 80 ? 'high' : s >= 60 ? 'mid' : s >= 40 ? 'low' : 'bad'; }
+    function scoreLabel(s) { return s >= 80 ? '🎉 高度匹配' : s >= 60 ? '👍 较为匹配' : s >= 40 ? '⚠️ 部分匹配' : '❌ 匹配度低'; }
+
+    function renderResults() {
+      const list = document.getElementById('resultsList');
+      list.innerHTML = analysisResults.map((r, i) => {
+        const job = jobList.find(j => j.id === r.jobId) || {};
+        const cls = scoreClass(r.overallScore || 0);
+        return `<div class="job-card ${i === selectedJobIdx ? 'selected' : ''}" onclick="selectJob(${i})">
+          <span class="score-badge score-${cls}">${r.overallScore || 0}分</span>
+          <div class="title">${job.title || '未知职位'}</div>
+          <div class="company">${[job.company, job.salary, job.location].filter(Boolean).join(' · ')}</div>
+          <div class="meta">${job.experience || ''} ${job.education || ''}</div>
+          <div class="prob-bar"><div class="prob-fill ${cls}" style="width:${r.interviewProbability||0}%"></div></div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:4px;">进面概率 ${r.interviewProbability || 0}%</div>
+        </div>`;
+      }).join('');
+      renderAnalysis(selectedJobIdx);
+    }
+
+    window.selectJob = function(i) {
+      selectedJobIdx = i;
+      document.querySelectorAll('.job-card').forEach((c, ci) => c.classList.toggle('selected', ci === i));
+      renderAnalysis(i);
+    };
+
+    function renderAnalysis(i) {
+      const r = analysisResults[i];
+      const job = jobList.find(j => j.id === r?.jobId) || {};
+      const panel = document.getElementById('analysisPanel');
+
+      if (!r || r.error) {
+        panel.innerHTML = `<div class="card"><p style="color:var(--gray-400);text-align:center;padding:40px;">${r?.error || '暂无分析数据'}</p></div>`;
+        return;
+      }
+
+      const circ = 2 * Math.PI * 54;
+      const offset = circ - ((r.overallScore || 0) / 100) * circ;
+      const cls = scoreClass(r.overallScore || 0);
+      const colors = { high: '#10b981', mid: '#3b82f6', low: '#f59e0b', bad: '#ef4444' };
+
+      panel.innerHTML = `
+        <div class="card analysis-panel">
+          <h3>${job.title || '职位分析'}</h3>
+          <p style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">${[job.company, job.salary, job.location].filter(Boolean).join(' · ')}</p>
+
+          <div class="flex-score" style="margin-bottom:24px;">
+            <div class="ring-container">
+              <svg viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+                <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                <circle cx="60" cy="60" r="54" fill="none" stroke="${colors[cls]}" stroke-width="8"
+                  stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+                  style="transition:stroke-dashoffset 1s ease"/>
+              </svg>
+              <div class="score-text"><span class="score-num">${r.overallScore}</span><span class="score-label">综合匹配</span></div>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:6px;">${scoreLabel(r.overallScore)}</div>
+              <p style="font-size:13px;color:var(--gray-600);line-height:1.7;">${r.detailedReasoning || ''}</p>
+            </div>
+          </div>
+
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;">📊 维度评分</h4>
+          ${(r.dimensions || []).map(d => {
+            const dc = scoreClass(d.score);
+            return `<div class="dimension">
+              <div class="label"><span>${d.name} <span style="color:var(--gray-400);font-size:11px;">(${d.weight}%)</span></span><span style="font-weight:600">${d.score}</span></div>
+              <div class="bar"><div class="fill" style="width:${d.score}%;background:${colors[dc]}"></div></div>
+              <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">${d.detail || ''}</div>
+            </div>`;
+          }).join('')}
+
+          <div class="insight insight-purple" style="margin-top:20px;">
+            <h4>📊 进面概率评估</h4>
+            <div style="display:flex;align-items:baseline;gap:8px;margin:8px 0;">
+              <span style="font-size:36px;font-weight:700;color:#7c3aed;">${r.interviewProbability}%</span>
+              <span style="font-size:13px;color:var(--gray-500);">范围 ${r.probabilityRange?.low||0}%-${r.probabilityRange?.high||0}%</span>
+            </div>
+            <div class="prob-bar" style="height:10px;margin-bottom:8px;">
+              <div class="prob-fill ${cls}" style="width:${r.interviewProbability||0}%"></div>
+            </div>
+            <p style="font-size:12px;color:#6d28d9;">${r.companyHiringInsight || ''}</p>
+          </div>
+
+          <div class="grid-3" style="margin-top:16px;">
+            <div class="insight insight-green"><h4>✅ 你的优势</h4><ul>${(r.strengths||[]).map(s=>`<li>${s}</li>`).join('')}</ul></div>
+            <div class="insight insight-yellow"><h4>⚠️ 可能短板</h4><ul>${(r.weaknesses||[]).map(w=>`<li>${w}</li>`).join('')}</ul></div>
+            <div class="insight insight-blue"><h4>💡 提升建议</h4><ul>${(r.suggestions||[]).map(s=>`<li>${s}</li>`).join('')}</ul></div>
+          </div>
+        </div>`;
+    }
+  </script>
+</body>
+</html>

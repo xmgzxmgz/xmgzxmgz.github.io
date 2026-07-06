@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Disallow: /posts/day-*
+Disallow: /posts/loc-*
+Disallow: /posts/personal-*
+Disallow: /posts/travel-expenses*
+Disallow: /posts/rockchip-*
+Disallow: /posts/ielts-*
+Disallow: /posts/huawei-*
+Disallow: /posts/teaching-*
+Disallow: /posts/weak-current*
+Disallow: /posts/phone-*
+Disallow: /posts/photo-habits*
+Disallow: /posts/video-stories*
+Disallow: /posts/insta360-*
+Disallow: /posts/innovation-*
+Disallow: /posts/campus-*
+Disallow: /posts/nvidia-*
+Disallow: /posts/pcb-*
+Disallow: /posts/esp32-*
+Disallow: /posts/cat-story*
+Disallow: /posts/fuzhou-life*
+Disallow: /posts/hainan-*
+
+Sitemap: https://xmgzxmgz.github.io/sitemap.xml
