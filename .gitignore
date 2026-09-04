@@ -6,3 +6,5 @@ Thumbs.db
 .idea/
 .vscode/
 node_modules/
+# 内部工作数据，禁止发布到公开 Pages 仓库
+.workbuddy/
