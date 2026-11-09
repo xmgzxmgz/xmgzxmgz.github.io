@@ -1,235 +1,436 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>全部项目 - 贵志的猫</title>
-  <meta name="description" content="XMGZ 全部开源项目一览">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
-    :root {
-      --bg: #f8f6f1;
-      --bg2: #ffffff;
-      --bg3: #f0ece4;
-      --text: #2c2c2c;
-      --text-secondary: #6b6357;
-      --text-muted: #a09888;
-      --accent: #c8553d;
-      --accent2: #5a7d6a;
-      --accent3: #4a6fa5;
-      --sakura: #f4b4c6;
-      --sakura-light: rgba(244,180,198,0.15);
-      --border: #e8e2d8;
-      --shadow: 0 2px 12px rgba(44,44,44,0.06);
-      --shadow-hover: 0 8px 30px rgba(44,44,44,0.1);
-      --radius: 16px;
-      --serif: 'Noto Serif SC', 'Songti SC', serif;
-      --sans: 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.8;
-      -webkit-font-smoothing: antialiased;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 20% 50%, rgba(244,180,198,0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(90,125,106,0.04) 0%, transparent 40%);
-      pointer-events: none;
-      z-index: -1;
-    }
-    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
-    a:hover { color: var(--accent2); }
-    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全部项目 — 贵志的猫</title>
+<meta name="description" content="贵志的猫（xmgzxmgz）的开源项目总览：AI 应用、开发工具、数据可视化、桌面端与游戏，涵盖 Python、TypeScript、Rust、Swift、Kotlin。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/projects/">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 
-    /* Hero */
-    .page-hero {
-      padding: 100px 24px 48px;
-      text-align: center;
-      background: linear-gradient(180deg, #f8f6f1 0%, #efe9dd 100%);
-      border-bottom: 1px solid var(--border);
-    }
-    .page-hero h1 {
-      font-family: var(--serif);
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-    .page-hero p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 560px;
-      margin: 0 auto 24px;
-      line-height: 1.8;
-    }
-    .page-nav {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-    }
-    .page-nav a {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: 0.2s;
-    }
-    .page-nav a:hover { color: var(--accent); }
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="全部项目 — 贵志的猫">
+<meta property="og:description" content="AI 应用、开发工具、数据可视化、桌面端与游戏，共 15 个开源项目。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/projects/">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
 
-    /* Project rows */
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      padding: 48px 0 80px;
-    }
-    .project-row {
-      display: grid;
-      grid-template-columns: 52px 1fr auto;
-      gap: 20px;
-      align-items: center;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      transition: all 0.3s ease;
-    }
-    .project-row:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
-      border-color: var(--accent);
-    }
-    .project-row-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      flex-shrink: 0;
-    }
-    .project-row-info h3 {
-      font-family: var(--serif);
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .project-row-info p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-    .project-row-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .ptag {
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-      background: var(--bg3);
-      color: var(--text-secondary);
-    }
-    .ptag-accent { background: var(--sakura-light); color: var(--accent); }
-    .project-row-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .project-row-actions a {
-      display: inline-block;
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 500;
-      text-align: center;
-      transition: all 0.25s;
-      letter-spacing: 0.5px;
-    }
-    .btn-gh {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-    }
-    .btn-gh:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-play {
-      background: var(--accent2);
-      color: #fff;
-      border: none;
-    }
-    .btn-play:hover { background: #4e6d5e; color: #fff; }
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+})();
+</script>
 
-    @media (max-width: 768px) {
-      .page-hero h1 { font-size: 28px; }
-      .project-row { grid-template-columns: 1fr; gap: 12px; }
-      .project-row-icon { display: none; }
-      .project-row-actions { flex-direction: row; }
-    }
-  </style>
+<link rel="stylesheet" href="../assets/base.css">
+
+<style>
+.page-head {
+  padding: 56px 0 34px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+.page-head h1 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+}
+.page-head p {
+  font-size: 14px;
+  color: var(--ink-2);
+  max-width: 560px;
+  margin: 0 auto 22px;
+}
+.page-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.page-nav a {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  transition: all .2s ease;
+}
+.page-nav a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.list-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 40px 0 72px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 18px;
+  align-items: start;
+  padding: 20px 22px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.row:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+.row .ico {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+.row h2 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+.row .desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+}
+.row .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.row .acts {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+  min-width: 96px;
+}
+.row .acts a {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-2);
+  text-align: center;
+  transition: all .2s ease;
+  white-space: nowrap;
+}
+.row .acts a:hover { border-color: var(--accent); color: var(--accent); }
+.row .acts a.is-live {
+  background: var(--moss);
+  border-color: var(--moss);
+  color: #fff;
+}
+[data-theme="dark"] .row .acts a.is-live { color: #14130f; }
+.row .acts a.is-live:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .page-head { padding: 36px 0 26px; }
+  .page-head h1 { font-size: 26px; letter-spacing: 2px; }
+  .row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 18px;
+  }
+  .row .ico { display: none; }
+  .row .acts { flex-direction: row; flex-wrap: wrap; }
+  .row .acts a { flex: 1 1 auto; }
+}
+</style>
 </head>
 <body>
 
-  <section class="page-hero">
-    <h1>全部项目</h1>
-    <p>涵盖 AI、全栈开发、游戏、DevOps、移动端等多个技术领域</p>
-    <div class="page-nav">
-      <a href="/">返回主页</a>
-      <a href="documentation.html">文档中心</a>
-      <a href="https://github.com/xmgzxmgz?tab=repositories" target="_blank">GitHub 全部仓库</a>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work" class="is-active">项目</a>
+      <a href="../index.html#writing">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="wrap">
+      <h1>全部项目</h1>
+      <p>AI 应用、开发工具、数据可视化、桌面端与游戏，共 15 个项目。带「在线」标记的可以直接在浏览器里跑起来。</p>
+      <nav class="page-nav" aria-label="页面导航">
+        <a href="../index.html">← 返回主页</a>
+        <a href="documentation.html">文档中心</a>
+        <a href="https://github.com/xmgzxmgz?tab=repositories" target="_blank" rel="noopener">GitHub 全部仓库</a>
+      </nav>
     </div>
   </section>
 
-  <div class="container">
-    <div class="projects-list">
+  <div class="wrap">
+    <div class="list-projects">
 
-      
-        <div class="project-row-actions">
-          <a href="https://github.com/xmgzxmgz/Flux" target="_blank" class="btn-gh">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/Flux#readme" target="_blank" class="btn-gh">文档</a>
-          <a href="flux/" class="btn-play">Live Demo</a>
+      <div class="row">
+        <div class="ico" aria-hidden="true">🦞</div>
+        <div>
+          <h2>OpenClaw Console</h2>
+          <p class="desc">本地 AI 助手控制面板。多渠道消息接入、实时状态监控、暗色模式，支持 PWA 安装到桌面。</p>
+          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">PWA</span><span class="tag">WebSocket</span><span class="tag">v2.0</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/openclaw-console" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/xmgzxmgz/openclaw-console#readme" target="_blank" rel="noopener">文档</a>
         </div>
       </div>
 
-      
-        <div class="project-row-actions">
+      <div class="row">
+        <div class="ico" aria-hidden="true">🔀</div>
+        <div>
+          <h2>WorkBuddy Account Hub</h2>
+          <p class="desc">多账号一键切换、积分与用量可视化。Rust + Tauri 跨平台桌面端，Windows / macOS 通用。</p>
+          <div class="tags"><span class="tag tag--accent">Rust</span><span class="tag">Tauri</span><span class="tag tag--live">⭐ 27</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/workbuddy-account-hub" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/xmgzxmgz/workbuddy-account-hub#readme" target="_blank" rel="noopener">文档</a>
+        </div>
       </div>
 
-      <div class="project-row">
-        <div class="project-row-icon" style="background:linear-gradient(135deg,#27ae60,#2ecc71);">🏘️</div>
-        <div class="project-row-info">
-          <h3>HQC K-Means 分析</h3>
-          <p>基于 K-Means 聚类算法的住房与就业数据分析看板，交互式地图和图表展示聚类结果。</p>
-          <div class="project-row-tags">
-            <span class="ptag ptag-accent">TypeScript</span>
-            <span class="ptag">React</span>
-            <span class="ptag">K-Means</span>
-            <span class="ptag">Leaflet</span>
-          </div>
+      <div class="row">
+        <div class="ico" aria-hidden="true">🧹</div>
+        <div>
+          <h2>Mac 清风 · MacSweeper</h2>
+          <p class="desc">智能 Mac 磁盘清理工具，扫描大文件与缓存，给出可回滚的安全删除建议。命令行与图形界面双形态。</p>
+          <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">CLI + GUI</span></div>
         </div>
-        <div class="project-row-actions">
-          <a href="https://github.com/xmgzxmgz/hqc_kmeans" target="_blank" class="btn-gh">GitHub</a>
-          <a href="hqc-kmeans/" class="btn-play">Live Demo</a>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/MacSweeper" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/xmgzxmgz/MacSweeper#readme" target="_blank" rel="noopener">文档</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">📚</div>
+        <div>
+          <h2>ruankao-cli</h2>
+          <p class="desc">软考高级「信息系统项目管理师」终端刷题工具，内置离线题库，装好后 <code>rk</code> 一条命令即开即用。</p>
+          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">CLI</span><span class="tag">离线题库</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/ruankao-cli" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/xmgzxmgz/ruankao-cli#readme" target="_blank" rel="noopener">文档</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🎮</div>
+        <div>
+          <h2>TETRIS-99</h2>
+          <p class="desc">网页版俄罗斯方块 99，AI 对战、道具系统、多种游戏模式。纯 Canvas 实现，打开即玩。</p>
+          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">Canvas</span><span class="tag tag--live">在线试玩</span></div>
+        </div>
+        <div class="acts">
+          <a href="tetris.html" class="is-live">开始游戏</a>
+          <a href="https://github.com/xmgzxmgz/TETRIS-99" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🎯</div>
+        <div>
+          <h2>AI 求职助手</h2>
+          <p class="desc">上传简历 PDF，AI 提取经历亮点并与目标职位比对，评估进面概率。Claude API 驱动。</p>
+          <div class="tags"><span class="tag tag--accent">Claude API</span><span class="tag">AI</span><span class="tag tag--live">在线使用</span></div>
+        </div>
+        <div class="acts">
+          <a href="job-assistant.html" class="is-live">打开应用</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🏘️</div>
+        <div>
+          <h2>HQC K-Means 分析</h2>
+          <p class="desc">K-Means 聚类看板，在地图上交互式呈现住房质量与就业数据的空间分布。</p>
+          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">Leaflet</span><span class="tag tag--live">在线演示</span></div>
+        </div>
+        <div class="acts">
+          <a href="hqc-kmeans/" class="is-live">在线演示</a>
+          <a href="https://github.com/xmgzxmgz/hqc_kmeans" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">📦</div>
+        <div>
+          <h2>Dependency Analyzer</h2>
+          <p class="desc">项目依赖关系分析，把 package.json 的相互引用画成力导向图，快速发现循环依赖与高危包。</p>
+          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">Graph</span><span class="tag tag--live">在线演示</span></div>
+        </div>
+        <div class="acts">
+          <a href="dependency-analyzer/" class="is-live">在线演示</a>
+          <a href="https://github.com/xmgzxmgz/Dependency-Analyzer" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">📈</div>
+        <div>
+          <h2>Flux</h2>
+          <p class="desc">旅行数据可视化工具，用交互式图表展示旅行轨迹、里程与统计数据。</p>
+          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">Vue</span><span class="tag">ECharts</span><span class="tag tag--live">在线演示</span></div>
+        </div>
+        <div class="acts">
+          <a href="flux/" class="is-live">在线演示</a>
+          <a href="https://github.com/xmgzxmgz/Flux" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🧠</div>
+        <div>
+          <h2>Cognito</h2>
+          <p class="desc">基于 RAG 的个人知识库系统，支持文档上传、向量检索与 AI 问答。</p>
+          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">RAG</span><span class="tag">Vector DB</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/Cognito" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/xmgzxmgz/Cognito#readme" target="_blank" rel="noopener">文档</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🔍</div>
+        <div>
+          <h2>SchemaLinter</h2>
+          <p class="desc">数据库模式变更影响分析，支持 Python、Java 与主流 ORM，可接入 CI 做发布前拦截。</p>
+          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">SQL</span><span class="tag">ORM</span><span class="tag">CI/CD</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/SchemaLinter" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://pypi.org/project/schema-linter/" target="_blank" rel="noopener">PyPI</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">⭐</div>
+        <div>
+          <h2>StarClassify-Vis</h2>
+          <p class="desc">恒星分类可视化，把天文观测数据映射成可交互的图表，一个偏数据科学的练手项目。</p>
+          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">D3.js</span><span class="tag">数据科学</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/StarClassify-Vis" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🗺️</div>
+        <div>
+          <h2>travelmap</h2>
+          <p class="desc">智能旅行路线优化器，基于地图可视化规划最优行程顺序。</p>
+          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">Maps API</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/travelmap" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🔐</div>
+        <div>
+          <h2>LeaveWhite</h2>
+          <p class="desc">安全加密日记应用，全部内容本地加密存储，不上传任何服务器。</p>
+          <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">CryptoKit</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/LeaveWhite" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ico" aria-hidden="true">🚗</div>
+        <div>
+          <h2>parking_your_car</h2>
+          <p class="desc">Android 停车小游戏，Kotlin 原生开发，自写物理引擎与关卡设计。</p>
+          <div class="tags"><span class="tag tag--accent">Kotlin</span><span class="tag">Android</span><span class="tag">游戏开发</span></div>
+        </div>
+        <div class="acts">
+          <a href="https://github.com/xmgzxmgz/parking_your_car" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
 
     </div>
   </div>
 
-  <footer>
-    <span style="font-size:24px;display:block;margin-bottom:8px;">🐱</span>
-    <p>&copy; 2026 贵志的猫</p>
-  </footer>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="sigil">🐱</div>
+    <div class="meta">
+      <span>© 2026 贵志的猫</span>
+      <span class="sep">·</span>
+      <a href="../index.html">主页</a>
+      <span class="sep">·</span>
+      <a href="documentation.html">文档中心</a>
+      <span class="sep">·</span>
+      <a href="https://github.com/xmgzxmgz" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+
+  var header = document.querySelector('.site-header');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
 </body>
 </html>

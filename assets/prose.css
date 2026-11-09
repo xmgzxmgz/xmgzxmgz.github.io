@@ -1,0 +1,348 @@
+/* ==========================================================
+   xmgzxmgz.github.io — prose.css
+   文章正文排版。只被 /posts/*.html 引用。
+   ========================================================== */
+
+/* ---------- 阅读进度条 ---------- */
+.progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--sakura));
+  z-index: 120;
+  transition: width .1s linear;
+}
+
+/* ---------- 文章容器 ---------- */
+.article {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+  padding: 44px var(--gutter) 0;
+  font-size: 15px;
+  line-height: 2;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: .4px;
+  margin-bottom: 36px;
+  transition: color .2s ease, transform .2s ease;
+}
+.back:hover { color: var(--accent); transform: translateX(-3px); }
+
+/* ---------- 标题区 ---------- */
+.article h1 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+  letter-spacing: .3px;
+}
+.meta .date { font-family: var(--mono); font-size: 11.5px; }
+.meta .sep { opacity: .4; }
+
+/* ---------- 正文元素 ---------- */
+.article h2 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: .8px;
+  margin: 46px 0 14px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+.article h3 {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 30px 0 10px;
+  letter-spacing: .5px;
+}
+
+.article p { margin-bottom: 16px; }
+.article p a { border-bottom: 1px solid var(--accent-wash); }
+.article p a:hover { border-bottom-color: var(--accent); }
+
+.article ul,
+.article ol { padding-left: 22px; margin-bottom: 18px; }
+.article li { margin-bottom: 7px; }
+.article li::marker { color: var(--ink-3); }
+.article strong { font-weight: 700; color: var(--ink); }
+
+.article blockquote {
+  position: relative;
+  margin: 24px 0;
+  padding: 18px 22px 18px 24px;
+  background: var(--sakura-wash);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-left: 3px solid var(--sakura);
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.95;
+}
+.article blockquote p:last-child { margin-bottom: 0; }
+
+/* 行内代码 */
+.article code {
+  font-family: var(--mono);
+  font-size: .86em;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  color: var(--accent-ink);
+  word-break: break-word;
+}
+
+/* 代码块 */
+.article pre {
+  margin: 20px 0;
+  padding: 20px 22px;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  background: #22201b;
+  border: 1px solid #34302a;
+  font-size: 12.5px;
+  line-height: 1.75;
+  -webkit-overflow-scrolling: touch;
+}
+[data-theme="dark"] .article pre {
+  background: #100f0c;
+  border-color: #2a261f;
+}
+.article pre code {
+  background: transparent;
+  padding: 0;
+  color: #ddd6c9;
+  font-size: inherit;
+  word-break: normal;
+}
+
+/* ---------- 表格 ---------- */
+.article table,
+.article .tbl {
+  width: 100%;
+  margin: 22px 0;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.article th,
+.article .tbl th {
+  text-align: left;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.article td,
+.article .tbl td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  vertical-align: top;
+}
+.article tr:last-child td { border-bottom: none; }
+.article tbody tr:hover td { background: var(--accent-wash); }
+
+/* ---------- 卡片网格（图像处理页用） ---------- */
+.card-grid,
+.article .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+.card-grid .card,
+.article .grid .card {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.card-grid .card:hover,
+.article .grid .card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.card-emoji { font-size: 20px; line-height: 1.4; margin-bottom: 6px; }
+.card-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: .5px;
+}
+.card-desc { font-size: 12px; line-height: 1.7; color: var(--ink-3); }
+
+/* ---------- ASCII 架构图 ---------- */
+.arch-box {
+  margin: 22px 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  /* 关键：保留等宽对齐，否则整张图会被压成一行 */
+  white-space: pre;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  tab-size: 2;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---------- 分层架构图 ---------- */
+.layers { margin: 24px 0; }
+.layer {
+  padding: 15px 18px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.layer--core {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.layer-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.layer-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+}
+.layer-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .5px;
+  color: var(--ink-3);
+}
+.layer-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.layer-items span {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.layer--core .layer-items span { background: var(--surface); }
+.layer-arrow {
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--rule-strong);
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ---------- 文末上下篇 ---------- */
+.postnav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 56px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+.postnav a {
+  display: block;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.postnav a:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.postnav .dir {
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.postnav .title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.postnav .next { text-align: right; }
+.postnav .empty { visibility: hidden; }
+
+/* ---------- 文末页脚 ---------- */
+.article-foot {
+  margin-top: 32px;
+  padding: 24px 0 20px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  letter-spacing: .5px;
+}
+.article-foot a { color: var(--ink-3); }
+.article-foot a:hover { color: var(--accent); }
+.article-foot .sigil {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--ink-2);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ---------- 小屏 ---------- */
+@media (max-width: 720px) {
+  .article { padding-top: 28px; font-size: 14.5px; line-height: 1.95; }
+  .article h1 { font-size: 23px; }
+  .article h2 { font-size: 18px; margin-top: 38px; }
+  .article pre { padding: 16px; font-size: 11.5px; border-radius: 8px; }
+  .arch-box { font-size: 10px; padding: 14px; }
+  .card-grid, .article .grid { grid-template-columns: 1fr 1fr; }
+  .postnav { grid-template-columns: 1fr; }
+  .postnav .next { text-align: left; }
+}

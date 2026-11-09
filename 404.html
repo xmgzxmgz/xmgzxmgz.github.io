@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>页面走丢了 — 贵志的猫</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+})();
+</script>
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+  .lost {
+    min-height: calc(100vh - var(--header-h));
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 60px 24px;
+  }
+  .lost .cat {
+    font-size: 62px;
+    line-height: 1;
+    margin-bottom: 22px;
+    filter: grayscale(.25);
+  }
+  .lost .code {
+    font-family: var(--serif);
+    font-size: 68px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 6px;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .lost h1 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+  .lost p {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin-bottom: 30px;
+    max-width: 380px;
+    line-height: 1.9;
+  }
+  .lost .acts {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 600px) {
+    .lost .code { font-size: 48px; }
+    .lost .cat { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/#work">项目</a>
+      <a href="/#writing">文章</a>
+      <a href="/#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main class="lost">
+  <div>
+    <div class="cat" aria-hidden="true">🐱</div>
+    <div class="code">404</div>
+    <h1>这条路没走通</h1>
+    <p>你要找的页面不存在，或者已经被搬走了。<br>不如回首页看看别的。</p>
+    <div class="acts">
+      <a class="btn btn--primary" href="/">← 回首页</a>
+      <a class="btn btn--ghost" href="/projects/">看看项目</a>
+      <a class="btn btn--ghost" href="/#writing">读点文章</a>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

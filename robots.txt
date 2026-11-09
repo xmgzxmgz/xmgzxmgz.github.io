@@ -1,25 +1,22 @@
+# robots.txt — xmgzxmgz.github.io
+#
+# 全站允许抓取。下面保留的 Disallow 规则针对不希望被搜索引擎收录的
+# 个人向文章前缀（目前仓库里没有这些文件，留作以后补文时的保险），
+# 不要随意删除，否则新写的生活/私人题材会被直接索引。
+
 User-agent: *
 Allow: /
+
+# 私人题材前缀（保底）
 Disallow: /posts/day-*
 Disallow: /posts/loc-*
 Disallow: /posts/personal-*
 Disallow: /posts/travel-expenses*
-Disallow: /posts/rockchip-*
-Disallow: /posts/ielts-*
-Disallow: /posts/huawei-*
-Disallow: /posts/teaching-*
-Disallow: /posts/weak-current*
-Disallow: /posts/phone-*
-Disallow: /posts/photo-habits*
-Disallow: /posts/video-stories*
-Disallow: /posts/insta360-*
-Disallow: /posts/innovation-*
-Disallow: /posts/campus-*
-Disallow: /posts/nvidia-*
-Disallow: /posts/pcb-*
-Disallow: /posts/esp32-*
 Disallow: /posts/cat-story*
 Disallow: /posts/fuzhou-life*
-Disallow: /posts/hainan-*
+Disallow: /posts/teaching-*
+
+# 构建产物里的 sourcemap，不需要被索引
+Disallow: /*.map$
 
 Sitemap: https://xmgzxmgz.github.io/sitemap.xml

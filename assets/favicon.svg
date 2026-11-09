@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="贵志的猫">
+  <rect width="64" height="64" rx="14" fill="#b8483a"/>
+  <path d="M18.5 28.5 L16.5 12.5 L30 21.5 Z" fill="#fffdf9"/>
+  <path d="M45.5 28.5 L47.5 12.5 L34 21.5 Z" fill="#fffdf9"/>
+  <circle cx="32" cy="38" r="16.5" fill="#fffdf9"/>
+  <circle cx="25.5" cy="35.5" r="2.3" fill="#b8483a"/>
+  <circle cx="38.5" cy="35.5" r="2.3" fill="#b8483a"/>
+  <path d="M32 42.5 L29.4 45.2 A2.6 2.6 0 0 0 34.6 45.2 Z" fill="#b8483a"/>
+  <path d="M17 40 L9 38.5 M17 45 L9.5 46" stroke="#fffdf9" stroke-width="1.6" stroke-linecap="round" opacity=".85"/>
+  <path d="M47 40 L55 38.5 M47 45 L54.5 46" stroke="#fffdf9" stroke-width="1.6" stroke-linecap="round" opacity=".85"/>
+</svg>

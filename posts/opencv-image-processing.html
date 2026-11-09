@@ -1,26 +1,108 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Python 图像处理入门：从色彩转换到边缘检测 — 贵志的猫</title>
-<script src="../auth.js"></script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 图像处理入门：从色彩转换到边缘检测 — 贵志的猫</title>
+<meta name="description" content="用 Python + OpenCV 实现色彩空间转换、几何变换、直方图均衡、Canny 边缘检测与中值滤波，6 种经典图像处理操作全部附可运行代码。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/opencv-image-processing.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 
-<style>@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap");:root{--bg:#f8f6f1;--bg2:#fff;--text:#2c2c2c;--muted:#6b6357;--dim:#a09888;--accent:#c8553d;--accent2:#5a7d6a;--border:#e8e2d8;--serif:"Noto Serif SC","Songti SC",serif;--sans:"Noto Sans SC",-apple-system,"PingFang SC",sans-serif}*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:2}.c{max-width:680px;margin:0 auto;padding:48px 24px}.bk{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;margin-bottom:40px;text-decoration:none;letter-spacing:.5px}h1{font-family:var(--serif);font-size:30px;font-weight:700;margin-bottom:12px;letter-spacing:1px}.m{color:var(--dim);font-size:12px;margin-bottom:40px;display:flex;gap:14px;flex-wrap:wrap}.t{padding:3px 10px;border-radius:16px;background:rgba(200,85,61,.08);color:var(--accent);font-size:10px;font-weight:500}h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:40px 0 14px;letter-spacing:.5px}h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:28px 0 10px}p{margin-bottom:14px;font-size:14px;color:var(--text)}code{background:#f0ece4;padding:2px 6px;border-radius:4px;font-family:"SF Mono",monospace;font-size:12px}pre{background:#2c2c2c;color:#e8e2d8;padding:20px;border-radius:12px;overflow-x:auto;margin:14px 0;font-size:12px;line-height:1.7}pre code{background:transparent;padding:0;color:inherit}ul,ol{padding-left:22px;margin-bottom:14px}li{margin-bottom:5px;font-size:14px}bq{border-left:3px solid var(--sakura,#f4b4c6);padding:14px 20px;background:rgba(244,180,198,.06);margin:16px 0;border-radius:0 10px 10px 0;font-size:14px;color:var(--muted);display:block;font-family:var(--serif)}ft{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--dim);font-size:11px;display:block;letter-spacing:.5px}.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.sb{text-align:center;padding:18px;background:var(--bg2);border:1px solid var(--border);border-radius:12px}.sv{font-size:28px;font-weight:800;color:var(--accent)}.sl{font-size:10px;color:var(--dim);margin-top:3px}.exp{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0}.exp-title{font-weight:600;font-size:13px;margin-bottom:8px;color:var(--accent2,#5a7d6a)}.exp-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border)}.exp-row:last-child{border:none}@media(max-width:640px){.sg{grid-template-columns:1fr}h1{font-size:24px}.c{padding:32px 16px}}</style></head><body><div class="c">
-<a href="../index.html" class="bk">← 返回首页</a>
-<h1>🖼️ Python 图像处理入门：从色彩转换到边缘检测</h1>
-<div class="m"><span>2025-10-17</span><span class="t">Python</span><span class="t">OpenCV</span><span class="t">计算机视觉</span></div>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="Python 图像处理入门：从色彩转换到边缘检测">
+<meta property="og:description" content="用 OpenCV 实现 6 种经典图像处理操作，每种都附可运行代码与结果说明。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/opencv-image-processing.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+<meta property="article:published_time" content="2025-10-17">
+<meta property="article:author" content="贵志的猫">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Python 图像处理入门：从色彩转换到边缘检测">
+<meta name="twitter:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
 
-<bq>用 Python + OpenCV 实现 6 种经典图像处理操作，每种都有可视化结果。适合初学者入门。</bq>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Python 图像处理入门：从色彩转换到边缘检测",
+  "description": "用 Python + OpenCV 实现 6 种经典图像处理操作，每种都附可运行代码与结果说明。",
+  "datePublished": "2025-10-17",
+  "dateModified": "2025-10-17",
+  "inLanguage": "zh-CN",
+  "author": { "@type": "Person", "name": "贵志的猫", "url": "https://xmgzxmgz.github.io/" },
+  "mainEntityOfPage": "https://xmgzxmgz.github.io/posts/opencv-image-processing.html",
+  "image": "https://xmgzxmgz.github.io/assets/og-cover.png"
+}
+</script>
 
-<h2>🎯 实验内容</h2>
-<div class="grid">
-<div class="card"><div class="card-emoji">🎨</div><div class="card-title">色彩空间转换</div><div class="card-desc">BGR → RGB → 灰度 → HSV → YUV，理解不同色彩模型</div></div>
-<div class="card"><div class="card-emoji">📐</div><div class="card-title">几何变换</div><div class="card-desc">平移、旋转、缩放、仿射变换</div></div>
-<div class="card"><div class="card-emoji">✨</div><div class="card-title">图像增强</div><div class="card-desc">灰度拉伸、直方图均衡化</div></div>
-<div class="card"><div class="card-emoji">🔍</div><div class="card-title">边缘检测</div><div class="card-desc">Robert 算子、Canny 算子</div></div>
-<div class="card"><div class="card-emoji">🧹</div><div class="card-title">噪声与滤波</div><div class="card-desc">椒盐噪声、均值滤波、中值滤波</div></div>
-<div class="card"><div class="card-emoji">⚡</div><div class="card-title">锐化处理</div><div class="card-desc">Sobel 算子、拉普拉斯算子</div></div>
-</div>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+})();
+</script>
 
-<h2>🎨 色彩空间转换</h2>
-<p>OpenCV 默认使用 BGR 格式，和常见的 RGB 顺序不同。转换到不同色彩空间可以看到图像的不同特征：</p>
-<pre><code>import cv2
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>Python 图像处理入门：从色彩转换到边缘检测</h1>
+
+  <div class="meta">
+    <span class="date">2025-10-17</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">Python</span>
+    <span class="tag">OpenCV</span>
+    <span class="tag">计算机视觉</span>
+    <span class="sep">·</span>
+    <span>约 4 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>用 Python + OpenCV 实现 6 种经典图像处理操作，每种都有可视化结果。适合初学者入门。</p>
+  </blockquote>
+
+  <h2>🎯 实验内容</h2>
+  <div class="grid">
+    <div class="card"><div class="card-emoji">🎨</div><div class="card-title">色彩空间转换</div><div class="card-desc">BGR → RGB → 灰度 → HSV → YUV，理解不同色彩模型</div></div>
+    <div class="card"><div class="card-emoji">📐</div><div class="card-title">几何变换</div><div class="card-desc">平移、旋转、缩放、仿射变换</div></div>
+    <div class="card"><div class="card-emoji">✨</div><div class="card-title">图像增强</div><div class="card-desc">灰度拉伸、直方图均衡化</div></div>
+    <div class="card"><div class="card-emoji">🔍</div><div class="card-title">边缘检测</div><div class="card-desc">Robert 算子、Canny 算子</div></div>
+    <div class="card"><div class="card-emoji">🧹</div><div class="card-title">噪声与滤波</div><div class="card-desc">椒盐噪声、均值滤波、中值滤波</div></div>
+    <div class="card"><div class="card-emoji">⚡</div><div class="card-title">锐化处理</div><div class="card-desc">Sobel 算子、拉普拉斯算子</div></div>
+  </div>
+
+  <h2>🎨 色彩空间转换</h2>
+  <p>OpenCV 默认使用 BGR 格式，和常见的 RGB 顺序不同。转换到不同色彩空间可以看到图像的不同特征：</p>
+  <pre><code>import cv2
 import numpy as np
 
 img = cv2.imread('photo.jpg')
@@ -36,11 +118,11 @@ hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 # BGR → YUV（亮度-色度）
 yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)</code></pre>
-<p>HSV 空间特别有用 — 在 HSV 空间中做颜色筛选比 RGB 容易得多。</p>
+  <p>HSV 空间特别有用 —— 在 HSV 空间中做颜色筛选比 RGB 容易得多。</p>
 
-<h2>📐 仿射变换</h2>
-<p>仿射变换可以实现平移、旋转、缩放和剪切：</p>
-<pre><code># 旋转 45 度
+  <h2>📐 仿射变换</h2>
+  <p>仿射变换可以实现平移、旋转、缩放和剪切：</p>
+  <pre><code># 旋转 45 度
 h, w = img.shape[:2]
 center = (w//2, h//2)
 M = cv2.getRotationMatrix2D(center, 45, 1.0)
@@ -50,9 +132,9 @@ rotated = cv2.warpAffine(img, M, (w, h))
 M = np.float32([[1, 0, 100], [0, 1, 50]])
 translated = cv2.warpAffine(img, M, (w, h))</code></pre>
 
-<h2>🔍 边缘检测</h2>
-<p>Canny 边缘检测是最常用的算法，通过双阈值控制边缘的粗细：</p>
-<pre><code># Canny 边缘检测
+  <h2>🔍 边缘检测</h2>
+  <p>Canny 边缘检测是最常用的算法，通过双阈值控制边缘的粗细：</p>
+  <pre><code># Canny 边缘检测
 edges = cv2.Canny(gray, threshold1=50, threshold2=150)
 
 # Robert 算子（手动实现）
@@ -62,9 +144,9 @@ robert_x = cv2.filter2D(gray, -1, kernel_x)
 robert_y = cv2.filter2D(gray, -1, kernel_y)
 robert = cv2.addWeighted(robert_x, 0.5, robert_y, 0.5, 0)</code></pre>
 
-<h2>🧹 噪声与滤波</h2>
-<p>给图像添加椒盐噪声，然后用不同滤波器去除：</p>
-<pre><code># 添加椒盐噪声
+  <h2>🧹 噪声与滤波</h2>
+  <p>给图像添加椒盐噪声，然后用不同滤波器去除：</p>
+  <pre><code># 添加椒盐噪声
 def add_salt_pepper(img, prob=0.02):
     noisy = img.copy()
     num_salt = int(prob * img.size / 2)
@@ -82,16 +164,65 @@ mean_filtered = cv2.blur(noisy, (5, 5))
 # 中值滤波（对椒盐噪声效果最好）
 median_filtered = cv2.medianBlur(noisy, 5)</code></pre>
 
-<h2>📊 实验结果</h2>
-<p>每种处理都生成了带中文标签的结果图，方便对比。所有代码和结果图已整理到 GitHub 仓库。</p>
+  <h2>📊 实验结果</h2>
+  <p>每种处理都生成了带中文标签的结果图，方便对比。所有代码和结果图已整理到 GitHub 仓库。</p>
 
-<h2>💡 学到的</h2>
-<ul>
-<li>色彩空间的选择会影响后续处理的效果</li>
-<li>中值滤波对椒盐噪声的效果远好于均值滤波</li>
-<li>Canny 的两个阈值需要根据图像调整</li>
-<li>Python + OpenCV 的组合对初学者非常友好</li>
-</ul>
+  <h2>💡 学到的</h2>
+  <ul>
+    <li>色彩空间的选择会影响后续处理的效果</li>
+    <li>中值滤波对椒盐噪声的效果远好于均值滤波</li>
+    <li>Canny 的两个阈值需要根据图像调整</li>
+    <li>Python + OpenCV 的组合对初学者非常友好</li>
+  </ul>
 
-<ft><p>© 2026 贵志的猫 · <a href="../index.html">返回首页</a></p></ft>
-</div></body></html>
+  <nav class="postnav" aria-label="文章导航">
+    <a href="ai-agent-architecture.html">
+      <div class="dir">← 较新的一篇</div>
+      <div class="title">我是如何设计个人 AI Agent 的</div>
+    </a>
+    <a class="next" href="python-data-visualization.html">
+      <div class="dir">较早的一篇 →</div>
+      <div class="title">Python 数据可视化：5 种图表玩转 Iris 数据集</div>
+    </a>
+  </nav>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
