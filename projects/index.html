@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>全部项目 — 贵志的猫</title>
-<meta name="description" content="贵志的猫（xmgzxmgz）的开源项目总览：AI 应用、开发工具、数据可视化、桌面端与游戏，涵盖 Python、TypeScript、Rust、Swift、Kotlin。">
+<meta name="description" content="贵志的猫的项目总览：5 个可在线体验的演示、15 个源码公开的仓库、8 个已转为私有的作品存档。">
 <meta name="author" content="贵志的猫">
 <link rel="canonical" href="https://xmgzxmgz.github.io/projects/">
 <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="贵志的猫">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:title" content="全部项目 — 贵志的猫">
-<meta property="og:description" content="AI 应用、开发工具、数据可视化、桌面端与游戏，共 15 个开源项目。">
+<meta property="og:description" content="5 个可在线体验的演示、15 个源码公开的仓库、8 个已转为私有的作品存档。">
 <meta property="og:url" content="https://xmgzxmgz.github.io/projects/">
 <meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -51,10 +51,12 @@
   color: var(--ink-2);
   max-width: 560px;
   margin: 0 auto 22px;
+  line-height: 1.9;
 }
 .page-nav {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
   font-size: 13px;
@@ -72,19 +74,48 @@
   background: var(--accent-wash);
 }
 
+/* ---------- 分组 ---------- */
+.group { margin-top: 44px; }
+.group:first-of-type { margin-top: 36px; }
+.group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.group-head h2 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+.group-head .count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.group-head .hint {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
 .list-projects {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 40px 0 72px;
+  gap: 9px;
+  padding-bottom: 8px;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 46px 1fr auto;
-  gap: 18px;
+  grid-template-columns: 44px 1fr auto;
+  gap: 16px;
   align-items: start;
-  padding: 20px 22px;
+  padding: 18px 20px;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--surface);
@@ -95,40 +126,44 @@
   box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
 }
+.row.is-private { background: transparent; }
+.row.is-private:hover { border-color: var(--rule-strong); box-shadow: none; transform: none; }
+
 .row .ico {
-  width: 46px;
-  height: 46px;
-  border-radius: 13px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: grid;
   place-items: center;
-  font-size: 22px;
+  font-size: 21px;
   background: var(--surface-2);
   flex-shrink: 0;
 }
-.row h2 {
+.row h3 {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 700;
   letter-spacing: .5px;
   line-height: 1.5;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 .row .desc {
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12.5px;
+  line-height: 1.75;
   color: var(--ink-2);
-  margin-bottom: 10px;
+  margin-bottom: 9px;
 }
-.row .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.row .tags { display: flex; flex-wrap: wrap; gap: 5px; }
 .row .acts {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
   flex-shrink: 0;
-  min-width: 96px;
+  /* 固定宽度，保证每行正文的可用宽度一致、换行位置对得齐 */
+  width: 96px;
 }
 .row .acts a {
-  padding: 6px 14px;
+  padding: 6px 13px;
   border-radius: 8px;
   border: 1px solid var(--rule);
   font-size: 12px;
@@ -149,18 +184,26 @@
   border-color: var(--accent);
   color: #fff;
 }
+.row .acts .note {
+  font-size: 11px;
+  color: var(--ink-3);
+  text-align: right;
+  letter-spacing: .5px;
+  padding-top: 2px;
+}
 
 @media (max-width: 760px) {
   .page-head { padding: 36px 0 26px; }
   .page-head h1 { font-size: 26px; letter-spacing: 2px; }
   .row {
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 18px;
+    gap: 10px;
+    padding: 16px;
   }
   .row .ico { display: none; }
   .row .acts { flex-direction: row; flex-wrap: wrap; }
   .row .acts a { flex: 1 1 auto; }
+  .group-head .hint { display: none; }
 }
 </style>
 </head>
@@ -174,6 +217,7 @@
     <nav class="nav" aria-label="主导航">
       <a href="../index.html#work" class="is-active">项目</a>
       <a href="../index.html#writing">文章</a>
+      <a href="../index.html#about">关于</a>
       <a href="../index.html#contact">联系</a>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
     </nav>
@@ -185,7 +229,7 @@
   <section class="page-head">
     <div class="wrap">
       <h1>全部项目</h1>
-      <p>AI 应用、开发工具、数据可视化、桌面端与游戏，共 15 个项目。带「在线」标记的可以直接在浏览器里跑起来。</p>
+      <p>有些能立刻点开玩，有些源码可以读，还有些只留了个存档。<br>我按「你现在能做什么」分组，而不是按时间排。</p>
       <nav class="page-nav" aria-label="页面导航">
         <a href="../index.html">← 返回主页</a>
         <a href="documentation.html">文档中心</a>
@@ -195,199 +239,358 @@
   </section>
 
   <div class="wrap">
-    <div class="list-projects">
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🦞</div>
-        <div>
-          <h2>OpenClaw Console</h2>
-          <p class="desc">本地 AI 助手控制面板。多渠道消息接入、实时状态监控、暗色模式，支持 PWA 安装到桌面。</p>
-          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">PWA</span><span class="tag">WebSocket</span><span class="tag">v2.0</span></div>
-        </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/openclaw-console" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/openclaw-console#readme" target="_blank" rel="noopener">文档</a>
-        </div>
+    <!-- ========== 一、可在线体验 ========== -->
+    <section class="group">
+      <div class="group-head">
+        <h2>可以现在就跑</h2>
+        <span class="count">5 个</span>
+        <span class="hint">纯前端，打开就能用，不用注册</span>
       </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🔀</div>
-        <div>
-          <h2>WorkBuddy Account Hub</h2>
-          <p class="desc">多账号一键切换、积分与用量可视化。Rust + Tauri 跨平台桌面端，Windows / macOS 通用。</p>
-          <div class="tags"><span class="tag tag--accent">Rust</span><span class="tag">Tauri</span><span class="tag tag--live">⭐ 27</span></div>
+      <div class="list-projects">
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🎮</div>
+          <div>
+            <h3>TETRIS-99</h3>
+            <p class="desc">网页版俄罗斯方块 99，AI 对战、道具系统、多种游戏模式。纯 Canvas 手写，没引入任何游戏引擎。</p>
+            <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">Canvas</span></div>
+          </div>
+          <div class="acts"><a href="tetris.html" class="is-live">开始游戏</a></div>
         </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/workbuddy-account-hub" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/workbuddy-account-hub#readme" target="_blank" rel="noopener">文档</a>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🎯</div>
+          <div>
+            <h3>AI 求职助手</h3>
+            <p class="desc">上传简历 PDF，AI 提取经历亮点并与目标职位逐条比对，给出进面概率和改写建议。需要自备 Claude API Key。</p>
+            <div class="tags"><span class="tag tag--accent">Claude API</span><span class="tag">PDF.js</span></div>
+          </div>
+          <div class="acts"><a href="job-assistant.html" class="is-live">打开应用</a></div>
         </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🏘️</div>
+          <div>
+            <h3>HQC K-Means 分析</h3>
+            <p class="desc">住房质量与就业数据的聚类看板，把 K-Means 结果叠加到交互式地图上，配图表看空间分布与聚类特征。</p>
+            <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">Leaflet</span></div>
+          </div>
+          <div class="acts"><a href="hqc-kmeans/" class="is-live">在线演示</a></div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📦</div>
+          <div>
+            <h3>Dependency Analyzer</h3>
+            <p class="desc">把前端项目的组件引用关系画成力导向图，一眼看出孤立组件、循环依赖，以及声明了却没被用到的 props。</p>
+            <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">图可视化</span></div>
+          </div>
+          <div class="acts"><a href="dependency-analyzer/" class="is-live">在线演示</a></div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📈</div>
+          <div>
+            <h3>Flux</h3>
+            <p class="desc">旅行数据可视化：把几年攒下的行程整理成交互式图表，看轨迹、里程与时间分布。</p>
+            <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">Vue</span><span class="tag">ECharts</span></div>
+          </div>
+          <div class="acts"><a href="flux/" class="is-live">在线演示</a></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== 二、源码公开 ========== -->
+    <section class="group">
+      <div class="group-head">
+        <h2>源码公开</h2>
+        <span class="count">15 个</span>
+        <span class="hint">按 Star 排序 · 均可 clone</span>
       </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🧹</div>
-        <div>
-          <h2>Mac 清风 · MacSweeper</h2>
-          <p class="desc">智能 Mac 磁盘清理工具，扫描大文件与缓存，给出可回滚的安全删除建议。命令行与图形界面双形态。</p>
-          <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">CLI + GUI</span></div>
+      <div class="list-projects">
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🔀</div>
+          <div>
+            <h3>WorkBuddy Account Hub</h3>
+            <p class="desc">账号中枢：多账号一键切换且保留登录态、积分与用量可视化、每日签到、宠物自动探险、AI 记忆画像、API 模型管理，截图时支持全局隐私中段模糊。</p>
+            <div class="tags"><span class="tag tag--accent">Rust</span><span class="tag">Tauri</span><span class="tag tag--live">⭐ 31</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/workbuddy-account-hub" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://github.com/xmgzxmgz/workbuddy-account-hub#readme" target="_blank" rel="noopener">文档</a>
+          </div>
         </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/MacSweeper" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/MacSweeper#readme" target="_blank" rel="noopener">文档</a>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🐟</div>
+          <div>
+            <h3>xianyuzhushou</h3>
+            <p class="desc">闲鱼助手：商品批量管理、自动擦亮、上架辅助。Kotlin 写的手机端自动化工具。</p>
+            <div class="tags"><span class="tag tag--accent">Kotlin</span><span class="tag">Android</span><span class="tag tag--live">⭐ 3</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/xianyuzhushou" target="_blank" rel="noopener">GitHub</a>
+          </div>
         </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📚</div>
+          <div>
+            <h3>ruankao-cli</h3>
+            <p class="desc">软考「信息系统项目管理师（高项）」终端刷题 CLI：离线题库、随机组卷、错题回顾。装好之后 <code>rk</code> 一条命令开刷。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">CLI</span><span class="tag tag--live">⭐ 2</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/ruankao-cli" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://github.com/xmgzxmgz/ruankao-cli#readme" target="_blank" rel="noopener">文档</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🎞️</div>
+          <div>
+            <h3>low2high-tool</h3>
+            <p class="desc">本地高帧视频处理器：ffmpeg 运动补偿插帧、4K 保真、NVIDIA NVENC GPU 加速，带防限流伪装。纯本地、不上传、不需要登录付费。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">ffmpeg</span><span class="tag">NVENC</span><span class="tag tag--live">⭐ 2</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/low2high-tool" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📤</div>
+          <div>
+            <h3>wps-cloud-export</h3>
+            <p class="desc">批量导出 WPS / 金山文档云文档到本地。网页工具，勾选后一键打包下载，省掉逐个「另存为」。</p>
+            <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag tag--live">⭐ 1</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/wps-cloud-export" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📶</div>
+          <div>
+            <h3>CellPort</h3>
+            <p class="desc">大疆一代 4G 模块（Quectel EG25-G）的 Windows 管理器：短信、通话、设备信息、eSIM / eUICC 配置切换，还有一个 AT 控制台。</p>
+            <div class="tags"><span class="tag tag--accent">C#</span><span class="tag">Windows</span><span class="tag tag--live">⭐ 1</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/CellPort" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🐱</div>
+          <div>
+            <h3>workbuddy-checkin-qinglong</h3>
+            <p class="desc">青龙面板版的自动签到加宠物探险领积分，支持多账号 cron 定时。挂在 NAS 上就不用管了。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">青龙面板</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/workbuddy-checkin-qinglong" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📊</div>
+          <div>
+            <h3>workbuddy-account-dashboard</h3>
+            <p class="desc">账户全景仪表盘，只读本机登录态做可视化，不联网、不上传。轻量 HTML 单页版。</p>
+            <div class="tags"><span class="tag tag--accent">HTML</span><span class="tag">本地只读</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/workbuddy-account-dashboard" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🖱️</div>
+          <div>
+            <h3>logimac</h3>
+            <p class="desc">在 macOS 下用 HID++ 2.0 直接控制罗技鼠标：Web UI 调 DPI、改按键映射、配手势，绕开官方驱动。</p>
+            <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">HID++</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/logimac" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🗑️</div>
+          <div>
+            <h3>google-photos-bulk-delete</h3>
+            <p class="desc">批量删除 Google Photos：Playwright + CDP 按日期勾选，一键清掉一整天，比手动翻快得多。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">Playwright</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/google-photos-bulk-delete" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">⌨️</div>
+          <div>
+            <h3>wb2codex</h3>
+            <p class="desc">把 WorkBuddy 的本地会话迁移进 Codex，包括它那套分页存储格式的解析与转换。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">数据迁移</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/wb2codex" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🛰️</div>
+          <div>
+            <h3>ai-passport-workbuddy</h3>
+            <p class="desc">把 FoloToy AI Passport（ESP32-C3）改造成随身终端：状态灯、对话浏览、语音输入加本地转写确认发送。</p>
+            <div class="tags"><span class="tag tag--accent">C</span><span class="tag">ESP32-C3</span><span class="tag">硬件</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/ai-passport-workbuddy" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">📱</div>
+          <div>
+            <h3>ai-passport-ios</h3>
+            <p class="desc">上面那个随身终端的 iOS 客户端：对话浏览、语音输入、状态同步。</p>
+            <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">iOS</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/ai-passport-ios" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🔔</div>
+          <div>
+            <h3>bark-icons</h3>
+            <p class="desc">Bark 通知图标圆形适配版，解决 iOS 通知里图标被裁成方角的问题。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">图标</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/bark-icons" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ico" aria-hidden="true">🏅</div>
+          <div>
+            <h3>badge-lab</h3>
+            <p class="desc">GitHub 成就徽章的速查表与解锁记录，顺手整理的一份对照资料。</p>
+            <div class="tags"><span class="tag">速查表</span></div>
+          </div>
+          <div class="acts">
+            <a href="https://github.com/xmgzxmgz/badge-lab" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== 三、已转私有 ========== -->
+    <section class="group">
+      <div class="group-head">
+        <h2>存档：源码已转私有</h2>
+        <span class="count">8 个</span>
+        <span class="hint">做过，但源码不再公开</span>
       </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">📚</div>
-        <div>
-          <h2>ruankao-cli</h2>
-          <p class="desc">软考高级「信息系统项目管理师」终端刷题工具，内置离线题库，装好后 <code>rk</code> 一条命令即开即用。</p>
-          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">CLI</span><span class="tag">离线题库</span></div>
-        </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/ruankao-cli" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/ruankao-cli#readme" target="_blank" rel="noopener">文档</a>
-        </div>
-      </div>
+      <div class="list-projects">
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🎮</div>
-        <div>
-          <h2>TETRIS-99</h2>
-          <p class="desc">网页版俄罗斯方块 99，AI 对战、道具系统、多种游戏模式。纯 Canvas 实现，打开即玩。</p>
-          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">Canvas</span><span class="tag tag--live">在线试玩</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🦞</div>
+          <div>
+            <h3>OpenClaw Console</h3>
+            <p class="desc">本地 AI 助手控制面板：多渠道消息接入、实时状态监控、记忆与人格配置。整套设计思路写进了文章。</p>
+            <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">PWA</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><a href="../posts/ai-agent-architecture.html">读设计笔记</a></div>
         </div>
-        <div class="acts">
-          <a href="tetris.html" class="is-live">开始游戏</a>
-          <a href="https://github.com/xmgzxmgz/TETRIS-99" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🎯</div>
-        <div>
-          <h2>AI 求职助手</h2>
-          <p class="desc">上传简历 PDF，AI 提取经历亮点并与目标职位比对，评估进面概率。Claude API 驱动。</p>
-          <div class="tags"><span class="tag tag--accent">Claude API</span><span class="tag">AI</span><span class="tag tag--live">在线使用</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🧹</div>
+          <div>
+            <h3>Mac 清风 · MacSweeper</h3>
+            <p class="desc">Mac 磁盘清理工具，扫描大文件与缓存，给出可回滚的安全删除建议。Swift 写的 CLI 与图形界面双形态。</p>
+            <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="job-assistant.html" class="is-live">打开应用</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🏘️</div>
-        <div>
-          <h2>HQC K-Means 分析</h2>
-          <p class="desc">K-Means 聚类看板，在地图上交互式呈现住房质量与就业数据的空间分布。</p>
-          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">Leaflet</span><span class="tag tag--live">在线演示</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🔍</div>
+          <div>
+            <h3>SchemaLinter</h3>
+            <p class="desc">数据库模式变更的影响分析，支持 Python、Java 与主流 ORM，原本可以接进 CI 做发布前拦截。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">SQL</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="hqc-kmeans/" class="is-live">在线演示</a>
-          <a href="https://github.com/xmgzxmgz/hqc_kmeans" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">📦</div>
-        <div>
-          <h2>Dependency Analyzer</h2>
-          <p class="desc">项目依赖关系分析，把 package.json 的相互引用画成力导向图，快速发现循环依赖与高危包。</p>
-          <div class="tags"><span class="tag tag--accent">JavaScript</span><span class="tag">Graph</span><span class="tag tag--live">在线演示</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🧠</div>
+          <div>
+            <h3>Cognito</h3>
+            <p class="desc">基于 RAG 的个人知识库，支持文档上传、向量检索和 AI 问答。</p>
+            <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">RAG</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="dependency-analyzer/" class="is-live">在线演示</a>
-          <a href="https://github.com/xmgzxmgz/Dependency-Analyzer" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">📈</div>
-        <div>
-          <h2>Flux</h2>
-          <p class="desc">旅行数据可视化工具，用交互式图表展示旅行轨迹、里程与统计数据。</p>
-          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">Vue</span><span class="tag">ECharts</span><span class="tag tag--live">在线演示</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">⭐</div>
+          <div>
+            <h3>StarClassify-Vis</h3>
+            <p class="desc">恒星分类可视化，把天文观测数据映射成可交互图表的一个数据科学练手项目。</p>
+            <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">D3.js</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="flux/" class="is-live">在线演示</a>
-          <a href="https://github.com/xmgzxmgz/Flux" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🧠</div>
-        <div>
-          <h2>Cognito</h2>
-          <p class="desc">基于 RAG 的个人知识库系统，支持文档上传、向量检索与 AI 问答。</p>
-          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">RAG</span><span class="tag">Vector DB</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🔐</div>
+          <div>
+            <h3>LeaveWhite</h3>
+            <p class="desc">本地加密日记，内容只存在本机，用 CryptoKit 加密，不经过任何服务器。</p>
+            <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/Cognito" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://github.com/xmgzxmgz/Cognito#readme" target="_blank" rel="noopener">文档</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🔍</div>
-        <div>
-          <h2>SchemaLinter</h2>
-          <p class="desc">数据库模式变更影响分析，支持 Python、Java 与主流 ORM，可接入 CI 做发布前拦截。</p>
-          <div class="tags"><span class="tag tag--accent">Python</span><span class="tag">SQL</span><span class="tag">ORM</span><span class="tag">CI/CD</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🗺️</div>
+          <div>
+            <h3>travelmap</h3>
+            <p class="desc">旅行路线优化器，基于地图可视化规划最优行程顺序。</p>
+            <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/SchemaLinter" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://pypi.org/project/schema-linter/" target="_blank" rel="noopener">PyPI</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">⭐</div>
-        <div>
-          <h2>StarClassify-Vis</h2>
-          <p class="desc">恒星分类可视化，把天文观测数据映射成可交互的图表，一个偏数据科学的练手项目。</p>
-          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">D3.js</span><span class="tag">数据科学</span></div>
+        <div class="row is-private">
+          <div class="ico" aria-hidden="true">🚗</div>
+          <div>
+            <h3>parking_your_car</h3>
+            <p class="desc">Android 停车小游戏，Kotlin 原生开发，自己写的物理引擎和关卡设计。</p>
+            <div class="tags"><span class="tag tag--accent">Kotlin</span><span class="tag">Android</span><span class="tag">源码私有</span></div>
+          </div>
+          <div class="acts"><span class="note">源码私有</span></div>
         </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/StarClassify-Vis" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🗺️</div>
-        <div>
-          <h2>travelmap</h2>
-          <p class="desc">智能旅行路线优化器，基于地图可视化规划最优行程顺序。</p>
-          <div class="tags"><span class="tag tag--accent">TypeScript</span><span class="tag">React</span><span class="tag">Maps API</span></div>
-        </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/travelmap" target="_blank" rel="noopener">GitHub</a>
-        </div>
       </div>
+    </section>
 
-      <div class="row">
-        <div class="ico" aria-hidden="true">🔐</div>
-        <div>
-          <h2>LeaveWhite</h2>
-          <p class="desc">安全加密日记应用，全部内容本地加密存储，不上传任何服务器。</p>
-          <div class="tags"><span class="tag tag--accent">Swift</span><span class="tag">macOS</span><span class="tag">CryptoKit</span></div>
-        </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/LeaveWhite" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="ico" aria-hidden="true">🚗</div>
-        <div>
-          <h2>parking_your_car</h2>
-          <p class="desc">Android 停车小游戏，Kotlin 原生开发，自写物理引擎与关卡设计。</p>
-          <div class="tags"><span class="tag tag--accent">Kotlin</span><span class="tag">Android</span><span class="tag">游戏开发</span></div>
-        </div>
-        <div class="acts">
-          <a href="https://github.com/xmgzxmgz/parking_your_car" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-
-    </div>
   </div>
 
 </main>
