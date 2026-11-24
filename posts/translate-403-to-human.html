@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>把 403 翻译成人话 — 贵志的猫</title>
+<meta name="description" content="「无权限访问该接口（HTTP 403）」这句话，把服务端已经说清楚的原因吞掉了。错误信息的职责是告诉用户下一步做什么。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/translate-403-to-human.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="把 403 翻译成人话">
+<meta property="og:description" content="「无权限访问该接口（HTTP 403）」这句话，把服务端已经说清楚的原因吞掉了。错误信息的职责是告诉用户下一步做什么。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/translate-403-to-human.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="把 403 翻译成人话">
+<meta name="twitter:description" content="「无权限访问该接口（HTTP 403）」这句话，把服务端已经说清楚的原因吞掉了。错误信息的职责是告诉用户下一步做什么。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>把 403 翻译成人话</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-09</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">错误处理</span>
+    <span class="tag">UX</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>「无权限访问该接口（HTTP 403）」这句话，把服务端已经说清楚的原因吞掉了。错误信息的职责是告诉用户下一步做什么。</p>
+  </blockquote>
+
+<p>用户反馈宠物面板一直显示「无权限访问该接口（HTTP 403）」。查下来，服务端的原始响应里其实写着原因：<code>growth system is only available for personal users</code>——成长系统仅对个人版账号开放，而这位用户当前是企业版身份。<strong>答案一直都在，被我的错误处理吞掉了。</strong></p>
+<h2>🔧 修了三层</h2>
+<ol>
+<li>403 分支不再统一抛「无权限」，<strong>附上服务端返回的原文</strong></li>
+<li>识别已知的原文模式（比如「仅个人版可用」），映射成带标记的人话提示</li>
+<li>面板标题标注数据来源——企业形态时明确显示「当前是企业版身份，展示的是个人版快照」，避免误以为企业版也有这个功能</li>
+</ol>
+<h2>💡 错误信息的设计边界</h2>
+<p>好的错误信息要回答三个问题：<strong>发生了什么、为什么、下一步做什么</strong>。状态码只能回答第一个的一半。我的旧写法把「权限不足」当成了终点，实际上它只是起点——权限问题几乎总有「换个身份 / 换个账号 / 去开通」之类的出路。</p>
+<blockquote><p>你的程序吞掉的每一条服务端原文，都是用户本来可以自己解决问题的一次机会。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
