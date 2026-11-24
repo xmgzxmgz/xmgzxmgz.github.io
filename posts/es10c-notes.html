@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eSIM 切卡的实现笔记 — 贵志的猫</title>
+<meta name="description" content="从 BER-TLV 到启用停用 Profile：与 lpac 逐字节对齐的三条指令、分帧规则，以及「9eSIM 读不出 EID」的真相。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/es10c-notes.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="eSIM 切卡的实现笔记">
+<meta property="og:description" content="从 BER-TLV 到启用停用 Profile：与 lpac 逐字节对齐的三条指令、分帧规则，以及「9eSIM 读不出 EID」的真相。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/es10c-notes.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="eSIM 切卡的实现笔记">
+<meta name="twitter:description" content="从 BER-TLV 到启用停用 Profile：与 lpac 逐字节对齐的三条指令、分帧规则，以及「9eSIM 读不出 EID」的真相。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>eSIM 切卡的实现笔记</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-18</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">eSIM</span>
+    <span class="tag">协议</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>从 BER-TLV 到启用停用 Profile：与 lpac 逐字节对齐的三条指令、分帧规则，以及「9eSIM 读不出 EID」的真相。</p>
+  </blockquote>
+
+<p>CellPort 的核心功能是 eSIM/eUICC 的 Profile 管理。这篇记录实现时的关键结论，编码全部与开源的 lpac 对齐——<strong>逐字节一致</strong>是对这类实现的基本要求。</p>
+<h2>📖 读列表：BF2D</h2>
+<p>GetProfilesInfo 用 <code>BF2D 00</code>，响应按 <code>BF2D → A0 → E3</code> 三层解析，每个 Profile 的标签：<code>5A</code> ICCID、<code>4F</code> ISD-P AID、<code>9F70</code> 状态、<code>90</code> 昵称、<code>91</code> 运营商、<code>92</code> Profile 名、<code>95</code> 类别。</p>
+<h2>🔁 切卡：BF31 / BF32</h2>
+<p>启用和停用分别是 <code>BF31</code> / <code>BF32</code>，请求带 <code>refreshFlag = FALSE</code>。单激活卡上启用新 Profile 时，eUICC 会<strong>自动停用</strong>当前已启用的那个——这是卡的正常语义，不是 bug。对已停用的 Profile 再发停用会返回 <code>Code=2</code>（invalidProfile），同样正常。</p>
+<p>写入后 modem 的 SIM 会话不会自动刷新，需要 <code>AT+CFUN=1,1</code> 重启模块才生效——程序要做的是引导、等待端口恢复、自动重连。</p>
+<h2>🗑️ 删除与昵称</h2>
+<p>删除是 <code>BF33</code>（无 A0 包装、无 refreshFlag）；昵称是 <code>BF29</code>，按 ICCID 定位而不是 AID，昵称限 64 个 ASCII 字符。</p>
+<h2>🕳️ EID 是个独立问题</h2>
+<p>SGP.22 的 <code>BF3E</code> 和 SGP.02 的 <code>GET DATA 9F7F</code> 两条路径，在 9eSIM 这类早期卡上都被拒（6A80 / 6D00）——<strong>是卡不提供，不是模块问题</strong>。EID 读不出和 Profile 管不了，是两条独立的路径，UI 上必须分开提示。</p>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
