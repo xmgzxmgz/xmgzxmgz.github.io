@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13,134 个符号：静态逆向是怎么起步的 — 贵志的猫</title>
+<meta name="description" content="接手一个黑盒协议，第一件事不是抓包，是看看对方有没有把符号表留下来。这一次，13,134 个符号全在。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/13134-symbols.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="13,134 个符号：静态逆向是怎么起步的">
+<meta property="og:description" content="接手一个黑盒协议，第一件事不是抓包，是看看对方有没有把符号表留下来。这一次，13,134 个符号全在。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/13134-symbols.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="13,134 个符号：静态逆向是怎么起步的">
+<meta name="twitter:description" content="接手一个黑盒协议，第一件事不是抓包，是看看对方有没有把符号表留下来。这一次，13,134 个符号全在。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>13,134 个符号：静态逆向是怎么起步的</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-16</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">逆向</span>
+    <span class="tag">方法论</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>接手一个黑盒协议，第一件事不是抓包，是看看对方有没有把符号表留下来。这一次，13,134 个符号全在。</p>
+  </blockquote>
+
+<p>想搞清楚九号仪表投屏协议的时候，我做的第一件事不是抓包，而是把官方 iOS 应用的二进制丢进分析工具里看一眼——<strong>1.0.0 版本没有剥离符号表</strong>，13,134 个符号全在。</p>
+<h2>🎯 这意味着什么</h2>
+<p>意味着 <code>H264Packetizer.packets()</code> 这种函数名直接躺在那里。找协议实现不需要「从字节流猜结构」，而是：<strong>定位函数 → 读指令 → 记录常量 → 得出字段表</strong>。逆向从黑盒猜变成了阅读理解。</p>
+<h2>📓 每条结论挂一个地址</h2>
+<p>我把每个关键常量对应的 Mach-O 虚拟地址都记进了逆向笔记。这样做有三个好处：</p>
+<ol>
+<li>自己复核：写规格写到一半怀疑某个字段，翻回去看指令就行</li>
+<li>别人复核：不信我的结论，可以按地址自己去看</li>
+<li>固件更新后对比：新版本地址变了，但结构和常量通常还在</li>
+</ol>
+<h2>💡 起步清单</h2>
+<ol>
+<li>看有没有符号表（没剥是运气，剥了也能靠字符串和系统调用定位）</li>
+<li>找「打包/发送」类的类名和函数名，协议实现通常聚集在那里</li>
+<li>把常量（魔数、固定长度、端口）逐个记下并回溯写入点</li>
+<li>每条结论标注证据等级：指令级确认 / 多处推断 / 单次观察</li>
+</ol>
+<blockquote><p>逆向的产出不是「我搞明白了」，而是「别人按我的笔记也能搞明白」。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

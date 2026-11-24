@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的 24 个 PR 复盘：被拒的两个和该停的时候 — 贵志的猫</title>
+<meta name="description" content="24 个 PR 里 13 个发给了别人的仓库，集中在 9 天里。逐个对完数据，我发现这个模式在外人眼里长什么样。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/24-prs-retrospective.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="我的 24 个 PR 复盘：被拒的两个和该停的时候">
+<meta property="og:description" content="24 个 PR 里 13 个发给了别人的仓库，集中在 9 天里。逐个对完数据，我发现这个模式在外人眼里长什么样。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/24-prs-retrospective.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="我的 24 个 PR 复盘：被拒的两个和该停的时候">
+<meta name="twitter:description" content="24 个 PR 里 13 个发给了别人的仓库，集中在 9 天里。逐个对完数据，我发现这个模式在外人眼里长什么样。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>我的 24 个 PR 复盘：被拒的两个和该停的时候</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-24</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">开源</span>
+    <span class="tag">复盘</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>24 个 PR 里 13 个发给了别人的仓库，集中在 9 天里。逐个对完数据，我发现这个模式在外人眼里长什么样。</p>
+  </blockquote>
+
+<p>写这篇是因为我把自己的 PR 列表完整数了一遍，结论不太好看，但值得记下来。</p>
+<h2>📊 数据</h2>
+<p>24 个 PR：11 个发在自己仓库，<strong>13 个发给了别人的仓库，时间集中在 9 天内</strong>。这 13 个全是安全修复类，大量落在和我技术栈无关的嵌入式项目上（cJSON、pspsdk、artoolkitx、k3ng_cw_keyer……）。已确认至少两个被关闭且未合并：youtube-dl 的稀疏数组边界、cJSON 的递归深度。</p>
+<p>如果这些每一个都是我逐行读出来的真问题，那没问题。但 9 天 13 个、跨 6 个互不相关的仓库、统一的安全叙事——<strong>从维护者视角看，它和批量刷 PR 无法区分</strong>。GitHub 的滥用检测大概也是这么看的：当我再想给一个 43k star 的仓库提一个真正有用的一行修复时，创建 PR 的接口直接把我拒了。</p>
+<h2>🪞 顺手戳破一个迷思</h2>
+<p>我曾以为「中文 i18n 是我的天然优势」。实测了 9 个候选项目：有的在 README 明文禁止直接提翻译 PR，有的翻译走 Crowdin 平台，有的中英文档零缺口。<strong>所谓优势，只有「读中文文档能发现事实错误」这一种成立</strong>，改翻译文件本身是死路。</p>
+<h2>🧭 接下来怎么办</h2>
+<ul>
+<li>先清掉那批 fork——它们是那 9 天最显眼的痕迹</li>
+<li>冷却几周，不向任何他人仓库提 PR、开 issue</li>
+<li>之后只提「我真实用过、能一句话讲清用户可见故障」的那类改动</li>
+</ul>
+<blockquote><p>上游贡献按「接受率」算价值，不按「提交数」算。一个被合并的真修复，比十个没人理的安全叙事有用。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

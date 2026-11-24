@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一个外部 issue：分组空间错乱修复记 — 贵志的猫</title>
+<meta name="description" content="官方客户端 5.11.2 引入的 bug：切换账号后分组下拉变空、同名分组不断复制。这是项目收到的第一个外部 issue。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/spaces-repair-issue-6.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="第一个外部 issue：分组空间错乱修复记">
+<meta property="og:description" content="官方客户端 5.11.2 引入的 bug：切换账号后分组下拉变空、同名分组不断复制。这是项目收到的第一个外部 issue。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/spaces-repair-issue-6.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="第一个外部 issue：分组空间错乱修复记">
+<meta name="twitter:description" content="官方客户端 5.11.2 引入的 bug：切换账号后分组下拉变空、同名分组不断复制。这是项目收到的第一个外部 issue。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>第一个外部 issue：分组空间错乱修复记</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-22</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">SQL</span>
+    <span class="tag">排查</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>官方客户端 5.11.2 引入的 bug：切换账号后分组下拉变空、同名分组不断复制。这是项目收到的第一个外部 issue。</p>
+  </blockquote>
+
+<p>这个项目的第一个外部 issue 来了。用户反馈：切换账号后，输入框的「选择分组」下拉变空，而且同名分组反复出现——同一个名字实测复制出了三份。</p>
+<h2>🔍 真因在官方侧</h2>
+<p>对照数据库发现，官方客户端 5.11.2 的切换机制只把会话表的 <code>user_id</code> 归并到当前账号，<strong>分组表（spaces）完全不跟随</strong>：seed 出来的分组挂在了第三个账号名下，按「当前账号」过滤恒为空；每次切换又只 seed 一个新分组，同名不同 id，越切越多；关键路径字段还是 NULL。</p>
+<h2>🔧 三段修复</h2>
+<ol>
+<li><code>user_id</code> 对齐到当前账号（只碰未删除的行）</li>
+<li>同名分组去重：优先保留当前账号名下那个，其余会话的引用重定向后软删</li>
+<li>补齐路径字段（下拉要求非空）</li>
+</ol>
+<h2>🧪 落地与验证</h2>
+<p>修复挂在切换账号的流程里自动执行（此刻客户端已退出，数据库安全，且切换前本就有整库备份）；工具页另加一张手动修复卡片，换客户端版本后可重跑。写了三个测试用例完整复现 issue 里的数据形态，并验证第二次运行为零变更——<strong>幂等</strong>，这点很重要，因为用户可能会反复点。</p>
+<p>顺手给官方整理了四条建议（切换时统一归并、seed 一次性全量、补路径、同名去重）。第一个外部 issue 用这种方式回应，比修完沉默要好。</p>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

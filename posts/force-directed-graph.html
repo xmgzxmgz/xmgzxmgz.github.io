@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>把依赖关系画成一张图 — 贵志的猫</title>
+<meta name="description" content="package.json 是一份声明，不是真相。把项目里真实的组件引用画成力导向图，孤立节点、循环依赖、幽灵依赖自己浮出来。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/force-directed-graph.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="把依赖关系画成一张图">
+<meta property="og:description" content="package.json 是一份声明，不是真相。把项目里真实的组件引用画成力导向图，孤立节点、循环依赖、幽灵依赖自己浮出来。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/force-directed-graph.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="把依赖关系画成一张图">
+<meta name="twitter:description" content="package.json 是一份声明，不是真相。把项目里真实的组件引用画成力导向图，孤立节点、循环依赖、幽灵依赖自己浮出来。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>把依赖关系画成一张图</h1>
+
+  <div class="meta">
+    <span class="date">2026-07-20</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">可视化</span>
+    <span class="tag">工程</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>package.json 是一份声明，不是真相。把项目里真实的组件引用画成力导向图，孤立节点、循环依赖、幽灵依赖自己浮出来。</p>
+  </blockquote>
+
+<p>Dependency Analyzer 的起点是一个疑问：项目里的组件引用关系，到底长什么样？<code>package.json</code> 只是声明，<strong>真实的引用关系藏在每一个 import 里</strong>。把扫描结果画成力导向图之后，很多问题不需要「分析」，看一眼就在那里。</p>
+<h2>🕸️ 力导向布局的直觉</h2>
+<p>力导向布局把每个节点当带电粒子：相连的互相吸引，所有节点两两排斥，反复迭代直到稳定。结果是最相关的节点自然聚成团、没被引用的孤立节点漂到边缘——<strong>图的形状本身就是分析结论</strong>。</p>
+<h2>🔍 三类一眼可见的问题</h2>
+<ul>
+<li><strong>孤立节点</strong>：漂在图外围、没有连线——声明了却没人用</li>
+<li><strong>循环</strong>：A→B→C→A 的环在图上是一个「死结」</li>
+<li><strong>幽灵依赖</strong>：代码里 import 了、声明里没有的包</li>
+</ul>
+<p>配合按体积和使用率排序的瘦身清单，「该删什么」从感觉变成清单。</p>
+<h2>💡 为什么做成在线 demo</h2>
+<p>这类工具的解释成本很高——「力导向」「幽灵依赖」说半天不如让人拖一下。所以做成了网页版直接挂在博客上，<strong>demo 本身就是最好的 README</strong>。</p>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

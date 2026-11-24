@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>六个串口里找 AT 口 — 贵志的猫</title>
+<meta name="description" content="一个模块向系统暴露六个串口，AT 口还会在两个编号之间漂移，另有两个蓝牙虚拟口来捣乱。冷启动 600ms、热启动 60ms 的两段式探测。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/serial-port-detection.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="六个串口里找 AT 口">
+<meta property="og:description" content="一个模块向系统暴露六个串口，AT 口还会在两个编号之间漂移，另有两个蓝牙虚拟口来捣乱。冷启动 600ms、热启动 60ms 的两段式探测。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/serial-port-detection.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="六个串口里找 AT 口">
+<meta name="twitter:description" content="一个模块向系统暴露六个串口，AT 口还会在两个编号之间漂移，另有两个蓝牙虚拟口来捣乱。冷启动 600ms、热启动 60ms 的两段式探测。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>六个串口里找 AT 口</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-20</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">串口</span>
+    <span class="tag">C#</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>一个模块向系统暴露六个串口，AT 口还会在两个编号之间漂移，另有两个蓝牙虚拟口来捣乱。冷启动 600ms、热启动 60ms 的两段式探测。</p>
+  </blockquote>
+
+<p>大疆那块 4G 模块（实为 Quectel EG25-G）插上 Windows 后，设备管理器里出现<strong>六个串口</strong>（COM4–COM9）。真正能跑 AT 指令的只有一个，而且它会<strong>在 COM6 和 COM7 之间漂移</strong>；COM8、COM9 是蓝牙虚拟口（BTHENUM），纯粹来捣乱的。</p>
+<h2>🔧 两段式探测</h2>
+<ol>
+<li><strong>先试已知端口</strong>：上次成功的端口持久化在配置里，直接先开它发一条探测指令。命中就结束——这是热启动路径，约 60ms</li>
+<li><strong>未命中才全量并行</strong>：对剩余串口同时打开、发探测指令、等响应，冷启动约 600ms</li>
+</ol>
+<p>蓝牙虚拟口在枚举阶段就按驱动名剔除，不浪费探测次数。</p>
+<h2>🧰 失败也要留下线索</h2>
+<p>连接失败时把五个步骤的完整过程写进 <code>last-connect.log</code>：每个口打开是否成功、发了什么、收到什么。用户报「连不上」时，这个文件基本一眼定位。<strong>自动探测类功能的日志不是给自己看的，是给半年后排查的你和提 issue 的用户看的。</strong></p>
+<blockquote><p>探测策略的本质是缓存：把「上次的成功」当作最优先的猜测。任何有状态的硬件交互，都值得缓存上一次的工作配置。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对话数据的主权 — 贵志的猫</title>
+<meta name="description" content="你和 AI 的对话记录，大概是你最私人的数据之一。它现在存在哪，能导出吗，能同步到你自己的服务器吗？">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/conversation-data-sovereignty.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="对话数据的主权">
+<meta property="og:description" content="你和 AI 的对话记录，大概是你最私人的数据之一。它现在存在哪，能导出吗，能同步到你自己的服务器吗？">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/conversation-data-sovereignty.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="对话数据的主权">
+<meta name="twitter:description" content="你和 AI 的对话记录，大概是你最私人的数据之一。它现在存在哪，能导出吗，能同步到你自己的服务器吗？">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>对话数据的主权</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-10</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">隐私</span>
+    <span class="tag">自托管</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>你和 AI 的对话记录，大概是你最私人的数据之一。它现在存在哪，能导出吗，能同步到你自己的服务器吗？</p>
+  </blockquote>
+
+<p>我做对话同步工具的起因很简单：官方没有这个功能，而我的对话记录分散在好几台设备上。但写着写着，真正的需求浮出来了——<strong>不是同步，是主权</strong>。</p>
+<h2>🏠 三个设计原则</h2>
+<ol>
+<li><strong>只读取本机数据</strong>。工具不去逆向或请求任何线上接口，它处理的就是已经躺在你硬盘里的那份 SQLite</li>
+<li><strong>不向任何第三方上传</strong>。同步的目标服务器是你自己的——家里那台 NAS，或者你租的那台 VPS</li>
+<li><strong>隐私模式是一等公民</strong>。某些对话不想进同步范围，就该有个开关，而不是靠用户自己记得删</li>
+</ol>
+<h2>🐳 自托管比想象中简单</h2>
+<p>一个 Docker 镜像，一个挂载目录，跑起来。数据在你自己的盘上，检索是全文的，换设备接着聊。整个链路里没有任何一环需要信任我——代码开源，你可以不信任我，只信任代码。</p>
+<h2>💡 一点观察</h2>
+<blockquote><p>云服务的默认便利，让我们慢慢习惯了「我的数据存在别人的机器上」。自托管的价值不是省钱，是把「信任谁」这个决定收回来。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

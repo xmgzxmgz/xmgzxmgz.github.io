@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 助手记忆的分层迭代 — 贵志的猫</title>
+<meta name="description" content="第一版记忆是一个大文本框。第二版分了层。第三版学会了「有些事记一天，有些事记一年」。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/agent-memory-layers.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="AI 助手记忆的分层迭代">
+<meta property="og:description" content="第一版记忆是一个大文本框。第二版分了层。第三版学会了「有些事记一天，有些事记一年」。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/agent-memory-layers.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI 助手记忆的分层迭代">
+<meta name="twitter:description" content="第一版记忆是一个大文本框。第二版分了层。第三版学会了「有些事记一天，有些事记一年」。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>AI 助手记忆的分层迭代</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-05</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">AI Agent</span>
+    <span class="tag">记忆</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>第一版记忆是一个大文本框。第二版分了层。第三版学会了「有些事记一天，有些事记一年」。</p>
+  </blockquote>
+
+<p>我给自己搭 AI 助手快两年了，记忆系统推翻重来了三次。这篇记录分层结构是怎么长出来的——不是设计出来的，是被问题逼出来的。</p>
+<h2>🧱 现在的三层</h2>
+<table>
+<thead><tr><th>层</th><th>存什么</th><th>生命周期</th></tr></thead>
+<tbody>
+<tr><td>账号级</td><td>长期偏好、习惯、身份信息</td><td>跨所有项目，近乎永久</td></tr>
+<tr><td>项目级</td><td>项目约定、技术选型、当前状态</td><td>跟着项目走</td></tr>
+<tr><td>工作日志</td><td>某天做了什么、为什么这么做</td><td>append-only，定期蒸馏</td></tr>
+</tbody>
+</table>
+<h2>🔄 蒸馏比记录重要</h2>
+<p>日志会无限膨胀，三十天前的日志里 90% 是过期信息（临时路径、报错、当时的猜测）。定期把仍然成立的部分提炼进上一层，把日志清空——<strong>记忆系统的健康度取决于删除的纪律，不是记录的完整性</strong>。</p>
+<h2>⚠️ 两个教训</h2>
+<ul>
+<li>所有记忆都该有明确的作用域。跨项目泄漏的项目细节，比没有记忆更糟（它会让助手自信地说错话）</li>
+<li>密钥、口令永远不进记忆。记忆是明文的、会被全文检索的、会被打包备份的</li>
+</ul>
+<blockquote><p>好的记忆系统不是「记住一切」，是「在正确的时机想起正确的、仍然为真的那件事」。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

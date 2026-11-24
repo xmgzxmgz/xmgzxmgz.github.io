@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单实例锁的 PID 复用坑 — 贵志的猫</title>
+<meta name="description" content="应用装完打不开，进程秒退。根因：操作系统把旧实例的 PID 分配给了别的进程，「判活」判了一个陌生人。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/single-instance-lock-pid-reuse.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="单实例锁的 PID 复用坑">
+<meta property="og:description" content="应用装完打不开，进程秒退。根因：操作系统把旧实例的 PID 分配给了别的进程，「判活」判了一个陌生人。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/single-instance-lock-pid-reuse.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="单实例锁的 PID 复用坑">
+<meta name="twitter:description" content="应用装完打不开，进程秒退。根因：操作系统把旧实例的 PID 分配给了别的进程，「判活」判了一个陌生人。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>单实例锁的 PID 复用坑</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-09</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">Rust</span>
+    <span class="tag">排查</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>应用装完打不开，进程秒退。根因：操作系统把旧实例的 PID 分配给了别的进程，「判活」判了一个陌生人。</p>
+  </blockquote>
+
+<p>某个版本发出去之后，用户反馈「装了但打不开」——进程启动后立刻退出，没有任何报错。本机复现不了，是个典型的发布回归。</p>
+<h2>🔍 判活逻辑哪里错了</h2>
+<p>单实例锁的原理：启动时以「独占创建」方式打开锁文件，抢不到说明已有实例。抢不到之后还要判活——防止上次崩溃留下的死锁文件。我的判活是读出锁里记录的 PID，用 <code>kill -0</code> 检查进程是否存在。</p>
+<p><strong>漏洞在这：PID 是操作系统复用的。</strong>旧实例退出后，它的 PID 很快会被分配给完全无关的进程。<code>kill -0</code> 一查——那个陌生人活着——于是新实例判定「已有实例在跑」，静默退出。</p>
+<h2>🔧 修法：给锁加心跳</h2>
+<ul>
+<li>运行期每 10 秒重写锁文件的修改时间（心跳）</li>
+<li>判活条件从「进程存在」改成「<strong>进程存在 且 心跳新鲜</strong>（30 秒内有心跳）」</li>
+<li>陈旧锁自动接管；崩溃、强杀都不会再卡住下次启动</li>
+</ul>
+<h2>💡 通用教训</h2>
+<blockquote><p>用「进程存在」做判活，等于假设 PID 不复用——这个假设在所有现代操作系统上都是错的。任何「存在性检查」都要再问一句：存在的东西，是当年放进去的那个吗？</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

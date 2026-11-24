@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.264 推流的参数取舍 — 贵志的猫</title>
+<meta name="description" content="关键帧重发默认关、静止图每秒 2 帧、拥塞时先降码率再隔帧——三个决定让发热和丢包都下来了。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/h264-stream-params.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="H.264 推流的参数取舍">
+<meta property="og:description" content="关键帧重发默认关、静止图每秒 2 帧、拥塞时先降码率再隔帧——三个决定让发热和丢包都下来了。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/h264-stream-params.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="H.264 推流的参数取舍">
+<meta name="twitter:description" content="关键帧重发默认关、静止图每秒 2 帧、拥塞时先降码率再隔帧——三个决定让发热和丢包都下来了。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>H.264 推流的参数取舍</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-16</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">H.264</span>
+    <span class="tag">调参</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>关键帧重发默认关、静止图每秒 2 帧、拥塞时先降码率再隔帧——三个决定让发热和丢包都下来了。</p>
+  </blockquote>
+
+<p>把画面推进一个 848×480（五寸）或 480×272（4.3 寸）的仪表，编码参数不是越大越好。这篇记录三个实测下来最重要的取舍。</p>
+<h2>1️⃣ 关键帧重发：默认关</h2>
+<p>丢包后重发关键帧听起来很稳，但关键帧是普通帧的 5–8 倍大——<strong>越拥塞越发大包，等于往堵车上加货车</strong>。改成默认关闭，把带宽省下来给增量帧。</p>
+<h2>2️⃣ 拥塞治理：先降码率，再隔帧</h2>
+<p>顺序很重要。直接隔帧丢包会让画面卡成幻灯片；先降码率，画面只是变糊，信息还在；还不够再隔帧。两步走比一步到位体感好得多。</p>
+<h2>3️⃣ 静止画面：每秒 2 帧就够</h2>
+<p>仪表只在收到新帧时重绘。静态导航图按 20fps 推，98% 的包是浪费——还带着解码发热。改成每秒 2 帧，<strong>这是实测中发热和丢包最大的单项改善</strong>。</p>
+<h2>📐 其他固定项</h2>
+<p>编码用 Baseline（仪表解码器的能力边界），分辨率统一缩放到目标屏再编码——CarPlay 的 720p 缩到 848×480 后依然清楚。七寸屏那条通道要 KCP 封装，我抓了包但没实现，参数只保留给抓包对照。</p>
+<blockquote><p>推流调参的本质是承认瓶颈在哪：是带宽、是解码器，还是热。三个参数各自对应一个瓶颈，别用一个大码率解决所有问题。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
