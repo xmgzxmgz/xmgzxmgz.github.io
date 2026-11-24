@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>双语 README 的三个决定 — 贵志的猫</title>
+<meta name="description" content="两个项目都做了中英双语 README。做下来发现真正要决定的只有三件事：谁在前、翻译到什么程度、谁来维护同步。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/bilingual-readme-decisions.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="双语 README 的三个决定">
+<meta property="og:description" content="两个项目都做了中英双语 README。做下来发现真正要决定的只有三件事：谁在前、翻译到什么程度、谁来维护同步。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/bilingual-readme-decisions.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="双语 README 的三个决定">
+<meta name="twitter:description" content="两个项目都做了中英双语 README。做下来发现真正要决定的只有三件事：谁在前、翻译到什么程度、谁来维护同步。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>双语 README 的三个决定</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">开源</span>
+    <span class="tag">写作</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>两个项目都做了中英双语 README。做下来发现真正要决定的只有三件事：谁在前、翻译到什么程度、谁来维护同步。</p>
+  </blockquote>
+
+<p>我开源的项目里，两个做了双语 README（中文 + English）。做下来发现，双语化真正的难点不是翻译，是三个结构性的决定。</p>
+<h2>1️⃣ 谁在前</h2>
+<p>决定因素是<strong>目标受众在哪</strong>。面向国内场景的工具（软考、国产硬件）中文为主；有国际受众的（罗技外设、eSIM 管理）在中文主文档顶部加一段英文导语和切换链接——<strong>让英文读者三秒内知道这是什么，再决定要不要点进去</strong>。</p>
+<h2>2️⃣ 翻译到什么程度</h2>
+<p>不是所有内容都值得双份。我的分层：<strong>首屏（是什么、为什么、快速开始）必须双语；深度技术细节跟主语言</strong>——一个只想快速评估项目的英文读者不需要知道 APDU 的字节布局。翻译一半留一半，是诚实的成本控制，不是偷懒。</p>
+<h3>⚠️ 一条红线</h3>
+<p>两个文件必须同步更新。双语 README 最伤信誉的死法是：中文版更新到 v3，英文版停在 v1——英文读者会认为项目不活跃。<strong>维护不动就别开双语，开了就当两个文件养。</strong></p>
+<blockquote><p>双语 README 的本质是承认「不同读者需要不同深度的入口」，然后用结构去实现这个承认。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
