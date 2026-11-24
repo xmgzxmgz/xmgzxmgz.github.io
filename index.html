@@ -943,6 +943,186 @@
           </div>
           <span class="date">2026-07-20</span>
         </a>
+        <a class="card-post" href="posts/unauthorized-airplay.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">📡</span>
+          <div class="body">
+            <div class="title">「没授权」也能用：AirPlay 绕的到底是哪个环节</div>
+            <p class="excerpt">所有能用的第三方 AirPlay 接收端，绕的都不是「要不要授权」，而是「把哪个环节搬走」。AirPlay 搬走的是 FairPlay 密钥。</p>
+            <div class="foot"><span class="tag tag--accent">协议</span><span class="tag">AirPlay</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-18</span>
+        </a>
+        <a class="card-post" href="posts/carplay-dongle-chip.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🚗</span>
+          <div class="body">
+            <div class="title">CarPlay 的认证藏在哪颗芯片里</div>
+            <p class="excerpt">CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。</p>
+            <div class="foot"><span class="tag tag--accent">协议</span><span class="tag">CarPlay</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-19</span>
+        </a>
+        <a class="card-post" href="posts/carwithin-single-iphone.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">📱</span>
+          <div class="body">
+            <div class="title">CarWithin：一台 iPhone 跑起真 CarPlay</div>
+            <p class="excerpt">解包 CarWithin.ipa，Payload 里直接躺着 MFi 证书链和私钥。认证能力被搬进了 App 包——前提是接受它是未签名 IPA、依赖私有接口。</p>
+            <div class="foot"><span class="tag tag--accent">逆向</span><span class="tag">iOS</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-20</span>
+        </a>
+        <a class="card-post" href="posts/ninebot-cast-7-patches.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🩹</span>
+          <div class="body">
+            <div class="title">给 NinebotCast 的七处修正</div>
+            <p class="excerpt">分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。</p>
+            <div class="foot"><span class="tag tag--accent">iOS</span><span class="tag">补丁</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-21</span>
+        </a>
+        <a class="card-post" href="posts/stream-bridge-sources.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🌉</span>
+          <div class="body">
+            <div class="title">一套源抽象，五种画面来源</div>
+            <p class="excerpt">桌面、窗口、屏幕区域、安卓屏幕、RTSP 流、UVC 摄像头——不管画面从哪来，出去的都是同一条 UDP 通道。</p>
+            <div class="foot"><span class="tag tag--accent">ffmpeg</span><span class="tag">架构</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-18</span>
+        </a>
+        <a class="card-post" href="posts/ussd-cusd-encoding.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">☎️</span>
+          <div class="body">
+            <div class="title">USSD：一条 AT+CUSD 的编码迷宫</div>
+            <p class="excerpt">查个余额要发一条 USSD。协议上它比短信还绕：会话式的链式响应、GSM7 打包、编码协商，每一步都有坑。</p>
+            <div class="foot"><span class="tag tag--accent">AT 指令</span><span class="tag">编码</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-09-21</span>
+        </a>
+        <a class="card-post" href="posts/sim-phonebook-ucs2.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">📇</span>
+          <div class="body">
+            <div class="title">SIM 卡电话簿：SM 存储与 UCS2 姓名</div>
+            <p class="excerpt">SIM 卡上的电话簿存在「SM 存储」里，中文姓名是 UCS2 编码。读取容易，解码对齐难。</p>
+            <div class="foot"><span class="tag tag--accent">AT 指令</span><span class="tag">编码</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-09-22</span>
+        </a>
+        <a class="card-post" href="posts/usb-vid-pid-identity.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🎫</span>
+          <div class="body">
+            <div class="title">模块识别：USB VID/PID 是设备的身份证</div>
+            <p class="excerpt">同一个模块，两个身份：大疆定制 VID 2ca3:4006，移远标准 VID 2c7c:0125。识别逻辑必须两个都认。</p>
+            <div class="foot"><span class="tag tag--accent">USB</span><span class="tag">硬件</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-09-23</span>
+        </a>
+        <a class="card-post" href="posts/rolling-app-log.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🧰</span>
+          <div class="body">
+            <div class="title">运行日志的滚动设计与异常兜底</div>
+            <p class="excerpt">日志不是给自己调试用的，是给半年后提 issue 的用户用的。滚动保留 7 天、全局异常兜底，两个决定都很便宜。</p>
+            <div class="foot"><span class="tag tag--accent">日志</span><span class="tag">工程</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-09-24</span>
+        </a>
+        <a class="card-post" href="posts/batch-three-state-feedback.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">📊</span>
+          <div class="body">
+            <div class="title">「成功 6 · 跳过 4 · 失败 1」：批量操作的三段反馈</div>
+            <p class="excerpt">批量操作的结果反馈，二元的「成功/失败」是不够的。「跳过」这个第三状态，是批量的灵魂。</p>
+            <div class="foot"><span class="tag tag--accent">UX</span><span class="tag">设计</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-11</span>
+        </a>
+        <a class="card-post" href="posts/checkin-webhook.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🔔</span>
+          <div class="body">
+            <div class="title">通知 Webhook：让结果主动找到你</div>
+            <p class="excerpt">签到战报和续期结果不该躺在应用里等人来看。Bark 和企业微信群机器人，纯 HTTP 直连，失败不影响主流程。</p>
+            <div class="foot"><span class="tag tag--accent">集成</span><span class="tag">通知</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-12</span>
+        </a>
+        <a class="card-post" href="posts/renewal-guard.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🛡️</span>
+          <div class="body">
+            <div class="title">自动续期守护：把「记得续期」搬出脑子</div>
+            <p class="excerpt">每 30 分钟扫一次、剩余不到 7 天才动手、账号之间限速 400ms、跳过当前登录态。四个限制，每个都有理由。</p>
+            <div class="foot"><span class="tag tag--accent">自动化</span><span class="tag">边界</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-12</span>
+        </a>
+        <a class="card-post" href="posts/session-copy-semantics.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">📑</span>
+          <div class="body">
+            <div class="title">会话复制与搬移：一字之差的语义设计</div>
+            <p class="excerpt">「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。</p>
+            <div class="foot"><span class="tag tag--accent">设计</span><span class="tag">数据</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-13</span>
+        </a>
+        <a class="card-post" href="posts/wal-safe-window.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🗄️</span>
+          <div class="body">
+            <div class="title">WAL 模式下什么时候能动数据库</div>
+            <p class="excerpt">另一个程序正在用的 SQLite，你敢直接改吗？答案是：挑对时机敢。这个时机叫「客户端已退出」。</p>
+            <div class="foot"><span class="tag tag--accent">SQLite</span><span class="tag">数据</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-22</span>
+        </a>
+        <a class="card-post" href="posts/oplog-incremental.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🧾</span>
+          <div class="body">
+            <div class="title">oplog：增量同步为什么用操作日志</div>
+            <p class="excerpt">321 个会话、2.5 万条消息，全量首同步 3 分钟，日常增量秒级。秘密是一个全局单调序号的追加日志。</p>
+            <div class="foot"><span class="tag tag--accent">同步</span><span class="tag">架构</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-09</span>
+        </a>
+        <a class="card-post" href="posts/what-not-to-sync.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🚫</span>
+          <div class="body">
+            <div class="title">不同步什么，比同步什么更重要</div>
+            <p class="excerpt">对话同步工具的功能清单里，最该认真写的是「不同步清单」。推理过程、工具调用、图片引用——都有不走的理由。</p>
+            <div class="foot"><span class="tag tag--accent">隐私</span><span class="tag">同步</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-10</span>
+        </a>
+        <a class="card-post" href="posts/growth-tasks-boundary.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🎯</span>
+          <div class="body">
+            <div class="title">「一键完成」的安全边界形态</div>
+            <p class="excerpt">成长任务有 18 个，手动领奖励很烦。 「一键完成所有任务」是捷径，「只领取已完成的」是边界。我选后者。</p>
+            <div class="foot"><span class="tag tag--accent">风控</span><span class="tag">边界</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-13</span>
+        </a>
+        <a class="card-post" href="posts/websocket-vs-polling.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">⚡</span>
+          <div class="body">
+            <div class="title">设备状态为什么用 WebSocket 推</div>
+            <p class="excerpt">鼠标改一下 DPI，界面上的电量、连接状态要立刻变。轮询能做到，但推送做得很优雅。</p>
+            <div class="foot"><span class="tag tag--accent">前端</span><span class="tag">实时</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-08-22</span>
+        </a>
+        <a class="card-post" href="posts/bilingual-readme-decisions.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">🌐</span>
+          <div class="body">
+            <div class="title">双语 README 的三个决定</div>
+            <p class="excerpt">两个项目都做了中英双语 README。做下来发现真正要决定的只有三件事：谁在前、翻译到什么程度、谁来维护同步。</p>
+            <div class="foot"><span class="tag tag--accent">开源</span><span class="tag">写作</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-09-26</span>
+        </a>
+        <a class="card-post" href="posts/known-unknowns-in-specs.html" data-cat="tech">
+          <span class="glyph" aria-hidden="true">❓</span>
+          <div class="body">
+            <div class="title">规格文档里的 Known unknowns</div>
+            <p class="excerpt">规格文档最值钱的章节，可能是一节「我们不知道什么」。它把「这个文档可信吗」变成了一个可以逐条验证的问题。</p>
+            <div class="foot"><span class="tag tag--accent">文档</span><span class="tag">方法论</span><span class="sep">·</span><span>约 2 分钟</span></div>
+          </div>
+          <span class="date">2026-11-18</span>
+        </a>
         <a class="card-post" href="posts/ai-agent-architecture.html" data-cat="tech">
           <span class="glyph" aria-hidden="true">🤖</span>
           <div class="body">

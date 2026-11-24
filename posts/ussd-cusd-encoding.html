@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USSD：一条 AT+CUSD 的编码迷宫 — 贵志的猫</title>
+<meta name="description" content="查个余额要发一条 USSD。协议上它比短信还绕：会话式的链式响应、GSM7 打包、编码协商，每一步都有坑。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ussd-cusd-encoding.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="USSD：一条 AT+CUSD 的编码迷宫">
+<meta property="og:description" content="查个余额要发一条 USSD。协议上它比短信还绕：会话式的链式响应、GSM7 打包、编码协商，每一步都有坑。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ussd-cusd-encoding.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="USSD：一条 AT+CUSD 的编码迷宫">
+<meta name="twitter:description" content="查个余额要发一条 USSD。协议上它比短信还绕：会话式的链式响应、GSM7 打包、编码协商，每一步都有坑。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>USSD：一条 AT+CUSD 的编码迷宫</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-21</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">AT 指令</span>
+    <span class="tag">编码</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>查个余额要发一条 USSD。协议上它比短信还绕：会话式的链式响应、GSM7 打包、编码协商，每一步都有坑。</p>
+  </blockquote>
+
+<p>模块管理器里最容易低估的功能是 USSD（查余额、查流量那条 <code>*#…#</code>）。它比短信还绕——短信至少是一次性的，USSD 常常是<strong>会话式</strong>的：查一次余额，网络回一层菜单，你再选，再回。</p>
+<h2>🔤 编码的坑</h2>
+<p><code>AT+CUSD</code> 的响应有一个编码参数，实践里两种主流形态：</p>
+<ul>
+<li>GSM 7-bit 打包——英文运营商常用，7 位一个字符挤进 8 位字节，解包时要做位移</li>
+<li>UCS2——中文运营商常用，每字两字节</li>
+</ul>
+<p>两种都要自动识别并解码，不能指望运营商统一。<strong>打包算法和短信那条是同一套</strong>，所以短信解析器的单元测试向量在这里直接复用——这也是为什么我把 PDU 编解码放在核心库而不是 UI 层。</p>
+<h2>🔗 链式响应</h2>
+<p>会话式 USSD 的每次响应都可能携带新的输入请求。UI 上必须把它呈现成「继续对话」而不是「结果」——用户看到的应该是一个可以接着输入的提示，而不是一串莫名其妙的中间文本。</p>
+<blockquote><p>AT 指令集的每一行规范背后，都是一段要兼容的存量设备史。USSD 是其中沉积最深的一层。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

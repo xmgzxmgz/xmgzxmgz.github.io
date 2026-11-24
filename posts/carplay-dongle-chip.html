@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarPlay 的认证藏在哪颗芯片里 — 贵志的猫</title>
+<meta name="description" content="CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/carplay-dongle-chip.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="CarPlay 的认证藏在哪颗芯片里">
+<meta property="og:description" content="CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/carplay-dongle-chip.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CarPlay 的认证藏在哪颗芯片里">
+<meta name="twitter:description" content="CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>CarPlay 的认证藏在哪颗芯片里</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-19</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">协议</span>
+    <span class="tag">CarPlay</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。</p>
+  </blockquote>
+
+<p>CarPlay 的认证机制拆开看是这样的：iPhone 向配件要 X.509 证书、发 20 字节随机挑战、验签名；配件用 MFi 认证协处理器（MFi 3959 这类芯片）里的私钥签名。<strong>私钥烧在芯片里，导不出来——没有真芯片就一定过不了。</strong>所以「纯软件模拟 CarPlay 主机」这条路本质上不存在。</p>
+<h2>🔌 那些不合规的 Android 车机是怎么做的</h2>
+<p>它们根本不在主机里做认证。整条链路是：CarPlay 的认证、解码、Wi-Fi 组网全部在一个 <strong>CarPlay dongle</strong> 里完成——dongle 里有一颗真正的苹果 MFi 芯片（这才是合法件）。主机只跑逆向出来的 dongle 私有协议：<code>发控制帧 → 收 H.264 视频 → 回传触摸坐标</code>。</p>
+<p><strong>授权被转移到了那颗芯片上。</strong>主机（Android 车机、树莓派、你的电脑）完全不需要认证，这也是这类盒子能公开卖的原因。开源侧的对应物：node-carplay 在 Node 里跑 dongle 协议，carplay-raspberrypi 直接输出到 HDMI。</p>
+<h2>📅 2026 年的新变化</h2>
+<p>「必须有真芯片」这个结论今年被推翻了：有人把芯片里的证书和私钥导出来直接烧进程序。Android 上的 DiPlay 把 MFi 证书与私钥集成进 APK，软件层面完成 iAP2 认证，不需要任何转接盒，触控和方向盘按键还能反向控制 iPhone。</p>
+<blockquote><p>安全设计里最怕的假设是「这个密钥导不出来」。历史上每一个这样的假设，最后都等到了它的例外。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

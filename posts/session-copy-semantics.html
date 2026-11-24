@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会话复制与搬移：一字之差的语义设计 — 贵志的猫</title>
+<meta name="description" content="「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/session-copy-semantics.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="会话复制与搬移：一字之差的语义设计">
+<meta property="og:description" content="「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/session-copy-semantics.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="会话复制与搬移：一字之差的语义设计">
+<meta name="twitter:description" content="「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>会话复制与搬移：一字之差的语义设计</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-13</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">设计</span>
+    <span class="tag">数据</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。</p>
+  </blockquote>
+
+<p>多账号场景下有个高频需求：把 A 账号名下的对话记录给 B 账号用。实现它之前要先回答一个语义问题——<strong>是搬移还是复制？</strong></p>
+<h2>🔀 两种语义，两个世界</h2>
+<p><strong>搬移</strong>是账号切换的语义：会话从源账号转移到目标账号，源账号不再拥有它——这是切换工具的原生行为，改变归属。<strong>复制</strong>则完全相反：给目标账号一份带「（副本）」标记的新会话，<strong>源账号毫发无损</strong>。</p>
+<p>复制的适用场景恰恰是搬移覆盖不了的：把主号积累的项目上下文「借」给小号继续干活，同时主号的记录保持完整可查。</p>
+<h2>🛡️ 两道护栏</h2>
+<ol>
+<li><strong>复制前自动备份数据库</strong>。写操作发生前留一份可回滚的底，永远是对的</li>
+<li><strong>同 uid 的两个形态直接拒绝</strong>。有些账号本就共用会话存储，复制给它们等于自己复制自己——这种请求要在入口就拦下，而不是执行出一个奇怪的结果</li>
+</ol>
+<blockquote><p>数据操作的功能设计，一半在「做什么」，另一半在「拒绝什么、以及拒绝时说什么」。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「一键完成」的安全边界形态 — 贵志的猫</title>
+<meta name="description" content="成长任务有 18 个，手动领奖励很烦。 「一键完成所有任务」是捷径，「只领取已完成的」是边界。我选后者。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/growth-tasks-boundary.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="「一键完成」的安全边界形态">
+<meta property="og:description" content="成长任务有 18 个，手动领奖励很烦。 「一键完成所有任务」是捷径，「只领取已完成的」是边界。我选后者。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/growth-tasks-boundary.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「一键完成」的安全边界形态">
+<meta name="twitter:description" content="成长任务有 18 个，手动领奖励很烦。 「一键完成所有任务」是捷径，「只领取已完成的」是边界。我选后者。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>「一键完成」的安全边界形态</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-13</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">风控</span>
+    <span class="tag">边界</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>成长任务有 18 个，手动领奖励很烦。 「一键完成所有任务」是捷径，「只领取已完成的」是边界。我选后者。</p>
+  </blockquote>
+
+<p>成长任务系统有十几个任务：完成一次对话、安装一个技能、绑定微信……每完成一个要手动点领取，很烦。社区里流传的做法是「一键完成所有任务」——<strong>把没做的任务也模拟成做了</strong>。我没走那条路。</p>
+<h2>🔍 先验证，再决定</h2>
+<p>实测两个路由：查询任务列表的接口正常返回；领取奖励的路由存在且可用。这说明了技术上的可行性——<strong>但技术可行和应该做是两回事</strong>。</p>
+<h2>⚖️ 边界画在哪</h2>
+<p>任务完成与否由服务端按<strong>真实使用行为</strong>判定（对话了、装技能了、绑定了）。我的工具只做两件事：<strong>展示进度</strong>，和<strong>领取已经完成的任务的奖励</strong>。不模拟对话、不伪造行为、不碰判定逻辑。</p>
+<p>这就是「一键完成 17/18 任务」在安全边界内的可行形态：那一键只对 17 个已完成生效，第 18 个没做就是没做。</p>
+<h2>💡 为什么这条边界值得守护</h2>
+<blockquote><p>读接口和写接口的风险不对等：读错了顶多白屏，写错（或伪造）了就是在替用户向服务端撒谎。风控惩罚的从来不是「用工具」，是「用工具撒谎」。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
