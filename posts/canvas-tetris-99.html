@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纯 Canvas 的俄罗斯方块 99 — 贵志的猫</title>
+<meta name="description" content="&quot;用游戏引擎的话，我学到的就是游戏引擎。&quot;这个 99 人同屏的方块对战，每一行渲染代码都是手写的。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/canvas-tetris-99.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="纯 Canvas 的俄罗斯方块 99">
+<meta property="og:description" content="&quot;用游戏引擎的话，我学到的就是游戏引擎。&quot;这个 99 人同屏的方块对战，每一行渲染代码都是手写的。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/canvas-tetris-99.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="纯 Canvas 的俄罗斯方块 99">
+<meta name="twitter:description" content="&quot;用游戏引擎的话，我学到的就是游戏引擎。&quot;这个 99 人同屏的方块对战，每一行渲染代码都是手写的。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>纯 Canvas 的俄罗斯方块 99</h1>
+
+  <div class="meta">
+    <span class="date">2026-07-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">前端</span>
+    <span class="tag">Canvas</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>&quot;用游戏引擎的话，我学到的就是游戏引擎。&quot;这个 99 人同屏的方块对战，每一行渲染代码都是手写的。</p>
+  </blockquote>
+
+<p>博客上最能「点开就玩」的东西，是一个网页版俄罗斯方块 99：AI 对战、道具系统、多种模式。它有专门的页面，手机浏览器也能跑。整份代码里没有游戏引擎——渲染全部是 Canvas 2D 手写。</p>
+<h2>🎮 为什么不用引擎</h2>
+<p>俄罗斯方块的核心循环非常清晰：输入 → 更新网格 → 渲染。用一个通用引擎来跑这个循环，省下的代码量有限，多出来的是一层「引擎怎么想」的抽象。<strong>手写的每一行，都是对这个问题的直接回答。</strong>这是学习目的的项目，控制感比开发速度值钱。</p>
+<h2>🤖 AI 对手的设计取舍</h2>
+<p>99 人同屏的 AI 对手，如果每个都做完整决策，开销和复杂度都会失控。实际做法是把对手分成几档「性格」：决策频率、失误率、道具使用积极程度不同——<strong>玩家感受到的「水平差异」，大部分来自性格参数，不需要每个 AI 都是最优解</strong>。</p>
+<h2>🎭 道具系统的教训</h2>
+<p>道具最难的从来不是效果实现，是<strong>投放平衡</strong>：落后者拿到强道具、领先者拿到弱道具的动态补偿，调多了竞技性消失，调少了碾压局难看。这个平衡没有公式，只有 playtest。</p>
+<blockquote><p>游戏手感是无数个小决定的积分。引擎决定下限，对细节的偏执决定上限。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
