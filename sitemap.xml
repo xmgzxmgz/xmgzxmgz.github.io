@@ -66,23 +66,5 @@
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/opencv-image-processing.html</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/python-data-visualization.html</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/svm-classification.html</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
 
 </urlset>
