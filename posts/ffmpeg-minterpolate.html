@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>低帧视频变高帧：minterpolate 实战 — 贵志的猫</title>
+<meta name="description" content="minterpolate 的运动补偿插帧能把 30fps 变 60 甚至 120。代价是速度，收益是丝滑——以及一些必须知道的取舍。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ffmpeg-minterpolate.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="低帧视频变高帧：minterpolate 实战">
+<meta property="og:description" content="minterpolate 的运动补偿插帧能把 30fps 变 60 甚至 120。代价是速度，收益是丝滑——以及一些必须知道的取舍。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ffmpeg-minterpolate.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="低帧视频变高帧：minterpolate 实战">
+<meta name="twitter:description" content="minterpolate 的运动补偿插帧能把 30fps 变 60 甚至 120。代价是速度，收益是丝滑——以及一些必须知道的取舍。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>低帧视频变高帧：minterpolate 实战</h1>
+
+  <div class="meta">
+    <span class="date">2026-10-15</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">ffmpeg</span>
+    <span class="tag">视频</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>minterpolate 的运动补偿插帧能把 30fps 变 60 甚至 120。代价是速度，收益是丝滑——以及一些必须知道的取舍。</p>
+  </blockquote>
+
+<p>手头一堆 30fps 的老视频，在现代高刷屏上看就是不如 60fps 顺眼。ffmpeg 自带的 <code>minterpolate</code> 滤镜能做运动补偿插帧（MCI），配合 OBMC 和双向预测，效果比简单复制帧好一个档次。</p>
+<h2>⚙️ 核心命令</h2>
+<pre><code>ffmpeg -i in.mp4 -vf "minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:vsbmc=1" \
+       -c:v h264_nvenc -preset p5 out.mp4</code></pre>
+<p>编码器换 NVENC 走 GPU，CPU 就能腾出来给插帧计算——插帧是整条链路里最吃算力的一环。</p>
+<h2>⚖️ 三个必须知道的取舍</h2>
+<ol>
+<li><strong>慢</strong>。运动补偿是逐块搜索算法，4K 素材一小时的片子要跑很久，批量处理记得留出时间</li>
+<li><strong>伪影</strong>。遮挡和快速运动区域会出现果冻感或撕裂——算法在「猜」被遮挡的像素，猜错就露馅</li>
+<li><strong>信息不会凭空增加</strong>。插帧让运动更顺滑，但不会让模糊变清晰。低质量源插到 120fps 只会得到更大的低质量文件</li>
+</ol>
+<h2>💡 建议的流程</h2>
+<p>先抽 30 秒代表性片段试跑，确认伪影可接受再上全片；源是 24fps 电影类内容时格外谨慎——电影感的抖动被抹平后，有些人反而觉得怪。</p>
+<blockquote><p>插帧改变的是「运动的采样密度」，不是视频质量的上限。上限永远在源里。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
