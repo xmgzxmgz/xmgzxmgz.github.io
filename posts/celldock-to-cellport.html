@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从 CellDock 到 CellPort — 贵志的猫</title>
+<meta name="description" content="macOS 上有个 CellDock 管大疆 4G 模块，Windows 上什么都没有。对标实现的旅程里，最有价值的是列清楚「哪些我不做」。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/celldock-to-cellport.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="从 CellDock 到 CellPort">
+<meta property="og:description" content="macOS 上有个 CellDock 管大疆 4G 模块，Windows 上什么都没有。对标实现的旅程里，最有价值的是列清楚「哪些我不做」。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/celldock-to-cellport.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="从 CellDock 到 CellPort">
+<meta name="twitter:description" content="macOS 上有个 CellDock 管大疆 4G 模块，Windows 上什么都没有。对标实现的旅程里，最有价值的是列清楚「哪些我不做」。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>从 CellDock 到 CellPort</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-20</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">硬件</span>
+    <span class="tag">对标</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>macOS 上有个 CellDock 管大疆 4G 模块，Windows 上什么都没有。对标实现的旅程里，最有价值的是列清楚「哪些我不做」。</p>
+  </blockquote>
+
+<p>这套大疆一代 4G 模块在 macOS 上有 CellDock，体验完整。Windows 上呢？串口助手，敲 AT 指令，仅此而已。CellPort 就是来填这个空的：短信、通话、设备信息、eSIM 切卡、AT 控制台，Windows 原生，不依赖 WSL。</p>
+<h2>🆚 对标过程中确认的三个差异</h2>
+<ol>
+<li><strong>EID 读不出来不一定是你的问题</strong>。SGP.22 和 SGP.02 两条路径在某些早期规范的卡上都被 ISD-R 拒绝（6A80 / 6D00）——是卡片不提供，CellDock 在同样的卡上一样读不到。Profile 管理不受影响</li>
+<li><strong>切卡后必须重启模块</strong>。modem 侧的 SIM 会话不会自动刷新，需要 <code>AT+CFUN=1,1</code>，约 40 秒。程序在写入成功后引导用户确认，然后自动重启、等端口恢复、重连、重读列表</li>
+<li><strong>数据拨号不归程序管</strong>。数据网卡由 Windows 自己处理，项目不介入——这条写在 README 里，省掉一类永远修不好的 issue</li>
+</ol>
+<h2>🚧 明确不做的</h2>
+<p>Profile 下载（ES10b + SM-DP+）暂缓：<strong>没有真实 SM-DP+ 服务器可联调之前，实现了也无法验证，宣称支持是不负责任的</strong>。Roadmap 里这条写着「待拿到可联调环境再落地」。</p>
+<blockquote><p>对标实现最容易翻车的地方不是功能少，是功能多出来还都是没法验证的。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
