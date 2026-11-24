@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「额度 tab 黑屏」排查记 — 贵志的猫</title>
+<meta name="description" content="toast 显示「成功 6 · 跳过 4 · 失败 1」，页面却整片黑。数据明明拿到了，为什么看不见？两层原因叠加。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/quota-tab-blank-screen.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="「额度 tab 黑屏」排查记">
+<meta property="og:description" content="toast 显示「成功 6 · 跳过 4 · 失败 1」，页面却整片黑。数据明明拿到了，为什么看不见？两层原因叠加。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/quota-tab-blank-screen.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「额度 tab 黑屏」排查记">
+<meta name="twitter:description" content="toast 显示「成功 6 · 跳过 4 · 失败 1」，页面却整片黑。数据明明拿到了，为什么看不见？两层原因叠加。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>「额度 tab 黑屏」排查记</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-11</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">前端</span>
+    <span class="tag">排查</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>toast 显示「成功 6 · 跳过 4 · 失败 1」，页面却整片黑。数据明明拿到了，为什么看不见？两层原因叠加。</p>
+  </blockquote>
+
+<p>用户发来截图：切到「额度」标签页，只有一行标题，下面整片黑。但右上角的提示明明显示「成功 6 · 跳过 4 · 失败 1」——<strong>数据已经拿到了，就是看不见</strong>。</p>
+<h2>🔍 两层原因叠加</h2>
+<p><strong>第一层：标签切换和折叠状态打架。</strong>「全部账号额度」区块在默认折叠清单里，切到额度页时它仍然是收起状态，内容 <code>display:none</code>，只剩标题。用户切 tab 的语义是「我要用这个功能」，这时候还让它收着毫无道理。</p>
+<p><strong>第二层更隐蔽：区块嵌错了地方。</strong>「登录态健康」这个区块逻辑上属于健康分组，但 HTML 上嵌在「积分与签到」的面板内部。切到健康页时父面板被隐藏，它作为子元素被连带隐藏——所以健康页也全黑。两处症状被同一个用户当成「这个应用坏了」报上来。</p>
+<h2>🔧 修法</h2>
+<ul>
+<li>进入某个 tab 时，自动展开该 tab 下被折叠的区块</li>
+<li>把「登录态健康」「全部账号签到」从别的面板里提升为独立顶层区块，每个 tab 有干净的显隐边界</li>
+</ul>
+<h2>🧪 怎么证明修好了</h2>
+<p>七个 tab 逐个做无头 DOM 断言：每个 tab 至少有一个可见面板。修 UI bug 最怕「我这里好了」，断言把它变成可重复的检查。</p>
+<blockquote><p>「数据拿到了但看不见」和「数据没拿到」，从用户视角是同一个 bug——但在排查里是两条完全不同的路，先用 toast 把它们分开。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
