@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIM 卡电话簿：SM 存储与 UCS2 姓名 — 贵志的猫</title>
+<meta name="description" content="SIM 卡上的电话簿存在「SM 存储」里，中文姓名是 UCS2 编码。读取容易，解码对齐难。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/sim-phonebook-ucs2.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="SIM 卡电话簿：SM 存储与 UCS2 姓名">
+<meta property="og:description" content="SIM 卡上的电话簿存在「SM 存储」里，中文姓名是 UCS2 编码。读取容易，解码对齐难。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/sim-phonebook-ucs2.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SIM 卡电话簿：SM 存储与 UCS2 姓名">
+<meta name="twitter:description" content="SIM 卡上的电话簿存在「SM 存储」里，中文姓名是 UCS2 编码。读取容易，解码对齐难。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>SIM 卡电话簿：SM 存储与 UCS2 姓名</h1>
+
+  <div class="meta">
+    <span class="date">2026-09-22</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">AT 指令</span>
+    <span class="tag">编码</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>SIM 卡上的电话簿存在「SM 存储」里，中文姓名是 UCS2 编码。读取容易，解码对齐难。</p>
+  </blockquote>
+
+<p>除了短信和通话，模块管理器还做了一个容易被忽略的功能：读 SIM 卡电话簿。联系人存在 SIM 的 <strong>SM 存储</strong>里，读取本身是一条标准指令的事，真正的功夫在解码。</p>
+<h2>🔤 姓名的两种命运</h2>
+<p>电话簿条目的姓名字段，英文数字通常是透明的；<strong>中文姓名则以 UCS2 编码存储</strong>。不处理 UCS2 的读法会把「张三」读成一串问号或空白。解码本身不难——每两个字节的十六进制转一个字符——难的是<strong>判断哪些条目是 UCS2、哪些是透明文本</strong>，判定错了英文联系人反而会坏。</p>
+<h2>🖱️ 一个小而对的交互</h2>
+<p>列表里每个联系人点击即可复制号码。听起来是废话级功能，但在「对着 SIM 通讯录往微信里填手机号」这个真实场景里，它是使用频率最高的一下。<strong>工具的价值密度不在功能数量，在功能出现的位置。</strong></p>
+<h2>💡 顺带的收获</h2>
+<p>读电话簿时同时能拿到 SM 存储的容量与占用——这对判断「SIM 是否接近写满」（影响短信存储选择）是个免费的副产品。</p>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
