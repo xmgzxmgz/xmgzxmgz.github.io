@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>给 NinebotCast 的七处修正 — 贵志的猫</title>
+<meta name="description" content="分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ninebot-cast-7-patches.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="给 NinebotCast 的七处修正">
+<meta property="og:description" content="分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ninebot-cast-7-patches.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="给 NinebotCast 的七处修正">
+<meta name="twitter:description" content="分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>给 NinebotCast 的七处修正</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-21</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">iOS</span>
+    <span class="tag">补丁</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。</p>
+  </blockquote>
+
+<p>开源 iOS 客户端 NinebotCast 是很多人上手的起点，但它在实机上有一批水土不服的地方。我按现象逐一定位，做了七处修正：</p>
+<table>
+<thead><tr><th>#</th><th>问题</th><th>后果</th><th>修法</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>分片默认 1400 载荷（整包 1420）</td><td>部分仪表收不下</td><td>改 1380，整包恰好 1400</td></tr>
+<tr><td>2</td><td>非关键帧标志位缺 <code>0x02</code></td><td>仪表可能按关键帧处理，参考链错乱</td><td>非关键帧恒带 <code>0x02</code></td></tr>
+<tr><td>3</td><td>帧标签写成 <code>BE16(1024+ts)</code></td><td>与官方实现不一致</td><td>改小端、去掉 +1024</td></tr>
+<tr><td>4</td><td>pong 硬校验长度 20</td><td>七寸仪表回 24 字节，永远「尚无回应」</td><td>两种长度都接受</td></tr>
+<tr><td>5</td><td>静止图片每帧重编码</td><td>白占带宽与解码</td><td>每秒刷新一次</td></tr>
+<tr><td>6</td><td>拥塞时丢帧后补关键帧</td><td>关键帧 5–8 倍大，越堵越发大包</td><td>先降码率、再隔帧</td></tr>
+<tr><td>7</td><td>关键帧重发默认开</td><td>带宽翻倍</td><td>默认关，文案标注</td></tr>
+</tbody>
+</table>
+<h2>💡 修正的顺序感</h2>
+<p>这七处不是并列的。<strong>1、2、3 是「对不对」的问题</strong>——不改包根本不被正确解析；<strong>4 是「通不通」</strong>——不改状态机建立不起来；<strong>5、6、7 是「好不好」</strong>——是体验和资源优化。修协议类代码先修正确性、再修连通性、最后调优，顺序反了会在错误的层级上浪费时间。</p>
+<blockquote><p>每一个补丁背后都是一个实机现象。没有现象支撑的「优化」，在协议代码里通常是引入新 bug 的委婉说法。</p></blockquote>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
