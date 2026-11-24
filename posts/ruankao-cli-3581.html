@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>把 3581 道题装进终端 — 贵志的猫</title>
+<meta name="description" content="备考软考高项，网上的刷题平台都太吵了。于是写了个终端刷题器：零依赖、离线、外观像在跑单元测试。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ruankao-cli-3581.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="把 3581 道题装进终端">
+<meta property="og:description" content="备考软考高项，网上的刷题平台都太吵了。于是写了个终端刷题器：零依赖、离线、外观像在跑单元测试。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ruankao-cli-3581.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="把 3581 道题装进终端">
+<meta name="twitter:description" content="备考软考高项，网上的刷题平台都太吵了。于是写了个终端刷题器：零依赖、离线、外观像在跑单元测试。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>把 3581 道题装进终端</h1>
+
+  <div class="meta">
+    <span class="date">2026-08-23</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">Python</span>
+    <span class="tag">学习工具</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>备考软考高项，网上的刷题平台都太吵了。于是写了个终端刷题器：零依赖、离线、外观像在跑单元测试。</p>
+  </blockquote>
+
+<p>备考信息系统项目管理师（高项）的时候，市面上的刷题工具都有点吵：要登录、要开网页、弹窗、广告。而我每天盯着终端的时间最长——那就写一个终端刷题器。</p>
+<h2>⌨️ 两个形态</h2>
+<ul>
+<li><strong>纯键盘 CLI</strong>：零依赖，只用 Python 3 标准库，不联网、无弹窗</li>
+<li><strong>终端 TUI</strong>（默认）：在命令行里<strong>用鼠标点选项作答</strong>，外观仍然像在跑测试或看构建日志——在工位上用也不突兀</li>
+</ul>
+<h2>📚 题库功能</h2>
+<pre><code>python drill.py                  # 随机练全部 3581 题
+python drill.py --cat 信息化发展  # 按 144 个章节分类练
+python drill.py --wrong          # 只复习错题本，答对自动移出
+python drill.py --mock           # 模拟考试（75 题 / 150 分钟）
+python drill.py --paper 2023上   # 练某年真题</code></pre>
+<p>错题本的设计是答对自动移出——<strong>错题本的长度就是你距离通过的剩余工作量</strong>，让它只增不减没有意义。</p>
+<h2>💡 做工具的一点点心得</h2>
+<p>这个工具没有任何「技术含量」：标准库、离线题库、几个循环。但它每天真的被使用，考试也过了。<strong>能陪伴你度过一个真实目标的小工具，比仓库里十个炫技项目更有价值。</strong></p>
+
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
