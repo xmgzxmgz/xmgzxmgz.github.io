@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本地跑大模型前，先做一道乘法题 — 贵志的猫</title>
+<meta name="description" content="想本地跑个大模型，多数人的第一步是打开模型列表开始下载。我的第一步也是——直到模型在我那台机器上跑得像慢动作回放，才回头补上这道本该最先做的乘法题。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/local-llm-vram-first.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="本地跑大模型前，先做一道乘法题">
+<meta property="og:description" content="想本地跑个大模型，多数人的第一步是打开模型列表开始下载。我的第一步也是——直到模型在我那台机器上跑得像慢动作回放，才回头补上这道本该最先做的乘法题。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/local-llm-vram-first.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="本地跑大模型前，先做一道乘法题">
+<meta name="twitter:description" content="想本地跑个大模型，多数人的第一步是打开模型列表开始下载。我的第一步也是——直到模型在我那台机器上跑得像慢动作回放，才回头补上这道本该最先做的乘法题。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>本地跑大模型前，先做一道乘法题</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">本地模型</span><span class="tag">显存</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>想本地跑个大模型，多数人的第一步是打开模型列表开始下载。我的第一步也是——直到模型在我那台机器上跑得像慢动作回放，才回头补上这道本该最先做的乘法题。</p>
+  </blockquote>
+
+<p>想本地跑个大模型，多数人的第一步是打开模型列表开始下载。我的第一步也是——直到模型在我那台机器上跑得像慢动作回放，才回头补上这道本该最先做的乘法题。</p>
+<h2>🧮 一道乘法题</h2>
+<p>显存需求其实就一个公式：参数量 × 每个 token 占的字节数，后者由量化等级决定。</p>
+<p>Q4 量化下有个很好记的速算：每十亿参数约等于 0.6 到 0.7 GB。所以 7B 约占 5GB，14B 约占 9GB，32B 约占 19GB，70B 直接奔 40GB 起步，单卡基本告别。</p>
+<p>这道题的价值在于「下载之前就知道行不行」。8G 显存跑 7B 的 Q4 很从容，14B 就得掂量，32B 想都别想——不用下完 19GB 才发现。</p>
+<h2>🎚️ 卡线时的两种减法</h2>
+<p>量化等级里，Q4 是速度与质量的甜点；Q8 接近无损，但显存几乎翻倍，再往上意义不大。</p>
+<p>容易漏算的是上下文。KV 缓存要另占一块显存，32K 的上下文轻轻松松再吃 1 到 4GB。显存刚好卡线的机器，出路就两条：降一档量化，或者砍上下文长度。</p>
+<p>写着写着，思路清楚了——显存预算从来不是「能不能跑」的是非题，而是参数量、量化、上下文三者互相让步的谈判桌。</p>
+<h2>🧭 装好之后干什么</h2>
+<p>工具走双轨就够。Ollama 做后端：命令行加 OpenAI 兼容的本地 API，接什么都即插即用。LM Studio 做体验：图形界面里拖一拖，装不下的层可以卸到内存。</p>
+<pre><code>ollama pull qwen3:8b
+ollama run qwen3:8b
+# 本地 OpenAI 兼容 API，默认端口 11434</code></pre>
+<p>但比工具更重要的是定位。本地模型的强项是三件事：隐私敏感的东西不出机器；离线环境里它是唯一选项；批量打标这类低价值任务边际成本为零。弱项也很清楚——顶尖推理和长文创作，本地模型与云端旗舰的差距肉眼可见。</p>
+<h2>💡 一点观察</h2>
+<p>所以最终的答案不是「本地还是云端」，而是路由：什么任务放哪里。这和开头那道乘法题是同一件事——先算清楚，再决定钱和卡花在哪。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

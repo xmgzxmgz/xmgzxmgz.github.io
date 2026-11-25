@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>那个小图标能读你所有网页，我花十分钟审了一个扩展 — 贵志的猫</title>
+<meta name="description" content="浏览器右上角那个不起眼的小图标，权限可能比你想的大得多：读你正在看的每一个页面、改你发出的每一个请求、看你复制的每一段文本。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/browser-extension-audit.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="那个小图标能读你所有网页，我花十分钟审了一个扩展">
+<meta property="og:description" content="浏览器右上角那个不起眼的小图标，权限可能比你想的大得多：读你正在看的每一个页面、改你发出的每一个请求、看你复制的每一段文本。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/browser-extension-audit.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="那个小图标能读你所有网页，我花十分钟审了一个扩展">
+<meta name="twitter:description" content="浏览器右上角那个不起眼的小图标，权限可能比你想的大得多：读你正在看的每一个页面、改你发出的每一个请求、看你复制的每一段文本。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>那个小图标能读你所有网页，我花十分钟审了一个扩展</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">浏览器扩展</span><span class="tag">隐私</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>浏览器右上角那个不起眼的小图标，权限可能比你想的大得多：读你正在看的每一个页面、改你发出的每一个请求、看你复制的每一段文本。</p>
+  </blockquote>
+
+<p>浏览器右上角那个不起眼的小图标，权限可能比你想的大得多：读你正在看的每一个页面、改你发出的每一个请求、看你复制的每一段文本。</p>
+<p>而我以前装扩展的方式是：看评分不错，点安装。直到有天意识到，商店对扩展的审核远比应用商店宽松，这个习惯等于把整个浏览器裸奔。</p>
+<h2>📋 权限要跟功能对得上</h2>
+<p>后来我给自己立了一条唯一的规则：权限和功能不匹配的，一律不装。</p>
+<p>判断基准其实很朴素。广告拦截器请求一个订阅规则的域名，合理；广告拦截器把浏览历史发到一个陌生统计域名，恶意。一个单站点的小工具却申请「读取所有网站数据」，那它要的就不是功能，是数据。</p>
+<p>几类权限尤其要眯起眼看：cookies 权限等于会话在手，接近账号接管；标签页和浏览记录权限能画出你的行为画像；剪贴板权限则能摸到你复制的密码和验证码。</p>
+<h2>🔍 十分钟的快审流程</h2>
+<p>现在的流程固定下来，十分钟一个：</p>
+<p>先读 manifest.json，看权限清单和 content_scripts 注入了哪些站点。再全文搜危险模式——动态拉脚本执行的是重灾区，代码商店规则明令禁止，但总有人打擦边。大段 base64、变量名全混淆、体积和功能严重不成比例的，直接pass。</p>
+<pre><code># 扩展目录下全文搜危险模式
+grep -rEn &quot;eval\(|new Function|atob\(&quot; .
+grep -rEn &quot;fetch\(|XMLHttpRequest&quot; . | head -20</code></pre>
+<p>搜出来的请求域名，逐个跟功能对照：它联网的每一个理由，你都能解释吗？解释不了的，就是答案。</p>
+<p>开发者背景也值得花两分钟：个人开发者有没有别的作品，隐私政策链接是不是死链，更新日志是真实迭代还是复制粘贴。</p>
+<h2>🗓️ 装完不是终点</h2>
+<p>最容易漏的一课是：审计不能只做在安装那天。</p>
+<p>好扩展被卖给新东家之后植入作恶代码的案例，隔一阵就来一次——更新审核同样宽松。所以我给已装的扩展定了季度复查：权限有没有悄悄变多，新版本的更新说明在不在讲人话，最近有没有突然冒出来的一堆差评提「上传数据」。</p>
+<p>复查那天顺手问自己：这个扩展我半年用了几次？答案尴尬的那些，直接卸载。扩展数量也是一种攻击面。</p>
+<h2>💡 一点观察</h2>
+<p>扩展审计的本质和挑室友差不多：进门时看证件，住进来之后还得偶尔看看他半夜在干什么。信任不是一次授予的，是持续核对的。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

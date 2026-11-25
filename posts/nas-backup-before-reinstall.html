@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重装系统前，我先数了数家底 — 贵志的猫</title>
+<meta name="description" content="NAS 用久了系统总有点不对劲，重装的念头就冒出来了。但 NAS 不像手机，恢复出厂之前得先想清楚：这一下会丢什么。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/nas-backup-before-reinstall.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="重装系统前，我先数了数家底">
+<meta property="og:description" content="NAS 用久了系统总有点不对劲，重装的念头就冒出来了。但 NAS 不像手机，恢复出厂之前得先想清楚：这一下会丢什么。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/nas-backup-before-reinstall.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="重装系统前，我先数了数家底">
+<meta name="twitter:description" content="NAS 用久了系统总有点不对劲，重装的念头就冒出来了。但 NAS 不像手机，恢复出厂之前得先想清楚：这一下会丢什么。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>重装系统前，我先数了数家底</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">nas</span><span class="tag">备份</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>NAS 用久了系统总有点不对劲，重装的念头就冒出来了。但 NAS 不像手机，恢复出厂之前得先想清楚：这一下会丢什么。</p>
+  </blockquote>
+
+<p>NAS 用久了系统总有点不对劲，重装的念头就冒出来了。但 NAS 不像手机，恢复出厂之前得先想清楚：这一下会丢什么。</p>
+<h2>🧮 先算会丢什么</h2>
+<p>我把风险摊开列了一遍，按疼的程度排序：</p>
+<p>最疼的是数据。存储池要是没了，照片、影视、文档，全都是不可再生资产。</p>
+<p>其次疼的是配置。几十个容器的参数、环境变量、挂载路径，丢了虽然能重建，但每一个都要重新回忆"当初是怎么配的"。</p>
+<p>再往后是系统授权——重装后要重新绑定账号，还有远程可达性，内网穿透、组网这些通道会断一阵子。</p>
+<p>概率和影响各不相同，但有一条我给自己划了红线：备份没验证过之前，绝不选"清空重装"，最多走"保留数据重装"。</p>
+<h2>📦 备份清单，一摊一摊清</h2>
+<p>清单是照着"重装后怎么恢复"倒推出来的，分四摊：</p>
+<p>容器这摊，每台机器存三样：启动命令脚本（镜像锁死版本）、环境变量文件、一份完整的 inspect 快照。</p>
+<p>配置这摊，把各容器的配置目录按原始路径打包。打包时保留绝对路径结构，恢复的时候解到原位就能用，不用再猜路径。</p>
+<p>宿主机这摊，是那些不属于任何容器的：Docker 的 daemon 配置、crontab、系统服务的配置文件。</p>
+<p>最后是青龙面板这摊，把它的数据目录整个备下来——定时任务和里面存的各类登录凭据都在。</p>
+<p>这摊里有个坑让我后背发凉：青龙镜像声明了数据卷，重建容器时如果忘了把宿主目录显式挂回去，Docker 会自动给它发一个匿名空卷。容器照常启动，页面照常打开，但任务列表是空的。一切看起来正常，数据其实已经没了。这种丢法最阴险。</p>
+<h2>🔁 恢复过一次才算备份</h2>
+<p>备份做完不久，机会真的来了。有次盘点发现 NAS 上少了十来个容器——原因不细究了，总之得从备份里拉回来。</p>
+<p>按清单逐个重建：从备份仓库取回启动脚本和配置，解包到原路径，按原端口拉起。大部分容器起来之后 HTTP 探测直接返回 200，几乎无感恢复。</p>
+<p>也有不完美的。两三个容器当时只备份了配置、没备运行时数据，恢复后服务活着，但里面的记录得重新配。我在这几个条目旁边补了一行注释：此项目未备份，丢了就丢了。</p>
+<h2>💡 一点观察</h2>
+<p>备份的意义从来不是"我存过了"，而是"我恢复过一次"。没被恢复演练验证过的备份清单，本质上只是一份愿望清单。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

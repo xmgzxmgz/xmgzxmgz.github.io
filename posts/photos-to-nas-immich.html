@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手机照片自己往 NAS 跑 — 贵志的猫</title>
+<meta name="description" content="手机相册两万多张，放在云上，要么压缩画质，要么按月收订阅费。我想要的是照片实实在在落进自己家里——于是认真研究了一遍"照片自动进 NAS"的几条路。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/photos-to-nas-immich.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="手机照片自己往 NAS 跑">
+<meta property="og:description" content="手机相册两万多张，放在云上，要么压缩画质，要么按月收订阅费。我想要的是照片实实在在落进自己家里——于是认真研究了一遍"照片自动进 NAS"的几条路。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/photos-to-nas-immich.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="手机照片自己往 NAS 跑">
+<meta name="twitter:description" content="手机相册两万多张，放在云上，要么压缩画质，要么按月收订阅费。我想要的是照片实实在在落进自己家里——于是认真研究了一遍"照片自动进 NAS"的几条路。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>手机照片自己往 NAS 跑</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">immich</span><span class="tag">nas</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>手机相册两万多张，放在云上，要么压缩画质，要么按月收订阅费。我想要的是照片实实在在落进自己家里——于是认真研究了一遍"照片自动进 NAS"的几条路。</p>
+  </blockquote>
+
+<p>手机相册两万多张，放在云上，要么压缩画质，要么按月收订阅费。我想要的是照片实实在在落进自己家里——于是认真研究了一遍"照片自动进 NAS"的几条路。</p>
+<h2>🛤️ 三条路的取舍</h2>
+<p>第一条路是纯同步工具，手机相册目录和 NAS 目录直传，零管理成本。缺点也直接：它只管搬运，没有相册体验，两万张照片摊在文件夹里，找一张靠翻。</p>
+<p>第二条路是自托管的照片管理器，浏览和检索做得不错，但备份链路弱，更适合展示已经整理好的库，不适合当入口。</p>
+<p>第三条路是 Immich，定位就是自托管版 Google 相册：App 后台自动备份、时间线、人脸和场景检索。代价是迭代快、偶尔有破坏性变更，还吃内存。</p>
+<p>写到这里，选择已经浮出来了：我要的不是"照片传过去"，是"传过去之后还找得到"。最终走 Immich，同步工具留作底层传输的备胎。</p>
+<h2>🐳 部署那一下</h2>
+<p>部署用官方 compose，一次拉起服务端、机器学习、数据库、缓存四个角色：</p>
+<pre><code>services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:release
+    ports:
+      - &quot;8080:2283&quot;
+    volumes:
+      - ./data:/usr/src/app/upload
+    restart: unless-stopped</code></pre>
+<p>硬件跟得上的话，机器学习一定开。人脸聚类和场景搜索是用上就回不去的功能——"找出所有有猫的照片"这种事，翻文件夹永远做不到。</p>
+<p>App 端有三个设置决定体验：仅 WiFi 上传、原始画质、后台白名单。第三个最容易被忽略——国产 ROM 的电池优化会悄悄杀掉后台上传，得手动加保护名单。</p>
+<h2>✅ 上传完不等于备份完</h2>
+<p>迁移完历史照片后我做了一次校验：服务端照片总数对比手机相册计数，一致才算数；再抽几张看 EXIF 拍摄时间对不对。</p>
+<p>更关键的一层是：NAS 上这份也只是第二份，不是备份。我按 3-2-1 补齐——定时同步到外置硬盘，再加密放一份到异地网盘，半年做一次抽样恢复。</p>
+<p>没验证过的备份，等于没有备份。</p>
+<h2>💡 一点观察</h2>
+<p>照片大概是数字资产里唯一"不可再生"的部分。"自动备份"真正的完成时刻，不是设置完的那一刻，而是你第一次从备份里把照片找回来的那一刻。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

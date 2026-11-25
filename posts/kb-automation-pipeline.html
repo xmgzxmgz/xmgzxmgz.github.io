@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关掉对话之后，知识库还在自己长大 — 贵志的猫</title>
+<meta name="description" content="之前写过《对话数据的主权》，结论是数据得留在自己手里。但留只是一半，另一半是：留下来的东西要能被找到。我的办法是让知识库自己生长——每天晚上，白天聊过的对话会自动变成一页页可搜索的 HTML，铺在家里的静态站上。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/kb-automation-pipeline.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="关掉对话之后，知识库还在自己长大">
+<meta property="og:description" content="之前写过《对话数据的主权》，结论是数据得留在自己手里。但留只是一半，另一半是：留下来的东西要能被找到。我的办法是让知识库自己生长——每天晚上，白天聊过的对话会自动变成一页页可搜索的 HTML，铺在家里的静态站上。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/kb-automation-pipeline.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="关掉对话之后，知识库还在自己长大">
+<meta name="twitter:description" content="之前写过《对话数据的主权》，结论是数据得留在自己手里。但留只是一半，另一半是：留下来的东西要能被找到。我的办法是让知识库自己生长——每天晚上，白天聊过的对话会自动变成一页页可搜索的 HTML，铺在家里的静态站上。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>关掉对话之后，知识库还在自己长大</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">知识库</span><span class="tag">自动化</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>之前写过《对话数据的主权》，结论是数据得留在自己手里。但留只是一半，另一半是：留下来的东西要能被找到。我的办法是让知识库自己生长——每天晚上，白天聊过的对话会自动变成一页页可搜索的 HTML，铺在家里的静态站上。</p>
+  </blockquote>
+
+<p>之前写过《对话数据的主权》，结论是数据得留在自己手里。但留只是一半，另一半是：留下来的东西要能被找到。我的办法是让知识库自己生长——每天晚上，白天聊过的对话会自动变成一页页可搜索的 HTML，铺在家里的静态站上。</p>
+<p>有天我随手搜一个三个月前的问题，居然真搜到了。那一刻的感觉不是方便，是安心：这条链路我一次都没手动碰过。</p>
+<h2>🌊 链路只有四段</h2>
+<p>整条流水线比想象中简单：</p>
+<p>Mac 只干一件事——把新会话同步到 NAS。生成在 NAS 上做：扫描会话、提炼纪要、渲染页面、推到 GitHub 私有仓库。极空间上还有个定时任务盯着仓库，有新提交就拉下来，铺进 nginx 的站点目录，内网随时能翻。</p>
+<p>关键分工就一句话：<strong>生成端独占写，同步端只读</strong>。谁生成谁才有资格 push，拉取的那端永远不还手。这句话是用一次事故换来的，后面说。</p>
+<h2>🔁 幂等是底气</h2>
+<p>同步任务最怕两种病：跑一半挂了不敢重跑，或者每跑一次都把所有东西重来一遍。解药是幂等——用一个状态文件记住每个源的处理位置，源没变就直接跳过。</p>
+<p>NAS 侧的拉取也一个思路：先问远端的 commit 有没有变，没变就零下载退出。</p>
+<pre><code>remote=$(git ls-remote origin main | cut -c1-12)
+local=$(cat ~/kb/last.sha 2&gt;/dev/null)
+[ &quot;$remote&quot; = &quot;$local&quot; ] &amp;&amp; exit 0
+echo &quot;更新: $local -&gt; $remote&quot;</code></pre>
+<p>坑也是真实踩过的：mtime 带小数秒，Mac 和 NAS 对同一个文件算出的时间差了零点几秒，于是同一页每天被反复重建。把比较改成整秒才安静下来。另一个坑是同一个会话在多个目录里有副本，两边各自建页，相互覆盖——扫描时按会话 ID 去重，留最新的那份，才算根治。</p>
+<h2>✍️ 两个写者必打架</h2>
+<p>前面说的事故是这样：NAS 每小时生成完会提交一次 index.html，我这边手动补录时也 push，两边各自提交，历史必然分叉。更糟的是拉取脚本用的是 <code>--ff-only</code>，分叉了它不报错，只是默默跳过——于是知识库看起来在更新，其实早就停在原地。</p>
+<p>修法不是修分叉，是取消「另一个写者」。Mac 降级为纯同步，NAS 是唯一有笔的人。分叉时就对齐远端、本地重建，反正生成是幂等的，重来不丢东西。</p>
+<p>顺手把凭据也挪了家：token 不再写在脚本里，搬进一个 600 权限的独立文件。</p>
+<h2>💡 一点观察</h2>
+<p>《不同步什么》讲的是把同步面砍到最小，这次续上一句：比砍同步面更要紧的，是砍写权限。数据可以到处有副本，但笔只能有一支。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

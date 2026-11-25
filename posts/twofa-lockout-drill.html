@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>开了 2FA 之后，我差点把自己锁在门外 — 贵志的猫</title>
+<meta name="description" content="周末做了个小演练：假装手机现在掉进水里，然后挨个想哪些账号登不上去。结果比想象中狼狈——好几个账号的验证码只活在那台手机里。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/twofa-lockout-drill.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="开了 2FA 之后，我差点把自己锁在门外">
+<meta property="og:description" content="周末做了个小演练：假装手机现在掉进水里，然后挨个想哪些账号登不上去。结果比想象中狼狈——好几个账号的验证码只活在那台手机里。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/twofa-lockout-drill.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="开了 2FA 之后，我差点把自己锁在门外">
+<meta name="twitter:description" content="周末做了个小演练：假装手机现在掉进水里，然后挨个想哪些账号登不上去。结果比想象中狼狈——好几个账号的验证码只活在那台手机里。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>开了 2FA 之后，我差点把自己锁在门外</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">2FA</span><span class="tag">账号安全</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>周末做了个小演练：假装手机现在掉进水里，然后挨个想哪些账号登不上去。结果比想象中狼狈——好几个账号的验证码只活在那台手机里。</p>
+  </blockquote>
+
+<p>周末做了个小演练：假装手机现在掉进水里，然后挨个想哪些账号登不上去。结果比想象中狼狈——好几个账号的验证码只活在那台手机里。</p>
+<p>那一刻我意识到，2FA 最常见的结局不是被黑客破解，是被自己锁死。</p>
+<h2>🔐 四档防护，差的是代</h2>
+<p>把常见的二步验证排个序，防钓鱼能力其实是代差关系，不是半斤八两。</p>
+<p>SMS 验证码最弱，卡能被劫持、短信能被转发，它只比没有强一点。TOTP 那个 30 秒滚动的六位数，防得住远程盗号，但防不住实时钓鱼——假网站把你现输的码中继走，照样能用。推送确认方便，却怕「疲劳攻击」，狂弹确认框总有一次手滑。</p>
+<p>真正把钓鱼堵死的是 FIDO2 硬件密钥：签名和真实域名绑在一起，假站拿到的签名是无效的。这也是为什么有些大厂强制员工人手一把。</p>
+<p>不过这篇不是劝你全换硬件钥匙的。</p>
+<h2>🧾 恢复码才是本体</h2>
+<p>写着写着，真正的重点浮出来了——比选哪档更重要的，是每个账号都得有「第二把钥匙」。</p>
+<p>我的做法很朴素：开启 2FA 时的恢复码，打印出来离线放，一式一份放在家里固定的地方。如果用硬件密钥，就买两把，一把日常插着，一把进抽屉，两把都注册到账号上。</p>
+<p>还有一个容易漏的根：主邮箱。所有「忘记密码」的流程最后都汇到邮箱，它是账号体系的树根，值得用你手里最强的 2FA 方式去保护它。</p>
+<p>最后在密码库里给高价值账号加一行备注：这个号用的是什么验证方式、恢复码放在哪。别嫌啰嗦，未来的你会感谢这行字。</p>
+<h2>🧯 换手机演练</h2>
+<p>前面说的那个「假装手机丢了」，建议真做一次，十五分钟就够。</p>
+<p>拿张纸，写下：哪些账号的验证码只在这台手机上？哪些能靠恢复码救回来？恢复码具体在哪？</p>
+<p>写不出来的格子，就是窟窿。当场补上——重新生成一份恢复码，或者换个更强的验证方式。这份皱巴巴的「失机预案」，比任何 2FA 档位的争论都实用。</p>
+<p>安全这事，防住别人只是上半场，别把自己锁在门外才是完整比赛。</p>
+<h2>💡 一点观察</h2>
+<p>我们总把安全想象成「对抗黑客」，但多数人的真实损失来自「对抗自己」——丢手机、忘恢复码、换机没迁移。预案的价值，就是把最坏情况提前演练成一张纸。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

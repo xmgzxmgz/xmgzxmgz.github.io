@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>转写一小时录音，坑全藏在静音里 — 贵志的猫</title>
+<meta name="description" content="把几段长录音变成文字稿，我原以为难点是中文识别率。结果真正卡住流程的，是一段没人说话的空白。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/whisper-transcription.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="转写一小时录音，坑全藏在静音里">
+<meta property="og:description" content="把几段长录音变成文字稿，我原以为难点是中文识别率。结果真正卡住流程的，是一段没人说话的空白。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/whisper-transcription.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="转写一小时录音，坑全藏在静音里">
+<meta name="twitter:description" content="把几段长录音变成文字稿，我原以为难点是中文识别率。结果真正卡住流程的，是一段没人说话的空白。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>转写一小时录音，坑全藏在静音里</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">语音识别</span><span class="tag">Whisper</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>把几段长录音变成文字稿，我原以为难点是中文识别率。结果真正卡住流程的，是一段没人说话的空白。</p>
+  </blockquote>
+
+<p>把几段长录音变成文字稿，我原以为难点是中文识别率。结果真正卡住流程的，是一段没人说话的空白。</p>
+<h2>🎚️ 档位按显存挑</h2>
+<p>工具没有悬念：faster-whisper。同样的模型，速度大约快四倍，显存减半，没有理由用原版。</p>
+<p>档位看显存量力而行：small 约占 1GB，清晰语音已经够用；medium 约 2.5GB，效果良好；large-v3 约 5GB，中文专有名词明显更准。显存装得下就上 large-v3，识别率上省下的纠错时间远比那几 GB 值钱。</p>
+<h2>🔇 静音才是反派</h2>
+<p>Whisper 原生一次只看 30 秒窗口，长音频必须切。而真正的坑在这里：遇到长静音或纯音乐段，模型会开始编造——同一句话循环复读，看着像鬼畜，实际是模型在无话可找时硬找话。</p>
+<p>解法只要一行：开 VAD，先按人声活动切片再转写，静音段直接跳过。</p>
+<pre><code>from faster_whisper import WhisperModel
+model = WhisperModel(&quot;large-v3&quot;, device=&quot;auto&quot;, compute_type=&quot;int8&quot;)
+segments, info = model.transcribe(&quot;meeting.mp3&quot;,
+    vad_filter=True,  # 切掉静音，防幻觉循环
+    initial_prompt=&quot;以下是技术分享录音，涉及语音识别与本地部署。&quot;)
+for s in segments:
+    print(f&quot;[{s.start:.1f}s] {s.text}&quot;)</code></pre>
+<h2>📋 从录音到能用的稿子</h2>
+<p>识别率还有两招。一是 initial_prompt 里塞领域词表——人名、产品名、术语，专有名词的准确率肉眼可见地改善；二是剩下的零星错字，转写完全局替换兜底。</p>
+<p>之后就是产线思维。要字幕，<code>--output_format srt</code> 直出，每段自带起止时间戳，配视频轴微调就能对齐；要会议纪要，就把转写全文丢给 LLM，让它提取「决议、待办、责任人」，出来就是结构化纪要，归档分发一气呵成。</p>
+<p>时间戳还有个隐藏用法：转写结果按段落在脚本里二次加工，比如每满一分钟合并一段、去掉口头语，喂给 LLM 前先做一层清洗，纪要质量会更好。</p>
+<p>敏感内容的录音我坚持本地转写——录音传第三方在线服务这一步，能省则省。之前写过本地模型那笔显存账，跑个 medium 档绰绰有余。</p>
+<h2>💡 一点观察</h2>
+<p>整条流水线里，最不起眼的环节往往决定成败。这次是 30 秒的静音教会我的。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docker ps 说它活着 — 贵志的猫</title>
+<meta name="description" content="周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/nas-fake-alive-container.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="docker ps 说它活着">
+<meta property="og:description" content="周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/nas-fake-alive-container.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="docker ps 说它活着">
+<meta name="twitter:description" content="周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>docker ps 说它活着</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">docker</span><span class="tag">nas</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。</p>
+  </blockquote>
+
+<p>周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。</p>
+<h2>🕳️ 死了三天才发现</h2>
+<p>时间线大概是这样的。那天下午，容器里的代理进程崩了，主进程直接退出。</p>
+<p>按理说 <code>docker ps</code> 该显示 Exited，但它没有。状态栏还是那个让人心安的 Up。</p>
+<p>我的看门狗每五分钟探一次端口，端口一直是通的，于是每五分钟确认一次"健康"。这个循环持续了整整三天，三天里没有一条告警。</p>
+<p>最后揭穿真相的不是监控系统，是我自己想用代理的那一刻。</p>
+<h2>🎭 端口在听，但不是它</h2>
+<p>复盘时最扎心的发现是：端口探活本身没有 bug，它只是探测错了对象。</p>
+<p>容器崩了以后，宿主机上有个叫 docker-proxy 的用户态进程还活着。它独立于容器的生命周期，只要 Docker 守护进程不重启，它就一直替那个死掉的容器占着端口。</p>
+<p><code>ss -tlnp</code> 一看，端口确实在 LISTEN，但监听者是 docker-proxy，不是容器里的应用。</p>
+<p>换句话说，看门狗一直在给一个尽职的替身演员鼓掌，正主早就退场了。</p>
+<h2>🔬 死活要对着两个视角看</h2>
+<p>真正能作证的，是 containerd 的视角。它和 Docker 各记各的账：</p>
+<pre><code>docker ps -q | wc -l
+# Docker 视角：21 个容器
+
+ctr -n moby task list | grep -c RUNNING
+# containerd 视角：17 个真在跑</code></pre>
+<p>两边一对账，差出来的那几个就是假活。</p>
+<p>处置也不复杂：对确认假活的容器逐个 <code>docker restart -t 10</code>，走正常重启流程基本都能救回来。但有一条禁令我写进了备忘——绝对不用重启整个 Docker 服务来自愈，那样不清残留，还会把旁边十几个健康容器一起拖下水。</p>
+<p>之后我把看门狗升级了一版：以 containerd 的 task 状态和进程的挂载命名空间为铁证，端口探测降级成辅助信号。</p>
+<h2>💡 一点观察</h2>
+<p>监控最危险的失效方式，不是不报，而是它每五分钟都报一次——报一个它验证过的假象。探测本身也要被怀疑，尤其是那个"从来没红过"的指标。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG 效果差，八成不是模型的锅 — 贵志的猫</title>
+<meta name="description" content="给自己的知识库上 RAG，一开始总以为是模型不够聪明。折腾两周才发现，模型是整条流水线里最不用背锅的一环。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/rag-personal-kb.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="RAG 效果差，八成不是模型的锅">
+<meta property="og:description" content="给自己的知识库上 RAG，一开始总以为是模型不够聪明。折腾两周才发现，模型是整条流水线里最不用背锅的一环。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/rag-personal-kb.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RAG 效果差，八成不是模型的锅">
+<meta name="twitter:description" content="给自己的知识库上 RAG，一开始总以为是模型不够聪明。折腾两周才发现，模型是整条流水线里最不用背锅的一环。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>RAG 效果差，八成不是模型的锅</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">RAG</span><span class="tag">知识库</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>给自己的知识库上 RAG，一开始总以为是模型不够聪明。折腾两周才发现，模型是整条流水线里最不用背锅的一环。</p>
+  </blockquote>
+
+<p>给自己的知识库上 RAG，一开始总以为是模型不够聪明。折腾两周才发现，模型是整条流水线里最不用背锅的一环。</p>
+<h2>✂️ 切块是第一杠杆</h2>
+<p>RAG 的四步：切块、嵌入、检索、生成。影响效果最大的，偏偏是最不起眼的切块。</p>
+<p>块大小 300 到 500 字、加 10% 到 20% 重叠，是稳健起点。比数字更重要的是切法：按文档结构切，标题层级就是天然边界；表格和代码块独立成块，别拦腰斩断。</p>
+<p>道理很简单——块内语义不完整，后面检索再准，也召不回一个被切碎的答案。</p>
+<h2>🔍 检索要打补丁</h2>
+<p>纯向量检索有个软肋：精确名词。型号、代码、专有名词这类「字面必须对上」的查询，向量相似度经常靠不住。补法是混一路关键词检索（BM25），两路结果合并，谁也不落下。</p>
+<p>性价比最高的加一步是重排：先粗召回 20 条，用 rerank 模型精排出前 5 条再塞给模型，一步顶得上好多调参。用户问得太口语化时，还可以先让模型把问题改写成检索友好的样子。</p>
+<h2>🧪 别用眼睛调参</h2>
+<p>最想提醒的一点：建 20 到 50 条「问题-标准答案」的测试集，每次改参数跑一遍命中率。裸眼看几个问答觉得「好像变好了」，基本都是幸存者偏差。</p>
+<pre><code>hits = sum(1 for q, gold in qa_pairs
+           if gold in retrieve(q)[:5])
+print(f&quot;命中率 {hits / len(qa_pairs):.0%}&quot;)</code></pre>
+<p>选型上，个人起步用现成框架就够了，上传文档即问；想精细控制切分和检索策略再自建，代价是维护。两个坑别踩：入库别手动上传，做成脚本，否则文档一更新索引就烂掉；敏感文档用本地嵌入加本地模型，全链路不出机器——之前写过那笔显存账，正好接上。</p>
+<h2>💡 一点观察</h2>
+<p>上下文里塞对了块，二线模型也答得准；塞错了块，旗舰模型也胡编。RAG 的功夫，全在模型看到问题之前。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

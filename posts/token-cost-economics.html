@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API 账单翻倍那天，我重新算了 token 的账 — 贵志的猫</title>
+<meta name="description" content="账单这东西，涨的时候没人提前打招呼。与其对着月底的数字叹气，不如把它当成一个工程问题：先拆结构，再排杠杆。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/token-cost-economics.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="API 账单翻倍那天，我重新算了 token 的账">
+<meta property="og:description" content="账单这东西，涨的时候没人提前打招呼。与其对着月底的数字叹气，不如把它当成一个工程问题：先拆结构，再排杠杆。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/token-cost-economics.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="API 账单翻倍那天，我重新算了 token 的账">
+<meta name="twitter:description" content="账单这东西，涨的时候没人提前打招呼。与其对着月底的数字叹气，不如把它当成一个工程问题：先拆结构，再排杠杆。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>API 账单翻倍那天，我重新算了 token 的账</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">成本</span><span class="tag">模型选型</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>账单这东西，涨的时候没人提前打招呼。与其对着月底的数字叹气，不如把它当成一个工程问题：先拆结构，再排杠杆。</p>
+  </blockquote>
+
+<p>账单这东西，涨的时候没人提前打招呼。与其对着月底的数字叹气，不如把它当成一个工程问题：先拆结构，再排杠杆。</p>
+<h2>🧾 账单的解剖</h2>
+<p>token 计费的结构比想象中立体。第一层：输入单价通常只有输出的四分之一到八分之一——所以省输入不如控输出，方向别搞反。</p>
+<p>第二层是容易被忽略的乘法因子：多轮对话每轮都会把历史完整重发一遍。聊到第二十轮，前面十九轮的 token 全在陪跑，轮数越多乘得越狠。</p>
+<p>第三层是隐性成本：失败重试、失控变长的轮次、Agent 循环里不知不觉烧掉的调用。它们不出现在单价格式里，但都真实扣钱。</p>
+<h2>📉 最大的杠杆是换模型</h2>
+<p>拿文档问答算过一笔账：输入 8K、输出 1K，旗舰模型一次约四美分，二线模型三厘，差 13 倍。一天 200 次，一个月下来就是几十美金的差距。</p>
+<pre><code>def cost(in_t, out_t, in_p, out_p):
+    return in_t / 1e6 * in_p + out_t / 1e6 * out_p
+
+# 输入 $3/M、输出 $15/M 的旗舰
+print(cost(8000, 1000, 3, 15))    # 0.039
+# 输入 $0.3/M、输出 $0.6/M 的二线
+print(cost(8000, 1000, 0.3, 0.6)) # 0.003</code></pre>
+<p>判断口诀只有一句：先问「这任务答错了会怎样」。分类打标答错无所谓，上旗舰是纯浪费；复杂推理用二线，返工的成本比省下的钱贵。按风险分配预算，而不是按虚荣心。</p>
+<h2>✂️ 小钱也要拧</h2>
+<p>换完模型，剩下的杠杆按效力排：上下文瘦身，检索结果重排后只留前三条，历史对话定期折叠成摘要，输入减半成本减半；输出控制，提示里写明「最多两百字」「只输出 JSON」——输出 token 是最贵的 token；缓存，长系统提示做成固定前缀，命中部分折扣很可观；批处理，非实时任务走批处理接口，普遍半价。</p>
+<h2>💡 一点观察</h2>
+<p>算完发现，成本问题说到底还是个路由问题：给每个任务配刚好够用的模型。之前写个人 Agent 设计时提过分层，这次不过是把钱也分了层。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

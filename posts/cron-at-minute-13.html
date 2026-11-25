@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我把定时任务排在每小时第 13 分钟 — 贵志的猫</title>
+<meta name="description" content="所有教程都教你把任务写在整点。我的同步任务偏偏是每小时第 13 分钟。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/cron-at-minute-13.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="我把定时任务排在每小时第 13 分钟">
+<meta property="og:description" content="所有教程都教你把任务写在整点。我的同步任务偏偏是每小时第 13 分钟。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/cron-at-minute-13.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="我把定时任务排在每小时第 13 分钟">
+<meta name="twitter:description" content="所有教程都教你把任务写在整点。我的同步任务偏偏是每小时第 13 分钟。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>我把定时任务排在每小时第 13 分钟</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-25</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">cron</span><span class="tag">定时任务</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>所有教程都教你把任务写在整点。我的同步任务偏偏是每小时第 13 分钟。</p>
+  </blockquote>
+
+<p>所有教程都教你把任务写在整点。我的同步任务偏偏是每小时第 13 分钟。</p>
+<p>不是玄学。家里的 NAS 上跑着七八个定时任务，全挤在整点的话，磁盘 IO 和带宽会在每个 00 分准时打架。13 分是我挑的空档——别人的任务都到齐了又散了，轮到我独占机器。</p>
+<p>不过在学会挑时刻之前，我先交过几轮学费。</p>
+<h2>🌍 事故在环境不在调度</h2>
+<p>cron 的坑，八成不在 cron 那五个星星，在它给你准备的那个贫瘠环境。</p>
+<p>最经典的一条：命令行里手动跑得好好的，进了 crontab 就 <code>command not found</code>。因为 cron 的 PATH 短得可怜，你登录 shell 里那些 PATH 全都不作数。修法要么写绝对路径，要么在 crontab 顶部显式声明 PATH。</p>
+<p>时区是另一类「灵异事件」。明明写的凌晨 2 点，实际 3 点才跑——服务器时区、任务时区、数据里记的时区，三方得对齐，否则日志对不上、备份时间戳错位，排查时会怀疑人生。</p>
+<h2>🔒 上一个没跑完，下一个别进</h2>
+<p>同步任务偶尔变慢，慢任务还没结束，下一个整点的实例又起来了，两个进程同时写一个目录。这种事故最阴，平时没事，专挑数据大的时候爆。</p>
+<p>防重叠一行搞定：<code>flock -n</code> 拿不到锁就直接退出，绝不排队。</p>
+<pre><code>13 * * * * flock -n /tmp/kb.lock ~/bin/kb_sync.sh \
+  &gt;&gt; ~/logs/kb_$(date +\%F).log 2&gt;&amp;1 \
+  || curl -s localhost:8080/alert -d &#x27;kb_sync 失败&#x27;</code></pre>
+<p>后半句同样重要：失败要出声。<code>||</code> 后面接一个通知，非零退出就喊一嗓子。日志按天分文件，防止滚成几十兆的大杂烩。任务静默失败几个月没人发现，比任务挂了本身更伤——你一直以为它在工作。</p>
+<h2>🕐 错峰是小决策，大回报</h2>
+<p>凌晨 2 到 5 点是备份和统计的黄金窗口，人人都知道，于是人人都挤在那里。我的做法是给自己立了个规矩：新增任务不许落在整点，也不要撞别人占用的档口，13 分就是这么来的。</p>
+<p>顺手一提，我还踩过比调度更狠的坑：面板升级后任务列表一夜全空，查了半天发现任务数据没丢，是容器的数据卷挂错了位置，读到了一个空目录。任务「消失」先别慌，看看它到底挂在哪儿。</p>
+<h2>💡 一点观察</h2>
+<p>定时任务的可靠性，九成靠的不是 cron 语法，而是那些没人写进教程的小决定：错峰、防重叠、失败出声。第 13 分钟不是优雅，是便宜好用。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
