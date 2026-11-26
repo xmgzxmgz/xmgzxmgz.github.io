@@ -55,14 +55,13 @@
     <span class="sep">·</span>
     <span class="tag tag--accent">sqlite</span><span class="tag">备份</span>
     <span class="sep">·</span>
-    <span>约 3 分钟</span>
+    <span>约 2 分钟</span>
   </div>
 
   <blockquote>
     <p>SQLite 最大的卖点是一个文件就是整个数据库，于是很多人（包括以前的我）得出一个危险的结论：备份嘛，cp 一下就完了。直到某天恢复时打开报错 database disk image is malformed，我才去补这一课。</p>
   </blockquote>
 
-<p>SQLite 最大的卖点是一个文件就是整个数据库，于是很多人（包括以前的我）得出一个危险的结论：备份嘛，cp 一下就完了。直到某天恢复时打开报错 database disk image is malformed，我才去补这一课。</p>
 <h2>🐳 单文件不是护身符</h2>
 <p>SQLite 的写入不是原子的文件级操作。写事务进行到一半时，页缓存、journal、WAL 都处在中间状态，这时候 cp 出来的快照，运气好丢最近几个事务，运气差页结构不一致，整个库就是坏的。</p>
 <p>更麻烦的是你根本不知道自己运气好不好——损坏往往在恢复那天才被发现，而距离备份可能已经过去很久。</p>

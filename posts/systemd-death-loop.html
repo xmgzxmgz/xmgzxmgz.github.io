@@ -62,7 +62,6 @@
     <p>排查一个不相干的问题时，随手敲了句 <code>systemctl status</code>，看到一行数字：某个固件服务，累计重启十七万多次。</p>
   </blockquote>
 
-<p>排查一个不相干的问题时，随手敲了句 <code>systemctl status</code>，看到一行数字：某个固件服务，累计重启十七万多次。</p>
 <p>按两秒一次的节奏，它在我的 NAS 上死循环了大半年，没有任何告警，机器看起来一切正常。</p>
 <h2>🌀 死循环是怎么转起来的</h2>
 <p>机理不复杂：unit 里写了 <code>Restart=always</code>，服务每次退出就被拉起，而它每次启动都失败，永远在「崩溃→重启」里打转。<code>RestartSec</code> 设得很小，循环转得飞快。</p>

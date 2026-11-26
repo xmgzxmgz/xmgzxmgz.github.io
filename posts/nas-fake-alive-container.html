@@ -55,14 +55,13 @@
     <span class="sep">·</span>
     <span class="tag tag--accent">docker</span><span class="tag">nas</span>
     <span class="sep">·</span>
-    <span>约 3 分钟</span>
+    <span>约 2 分钟</span>
   </div>
 
   <blockquote>
     <p>周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。</p>
   </blockquote>
 
-<p>周日晚上的意外就这么来了：手机上订阅刷不出来，第一反应是网络，第二反应是代理。登上 NAS 一看——四个容器的主进程三天前就死了，而巡检脚本从头到尾都在报"一切正常"。</p>
 <h2>🕳️ 死了三天才发现</h2>
 <p>时间线大概是这样的。那天下午，容器里的代理进程崩了，主进程直接退出。</p>
 <p>按理说 <code>docker ps</code> 该显示 Exited，但它没有。状态栏还是那个让人心安的 Up。</p>

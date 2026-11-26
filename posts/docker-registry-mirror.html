@@ -55,14 +55,13 @@
     <span class="sep">·</span>
     <span class="tag tag--accent">docker</span><span class="tag">NAS</span>
     <span class="sep">·</span>
-    <span>约 3 分钟</span>
+    <span>约 2 分钟</span>
   </div>
 
   <blockquote>
     <p>又是那个熟悉的画面：<code>docker pull</code> 走到一半，进度条不动了。等十分钟，超时。</p>
   </blockquote>
 
-<p>又是那个熟悉的画面：<code>docker pull</code> 走到一半，进度条不动了。等十分钟，超时。</p>
 <p>镜像拉不下来，编排写得再漂亮也是纸上谈兵。折腾过几轮之后，我梳理出四条路，按救急程度排序。</p>
 <h2>🚑 加速源救急，不救命</h2>
 <p>第一反应都是配镜像加速源：<code>daemon.json</code> 里加一个 <code>registry-mirrors</code> 列表，重启 Docker，立刻见效。</p>

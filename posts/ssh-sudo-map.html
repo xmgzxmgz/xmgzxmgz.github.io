@@ -62,7 +62,6 @@
     <p>第一次 SSH 进 NAS，我信心满满敲了一行 <code>sudo echo x &gt;&gt; /root/test</code>，回车，Permission denied。</p>
   </blockquote>
 
-<p>第一次 SSH 进 NAS，我信心满满敲了一行 <code>sudo echo x &gt;&gt; /root/test</code>，回车，Permission denied。</p>
 <p>明明带了 sudo。那一刻我意识到，这台机器的权限模型跟直觉不一样，得老老实实画张地图。</p>
 <h2>🗺️ 界面上的名字，都是别名</h2>
 <p>第一课是路径。前端界面里的「SATA 存储」「个人空间」，在 SSH 里根本不存在，那只是展示层的别名；真实路径藏在 zfuse 联合挂载点下，按物理卷和用户 ID 组织。</p>
