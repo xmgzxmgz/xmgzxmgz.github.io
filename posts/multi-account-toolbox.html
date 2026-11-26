@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多账号工具箱：先给你一张地图 — 贵志的猫</title>
+<meta name="description" content="博客里有十几篇文章都在讲同一个工具的不同侧面，但主角从未正式登场过。这篇补上：它是做什么的、为什么长成这样、每篇文章在地图上的哪个位置。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/multi-account-toolbox.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="会话复制与搬移：一字之差的语义设计">
+<meta property="og:description" content="「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/session-copy-semantics.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="会话复制与搬移：一字之差的语义设计">
+<meta name="twitter:description" content="「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>多账号工具箱：先给你一张地图</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">工具</span>
+    <span class="tag">设计</span>
+    <span class="sep">·</span>
+    <span>约 4 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>「把会话给另一个账号」有两种语义：搬移（源没了）和复制（源还在）。一字之差，备份策略和风险完全不同。</p>
+  </blockquote>
+
+<p>这个博客有一个隐藏设定：<strong>十几篇文章的主角是同一个工具</strong>，但它从来没被正式介绍过。修补数据库的、切会话的、领任务的、发通知的——读者要是不知道这些是同一双手做的，每篇就都像从中间开始的故事。这篇补一张地图。</p>
+<h2>🧭 主角登场</h2>
+<p>我维护着一个多账号桌面工具（Rust/Tauri）：把<strong>同一款 AI 对话应用的多个账号</strong>的登录态、会话、配额管理在一处。先说明一点：多账号不是薅资源，是把工作和个人、主力和小号分开的普通需求——官方客户端只认一个「当前账号」，切换要反复登录登出，而所有数据其实都躺在本地 SQLite 里。</p>
+<p>工具做的事说穿了就两层：<strong>读写本地库</strong>，加上<strong>替用户做一部分客户端调用</strong>（签到、续期、领奖励）。每做一层，边界就要重新画一次。</p>
+<h2>🗺️ 系列地图</h2>
+<p><strong>数据主权线</strong>：为什么要做这个工具——《对话数据的主权》讲初心；《不同步什么，比同步什么更重要》讲品性；《oplog：增量同步为什么用操作日志》讲引擎。</p>
+<p><strong>功能设计线</strong>：《会话复制与搬移：一字之差的语义设计》讲语义；《WAL 模式下什么时候能动数据库》讲安全窗口；《第一个外部 issue：分组空间错乱修复记》《「额度 tab 黑屏」排查记》《把 403 翻译成人话》是三次真实的排查。</p>
+<p><strong>自动化线</strong>：《青龙面板，我家的任务总管》是 NAS 侧的总管；《自动续期守护：把「记得续期」搬出脑子》是它的触角；《「一键完成」的安全边界形态》画了最重要的那条红线。</p>
+<p><strong>工程教训线</strong>：《单实例锁的 PID 复用坑》是一次发布回归；《只监听 127.0.0.1 的网关》是内置网关的安全设计。</p>
+<h2>⚖️ 为什么反复强调边界</h2>
+<p>这个工具的所有功能都落在同一个灰区：替用户操作一个不属于我的服务端。所以每篇的结论几乎都长一个样——<strong>读操作随便做，写操作只做用户明确授权的，伪造行为坚决不做</strong>。风控惩罚的从来不是「用工具」，是「用工具撒谎」。</p>
+<p>顺带回应一个常见的好奇：为什么文章里从不提那款应用的名字？因为这个系列讨论的是工具和方法，不是某款产品的攻略——把产品名去掉，剩下的才是可迁移的部分。</p>
+<h2>💡 一点观察</h2>
+<p>这个系列的文章都很短，因为每个功能都是一次「先想清楚边界，再动手」的练习。单篇是记录，系列才是方法——这张地图以后会随更新维护。</p>
+
+  article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -63,6 +63,9 @@
     <p>从 BER-TLV 到启用停用 Profile：与 lpac 逐字节对齐的三条指令、分帧规则，以及「9eSIM 读不出 EID」的真相。</p>
   </blockquote>
 
+<p class="series-note"><em>CellPort 系列：eSIM 切卡功能的实现笔记，编码与开源 lpac 逐字节对齐。</em></p>
+
+
 <p>CellPort 的核心功能是 eSIM/eUICC 的 Profile 管理。这篇记录实现时的关键结论，编码全部与开源的 lpac 对齐——<strong>逐字节一致</strong>是对这类实现的基本要求。</p>
 <h2>📖 读列表：BF2D</h2>
 <p>GetProfilesInfo 用 <code>BF2D 00</code>，响应按 <code>BF2D → A0 → E3</code> 三层解析，每个 Profile 的标签：<code>5A</code> ICCID、<code>4F</code> ISD-P AID、<code>9F70</code> 状态、<code>90</code> 昵称、<code>91</code> 运营商、<code>92</code> Profile 名、<code>95</code> 类别。</p>
@@ -73,6 +76,7 @@
 <p>删除是 <code>BF33</code>（无 A0 包装、无 refreshFlag）；昵称是 <code>BF29</code>，按 ICCID 定位而不是 AID，昵称限 64 个 ASCII 字符。</p>
 <h2>🕳️ EID 是个独立问题</h2>
 <p>SGP.22 的 <code>BF3E</code> 和 SGP.02 的 <code>GET DATA 9F7F</code> 两条路径，在 9eSIM 这类早期卡上都被拒（6A80 / 6D00）——<strong>是卡不提供，不是模块问题</strong>。EID 读不出和 Profile 管不了，是两条独立的路径，UI 上必须分开提示。</p>
+<p>这些字段级结论后来全部进了规格文档，每条都带着置信度——这套自我约束的完整版，就是《规格文档里的 Known unknowns》。</p>
 
 
   <div class="article-foot">

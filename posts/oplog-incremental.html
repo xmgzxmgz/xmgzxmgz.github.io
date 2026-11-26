@@ -63,6 +63,9 @@
     <p>321 个会话、2.5 万条消息，全量首同步 3 分钟，日常增量秒级。秘密是一个全局单调序号的追加日志。</p>
   </blockquote>
 
+<p class="series-note"><em>对话同步三部曲的第三篇（<a href="conversation-data-sovereignty.html">《对话数据的主权》</a><a href="what-not-to-sync.html">《不同步什么，比同步什么更重要》</a>之后），讲增量同步的引擎。</em></p>
+
+
 <p>对话同步工具的核心问题只有一个：<strong>两端怎么知道对方有哪些东西</strong>。全量比对在几千条消息的规模下既慢又容易出错。我的答案是 oplog——操作日志。</p>
 <h2>🧾 结构</h2>
 <p>服务端维护一个<strong>追加式日志</strong>，每条操作一个<strong>全局单调递增的序号</strong>。它就是唯一事实来源：</p>

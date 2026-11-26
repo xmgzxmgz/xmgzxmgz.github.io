@@ -63,6 +63,9 @@
     <p>给桌面应用加一个 OpenAI 兼容网关，让现成的工具直接用上它的模型。难点不是转发，是决定不做什么。</p>
   </blockquote>
 
+<p class="series-note"><em>「多账号工具箱」系列：工具里内置了一个本地 OpenAI 兼容网关，这篇讲它的三个安全决定。</em></p>
+
+
 <p>我的桌面应用里有很多账号和模型，而市面上现成的工具都讲 OpenAI 的协议。于是加了一个兼容网关：<code>POST /v1/chat/completions</code> 进来，转发到上游的对应接口，流式响应原样透传；<code>GET /v1/models</code> 列出可用账号。</p>
 <h2>🚪 三个安全决定</h2>
 <ol>

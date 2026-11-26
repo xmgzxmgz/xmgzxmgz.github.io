@@ -63,6 +63,9 @@
     <p>CarPlay 的认证是双向但不对称的：私钥烧在 MFi 芯片里导不出来。所以市面上的 Android 车机把认证塞进了一个 dongle。</p>
   </blockquote>
 
+<p class="series-note"><em>本篇与<a href="carwithin-single-iphone.html">《CarWithin：一台 iPhone 跑起真 CarPlay》</a>是上下篇：先讲认证为什么需要芯片，再讲结论的例外。</em></p>
+
+
 <p>CarPlay 的认证机制拆开看是这样的：iPhone 向配件要 X.509 证书、发 20 字节随机挑战、验签名；配件用 MFi 认证协处理器（MFi 3959 这类芯片）里的私钥签名。<strong>私钥烧在芯片里，导不出来——没有真芯片就一定过不了。</strong>所以「纯软件模拟 CarPlay 主机」这条路本质上不存在。</p>
 <h2>🔌 那些不合规的 Android 车机是怎么做的</h2>
 <p>它们根本不在主机里做认证。整条链路是：CarPlay 的认证、解码、Wi-Fi 组网全部在一个 <strong>CarPlay dongle</strong> 里完成——dongle 里有一颗真正的苹果 MFi 芯片（这才是合法件）。主机只跑逆向出来的 dongle 私有协议：<code>发控制帧 → 收 H.264 视频 → 回传触摸坐标</code>。</p>

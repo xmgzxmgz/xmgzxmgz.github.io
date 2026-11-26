@@ -63,6 +63,9 @@
     <p>一个模块向系统暴露六个串口，AT 口还会在两个编号之间漂移，另有两个蓝牙虚拟口来捣乱。冷启动 600ms、热启动 60ms 的两段式探测。</p>
   </blockquote>
 
+<p class="series-note"><em>CellPort 系列：六个串口里找 AT 口的探测策略。</em></p>
+
+
 <p>大疆那块 4G 模块（实为 Quectel EG25-G）插上 Windows 后，设备管理器里出现<strong>六个串口</strong>（COM4–COM9）。真正能跑 AT 指令的只有一个，而且它会<strong>在 COM6 和 COM7 之间漂移</strong>；COM8、COM9 是蓝牙虚拟口（BTHENUM），纯粹来捣乱的。</p>
 <h2>🔧 两段式探测</h2>
 <ol>

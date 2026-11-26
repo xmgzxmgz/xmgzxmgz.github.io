@@ -63,6 +63,9 @@
     <p>我一度得出「这块模块物理上无法读取 eUICC」的结论，还写进了文档。这个结论是错的，错得很有教育意义。</p>
   </blockquote>
 
+<p class="series-note"><em>CellPort 系列：我为一块大疆定制 4G 模块（实为移远 EG25-G）写的 Windows 管理工具，对标 macOS 上的 CellDock。本篇是一个差点写进文档的错误结论。</em></p>
+
+
 <p>开发初期我测过一组数据，并据此下了结论：这块模块固件的 <code>AT+CSIM</code> 透传有约 8 字节的 APDU 长度上限，因此<strong>物理上无法进入 ISD-R</strong>，eUICC 管理没戏。实测数据看起来非常扎实：</p>
 <table>
 <thead><tr><th>APDU</th><th>长度</th><th>结果</th></tr></thead>
