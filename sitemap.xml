@@ -51,24 +51,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/rolling-app-log.html</loc>
-    <lastmod>2026-09-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/batch-three-state-feedback.html</loc>
-    <lastmod>2026-11-11</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/checkin-webhook.html</loc>
-    <lastmod>2026-11-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xmgzxmgz.github.io/posts/renewal-guard.html</loc>
     <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
@@ -105,12 +87,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/websocket-vs-polling.html</loc>
-    <lastmod>2026-08-22</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xmgzxmgz.github.io/posts/bilingual-readme-decisions.html</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>yearly</changefreq>
@@ -130,18 +106,6 @@
   </url>
   <url>
     <loc>https://xmgzxmgz.github.io/posts/changelog-to-release-pipeline.html</loc>
-    <lastmod>2026-11-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/homebrew-tap-in-ten-minutes.html</loc>
-    <lastmod>2026-11-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/24-prs-retrospective.html</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
@@ -191,12 +155,6 @@
   <url>
     <loc>https://xmgzxmgz.github.io/posts/tauri-actions-release.html</loc>
     <lastmod>2026-11-11</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/zero-dependency-node.html</loc>
-    <lastmod>2026-11-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -279,26 +237,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/job-assistant-prompts.html</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/kmeans-on-map.html</loc>
-    <lastmod>2026-07-28</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xmgzxmgz.github.io/posts/canvas-tetris-99.html</loc>
     <lastmod>2026-07-25</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/force-directed-graph.html</loc>
-    <lastmod>2026-07-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
