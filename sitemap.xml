@@ -27,18 +27,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/ninebot-cast-7-patches.html</loc>
-    <lastmod>2026-11-21</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/stream-bridge-sources.html</loc>
-    <lastmod>2026-11-18</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xmgzxmgz.github.io/posts/ussd-cusd-encoding.html</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>yearly</changefreq>
@@ -99,12 +87,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/known-unknowns-in-specs.html</loc>
-    <lastmod>2026-11-18</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xmgzxmgz.github.io/posts/changelog-47-versions.html</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>yearly</changefreq>
@@ -119,36 +101,6 @@
   <url>
     <loc>https://xmgzxmgz.github.io/posts/spaces-repair-issue-6.html</loc>
     <lastmod>2026-11-22</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/pong-20-or-24.html</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/packet-capture-checklist.html</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/13134-symbols.html</loc>
-    <lastmod>2026-11-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/20-byte-header.html</loc>
-    <lastmod>2026-11-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xmgzxmgz.github.io/posts/h264-stream-params.html</loc>
-    <lastmod>2026-11-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -287,12 +239,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://xmgzxmgz.github.io/posts/ninebot-dash-protocol.html</loc>
-    <lastmod>2026-11-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-    <url>
     <loc>https://xmgzxmgz.github.io/projects/hqc-kmeans/</loc>
     <lastmod>2026-11-09</lastmod>
     <changefreq>yearly</changefreq>

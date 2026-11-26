@@ -651,7 +651,7 @@
     <div class="wrap">
       <div class="section-head">
         <h2 class="section-title"><span class="idx">02</span>文章</h2>
-        <span class="section-sub">Writings · 59 篇</span>
+        <span class="section-sub">Writings · 50 篇</span>
       </div>
 
       <div class="filters" role="group" aria-label="按分类筛选文章">
@@ -817,17 +817,6 @@
           </div>
           <span class="date">2026-11-25</span>
         </a>
-        <a class="card-post" href="posts/ninebot-dash-protocol.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🛴</span>
-          <div class="body">
-            <div class="title">给电动车仪表投屏：九号 dash 协议逆向记录</div>
-            <p class="excerpt">九号电动车仪表自带 Wi-Fi 热点，画面走的是一条私有协议——UDP 5012 上跑 H.264，每个包前 20 字节私有头。记录怎么拆开它、三个坑，以及为什么可以不连车就做单元测试。</p>
-            <div class="foot"><span class="tag tag--accent">逆向</span><span class="tag">协议</span><span class="sep">·</span><span>约 6 分钟</span></div>
-          </div>
-          <span class="date">2026-11-24</span>
-        </a>
-
-
         <a class="card-post" href="posts/changelog-47-versions.html" data-cat="tech">
           <span class="glyph" aria-hidden="true">📜</span>
           <div class="body">
@@ -854,51 +843,6 @@
             <div class="foot"><span class="tag tag--accent">SQL</span><span class="tag">排查</span><span class="sep">·</span><span>约 2 分钟</span></div>
           </div>
           <span class="date">2026-11-22</span>
-        </a>
-        <a class="card-post" href="posts/pong-20-or-24.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🏓</span>
-          <div class="body">
-            <div class="title">pong 是 20 还是 24 字节：一个宽容解析的案例</div>
-            <p class="excerpt">上游客户端硬校验心跳回应必须是 20 字节，于是七寸仪表的用户永远看到「尚无回应」。协议没搞清之前，严格校验是负担。</p>
-            <div class="foot"><span class="tag tag--accent">协议</span><span class="tag">兼容性</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-17</span>
-        </a>
-        <a class="card-post" href="posts/packet-capture-checklist.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">📡</span>
-          <div class="body">
-            <div class="title">抓仪表的包之前：一份环境清单</div>
-            <p class="excerpt">仪表不开 socket 时，正确的包和错误的包看起来一模一样。这份清单能帮你把「环境问题」和「代码问题」分开。</p>
-            <div class="foot"><span class="tag tag--accent">网络</span><span class="tag">排查清单</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-17</span>
-        </a>
-        <a class="card-post" href="posts/13134-symbols.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🔬</span>
-          <div class="body">
-            <div class="title">13,134 个符号：静态逆向是怎么起步的</div>
-            <p class="excerpt">接手一个黑盒协议，第一件事不是抓包，是看看对方有没有把符号表留下来。这一次，13,134 个符号全在。</p>
-            <div class="foot"><span class="tag tag--accent">逆向</span><span class="tag">方法论</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-16</span>
-        </a>
-        <a class="card-post" href="posts/20-byte-header.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🧩</span>
-          <div class="body">
-            <div class="title">20 字节私有头：确认、推断与未知</div>
-            <p class="excerpt">同一个偏移位置，视频包是 H.264 起始码，心跳包是计数器。把字段表按置信度分级，比假装全知更有用。</p>
-            <div class="foot"><span class="tag tag--accent">协议</span><span class="tag">字段表</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-16</span>
-        </a>
-        <a class="card-post" href="posts/h264-stream-params.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🎬</span>
-          <div class="body">
-            <div class="title">H.264 推流的参数取舍</div>
-            <p class="excerpt">关键帧重发默认关、静止图每秒 2 帧、拥塞时先降码率再隔帧——三个决定让发热和丢包都下来了。</p>
-            <div class="foot"><span class="tag tag--accent">H.264</span><span class="tag">调参</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-16</span>
         </a>
         <a class="card-post" href="posts/quota-tab-blank-screen.html" data-cat="tech">
           <span class="glyph" aria-hidden="true">🖥️</span>
@@ -1071,24 +1015,6 @@
           </div>
           <span class="date">2026-11-20</span>
         </a>
-        <a class="card-post" href="posts/ninebot-cast-7-patches.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🩹</span>
-          <div class="body">
-            <div class="title">给 NinebotCast 的七处修正</div>
-            <p class="excerpt">分片长度、标志位、字节序、pong 长度——七处修正，每一处的背后都是一个实机现象。修协议代码的顺序感很重要。</p>
-            <div class="foot"><span class="tag tag--accent">iOS</span><span class="tag">补丁</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-21</span>
-        </a>
-        <a class="card-post" href="posts/stream-bridge-sources.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">🌉</span>
-          <div class="body">
-            <div class="title">一套源抽象，五种画面来源</div>
-            <p class="excerpt">桌面、窗口、屏幕区域、安卓屏幕、RTSP 流、UVC 摄像头——不管画面从哪来，出去的都是同一条 UDP 通道。</p>
-            <div class="foot"><span class="tag tag--accent">ffmpeg</span><span class="tag">架构</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-18</span>
-        </a>
         <a class="card-post" href="posts/ussd-cusd-encoding.html" data-cat="tech">
           <span class="glyph" aria-hidden="true">☎️</span>
           <div class="body">
@@ -1178,15 +1104,6 @@
             <div class="foot"><span class="tag tag--accent">开源</span><span class="tag">写作</span><span class="sep">·</span><span>约 2 分钟</span></div>
           </div>
           <span class="date">2026-09-26</span>
-        </a>
-        <a class="card-post" href="posts/known-unknowns-in-specs.html" data-cat="tech">
-          <span class="glyph" aria-hidden="true">❓</span>
-          <div class="body">
-            <div class="title">规格文档里的 Known unknowns</div>
-            <p class="excerpt">规格文档最值钱的章节，可能是一节「我们不知道什么」。它把「这个文档可信吗」变成了一个可以逐条验证的问题。</p>
-            <div class="foot"><span class="tag tag--accent">文档</span><span class="tag">方法论</span><span class="sep">·</span><span>约 2 分钟</span></div>
-          </div>
-          <span class="date">2026-11-18</span>
         </a>
         <a class="card-post" href="posts/ai-agent-architecture.html" data-cat="tech">
           <span class="glyph" aria-hidden="true">🤖</span>
