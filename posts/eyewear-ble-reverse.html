@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电脑端控制华为眼镜：卡在握手包 — 贵志的猫</title>
+<meta name="description" content="想在自己的电脑上查看眼镜电量、调整手势设置、看到正在播放的歌——官方没有出电脑版，也没有开放 SDK。于是起了个项目自己造，做到一半发现：真正卡住进展的不是写代码，是拿不到一份数据。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/eyewear-ble-reverse.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="电脑端控制华为眼镜：卡在握手包">
+<meta property="og:description" content="想在自己的电脑上查看眼镜电量、调整手势设置、看到正在播放的歌——官方没有出电脑版，也没有开放 SDK。于是起了个项目自己造，做到一半发现：真正卡住进展的不是写代码，是拿不到一份数据。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/eyewear-ble-reverse.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="电脑端控制华为眼镜：卡在握手包">
+<meta name="twitter:description" content="想在自己的电脑上查看眼镜电量、调整手势设置、看到正在播放的歌——官方没有出电脑版，也没有开放 SDK。于是起了个项目自己造，做到一半发现：真正卡住进展的不是写代码，是拿不到一份数据。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>电脑端控制华为眼镜：卡在握手包</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">蓝牙</span><span class="tag">逆向</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>想在自己的电脑上查看眼镜电量、调整手势设置、看到正在播放的歌——官方没有出电脑版，也没有开放 SDK。于是起了个项目自己造，做到一半发现：真正卡住进展的不是写代码，是拿不到一份数据。</p>
+  </blockquote>
+
+<p>想在自己的电脑上查看眼镜电量、调整手势设置、看到正在播放的歌——官方没有出电脑版，也没有开放 SDK。于是起了个项目自己造，做到一半发现：真正卡住进展的不是写代码，是拿不到一份数据。</p>
+<h2>🏗️ 先把能做的做出来</h2>
+<p>工程上先搭了个可插拔的传输层抽象：模拟实现、浏览器蓝牙实现、将来的原生蓝牙实现，都遵守同一套接口，界面和状态管理完全不用改。浏览器端能真连眼镜的 BLE，读电量、设备信息、监听媒体按键都通；但经典的音频控制通道浏览器碰不到，这部分只能留给将来的原生实现。</p>
+<p>界面照着官方 App 的功能结构长出来：三路电量环、手势自定义、通知播报开关、播放中心，全部先由模拟数据驱动，无设备也能完整演示。</p>
+<h2>🕳️ 协议破了一半</h2>
+<p>认真逆向私有协议后，进展其实不小：帧格式已经破解，帧头、长度、服务号、命令号、CRC 校验，全部用眼镜的真实回包验证过；三条私有数据通道都能打开、能双向收发。</p>
+<p>卡点是会话认证：App 连上眼镜后先发一段握手字节流，猜不出里面的令牌和时序，眼镜就不认。没有参照数据，盲猜命中率低到不值得投入。</p>
+<h2>📸 破局的四条路</h2>
+<p>拿到参照数据的路径按成本排：借一台安卓手机开蓝牙 HCI 抓包，无需 root，Wireshark 直接解析，是社区验证过的标准做法；其次是 Linux 加 USB 蓝牙适配器抓链路层数据；Mac 的蓝牙工具受系统限制成功率低；自制一个模拟眼镜让 App 来连的中间人方案，工程量最大、成功率最低，不推荐。</p>
+<h2>💡 一点观察</h2>
+<p>逆向项目里最贵的东西往往不是技术，是参照物。帧格式能破，是因为有真实回包可对照；握手破不了，是因为没人发过那一段字节。先解决「数据从哪来」，再解决「代码怎么写」——顺序反了就是白忙。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

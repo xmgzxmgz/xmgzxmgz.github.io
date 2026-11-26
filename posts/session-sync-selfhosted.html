@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>给 AI 对话做个自己的云 — 贵志的猫</title>
+<meta name="description" content="用 AI 助手越久越心虚：几千条对话全存在厂商那边，本机只有一份、手机看不到、没法全文检索、产物文件散落各处。于是我给自己写了一套自托管的会话云同步，把三百余个会话、两万五千条消息、近四千个产物文件全部收进自己的服务里。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/session-sync-selfhosted.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="给 AI 对话做个自己的云">
+<meta property="og:description" content="用 AI 助手越久越心虚：几千条对话全存在厂商那边，本机只有一份、手机看不到、没法全文检索、产物文件散落各处。于是我给自己写了一套自托管的会话云同步，把三百余个会话、两万五千条消息、近四千个产物文件全部收进自己的服务里。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/session-sync-selfhosted.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="给 AI 对话做个自己的云">
+<meta name="twitter:description" content="用 AI 助手越久越心虚：几千条对话全存在厂商那边，本机只有一份、手机看不到、没法全文检索、产物文件散落各处。于是我给自己写了一套自托管的会话云同步，把三百余个会话、两万五千条消息、近四千个产物文件全部收进自己的服务里。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>给 AI 对话做个自己的云</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">自托管</span><span class="tag">数据同步</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>用 AI 助手越久越心虚：几千条对话全存在厂商那边，本机只有一份、手机看不到、没法全文检索、产物文件散落各处。于是我给自己写了一套自托管的会话云同步，把三百余个会话、两万五千条消息、近四千个产物文件全部收进自己的服务里。</p>
+  </blockquote>
+
+<p>用 AI 助手越久越心虚：几千条对话全存在厂商那边，本机只有一份、手机看不到、没法全文检索、产物文件散落各处。于是我给自己写了一套自托管的会话云同步，把三百余个会话、两万五千条消息、近四千个产物文件全部收进自己的服务里。</p>
+<h2>🔄 同步什么，不同步什么</h2>
+<p>先划边界。同步的是对话消息、记忆条目、产物文件的元数据和内容；不同步的是工具调用的原始输出、模型的内部推理和图片二进制——这些要么体积爆炸，要么没有回读价值。</p>
+<p>实现上是一条流水线：本地从 SQLite 和 JSONL 里采集，做规范化——剥离注入内容、映射角色、按工作区命名、算内容哈希；然后幂等入云，每条操作带唯一 ID 去重，重跑一万遍也不会出重复数据。oplog 是唯一事实来源，检索靠自建的中文倒排索引，增量分发走 SSE，手机上开个页面就能看到最新进展。</p>
+<h2>🕳️ 一个插曲：被删的对话回来了</h2>
+<p>做完同步的第二天，助手启动时一口气「软删除」了十几条对话。所谓软删除，只是数据库里打个时间戳，正文根本没动——把标记清掉就全回来了。这件事反过来证明了做这套系统的价值：云上有全量、本地有快照、恢复只要一条 SQL。</p>
+<h2>🐛 中文设备名的经典坑</h2>
+<p>上线后又抓到一个协议层的老坑：设备默认名叫「浏览器-某某」，直接塞进 HTTP 请求头，而请求头只允许 ISO-8859-1 字符，浏览器在发请求前就抛了异常。修法是客户端 URL 编码、服务端解码，顺手把控制台加上了禁缓存头。</p>
+<h2>💡 一点观察</h2>
+<p>这件事的起点不是「厂商不可信」，而是「单一副本不可靠」。数据在自己机器上多活一份、能用自己写的检索查一遍，睡觉都踏实一点。自托管的意义从来不是炫技，是把退路握在自己手里。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

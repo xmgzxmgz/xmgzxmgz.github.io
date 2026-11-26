@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 变慢，先查这两处 — 贵志的猫</title>
+<meta name="description" content="AI 编程工具用久了变慢，多数人第一反应是「网络问题」或者「服务限流」。我做了一次完整诊断，发现真正的元凶在本地磁盘上——一个 2.3GB 的会话目录。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/claude-code-slowness-429.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="Claude Code 变慢，先查这两处">
+<meta property="og:description" content="AI 编程工具用久了变慢，多数人第一反应是「网络问题」或者「服务限流」。我做了一次完整诊断，发现真正的元凶在本地磁盘上——一个 2.3GB 的会话目录。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/claude-code-slowness-429.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Code 变慢，先查这两处">
+<meta name="twitter:description" content="AI 编程工具用久了变慢，多数人第一反应是「网络问题」或者「服务限流」。我做了一次完整诊断，发现真正的元凶在本地磁盘上——一个 2.3GB 的会话目录。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>Claude Code 变慢，先查这两处</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">Claude Code</span><span class="tag">性能</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>AI 编程工具用久了变慢，多数人第一反应是「网络问题」或者「服务限流」。我做了一次完整诊断，发现真正的元凶在本地磁盘上——一个 2.3GB 的会话目录。</p>
+  </blockquote>
+
+<p>AI 编程工具用久了变慢，多数人第一反应是「网络问题」或者「服务限流」。我做了一次完整诊断，发现真正的元凶在本地磁盘上——一个 2.3GB 的会话目录。</p>
+<h2>🩺 排查清单怎么排</h2>
+<p>先查网络层：本地代理的健康检查端点五十毫秒返回，代理进程活着、端口正常监听；直连官方 API 延迟约一点四秒，有点高但不是瓶颈。排除网络，再查配置：全局规则文件一点五 KB，正常。</p>
+<p>然后是真凶：主目录下的会话目录占了 2.3GB。其中一个会话文件 41MB，子代理目录 2.1GB、二百多个文件、最大的单个 64MB。这类工具启动和加载会话时要扫描这些文件，磁盘上一坨，响应上就是肉眼可见的卡顿。</p>
+<p>处理也直接：清掉不再需要的旧会话，保留最近十到二十个，磁盘立刻回收 2GB 以上，启动速度明显回升。</p>
+<h2>🚦 429 不是故障</h2>
+<p>另一个高频误会：报 429 配额耗尽，很多人以为工具坏了。拆开看就两件事——429 是「请求太频繁」，配额耗尽是「这个计费周期的额度用完了」。不是网络问题，不是账号问题，是票用完了。</p>
+<p>能做的就三件：等，多数按时段恢复；不够用就升档；或者省着点用——砍掉不必要的长上下文，别在循环里反复调用，大任务拆小。如果走的是自建网关和转发渠道，去确认那把钥匙的限额，别把锅甩给工具。</p>
+<h2>💡 一点观察</h2>
+<p>性能问题的排查顺序应该是「本地、网络、配额」：先看磁盘上的历史包袱，再量网络延迟，最后才怀疑远端服务。工具变慢的锅，十有八九在自己攒了半年的会话文件里。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

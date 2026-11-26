@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信号差查到最后，答案在天线上 — 贵志的猫</title>
+<meta name="description" content="一块 4G 模块，信号从几个月前的强档掉到了 −104dBm。直觉反应是改配置：锁频段、调优先级、开分集。我把软件侧的杠杆挨个试了一遍，结论是——软件已经没有杠杆了，剩下的答案都在物理世界。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/lte-band-deadend.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="信号差查到最后，答案在天线上">
+<meta property="og:description" content="一块 4G 模块，信号从几个月前的强档掉到了 −104dBm。直觉反应是改配置：锁频段、调优先级、开分集。我把软件侧的杠杆挨个试了一遍，结论是——软件已经没有杠杆了，剩下的答案都在物理世界。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/lte-band-deadend.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="信号差查到最后，答案在天线上">
+<meta name="twitter:description" content="一块 4G 模块，信号从几个月前的强档掉到了 −104dBm。直觉反应是改配置：锁频段、调优先级、开分集。我把软件侧的杠杆挨个试了一遍，结论是——软件已经没有杠杆了，剩下的答案都在物理世界。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>信号差查到最后，答案在天线上</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">LTE</span><span class="tag">硬件</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>一块 4G 模块，信号从几个月前的强档掉到了 −104dBm。直觉反应是改配置：锁频段、调优先级、开分集。我把软件侧的杠杆挨个试了一遍，结论是——软件已经没有杠杆了，剩下的答案都在物理世界。</p>
+  </blockquote>
+
+<p>一块 4G 模块，信号从几个月前的强档掉到了 −104dBm。直觉反应是改配置：锁频段、调优先级、开分集。我把软件侧的杠杆挨个试了一遍，结论是——软件已经没有杠杆了，剩下的答案都在物理世界。</p>
+<h2>🔬 一轮可逆的对照实验</h2>
+<p>排查的原则是每一步都可回退。先看频段锁定：连原始值回写都被固件直接拒绝，这条路是焊死的。再试新式锁频命令，全部报错。软优先级倒是可以写，改完邻区列表确实变了，但模块重启两次后依然驻回原来的频段——因为它自己量过，别的频段信号更差。</p>
+<p>接收分集是个干干净净的对照实验：打开之后信号从 −103.7 变成 −104.0，纯噪声级差异，说明这块硬件没有第二路天线增益，改完立刻回退。</p>
+<h2>📉 排除法的终点</h2>
+<p>各频段实测都弱：900 兆赫 −104、1900 兆赫 −106 到 −110、2600 兆赫测不到、有一个频段干脆完全不出现。温度限功率没介入、运营商黑名单没触发、接入点配置不影响射频。模块已经驻留在当前能收到的最好小区上——不是它选错了，是它没得选。</p>
+<h2>🔧 真正有效的三件事</h2>
+<p>软件侧清零之后，剩下的按性价比排序：挪位置靠窗，室内衰减是最大的变量，−104 到 −85 往往只差一个窗台的距离；调整天线朝向，竖直放置、远离金属；外接增益天线，如果模块有天线座，一根双频吸盘天线通常值 10 到 15dB 的改善。</p>
+<h2>💡 一点观察</h2>
+<p>这次排查最值钱的产出不是修复，而是一组干净的否定结论：锁频写不进、优先级压不过实测、分集是摆设。把「软件上不可能」证明清楚，人才会死心去动天线——很多硬件问题卡住，不是因为难，而是因为没人愿意承认软件已经到头了。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAS 跑 PCDN 的风险账 — 贵志的猫</title>
+<meta name="description" content="带宽换钱这件事听起来很美：NAS 空着也是空着，跑个 PCDN 每月还能回点血。但把账摊开算一遍会发现，收益是小头，风险是大头——尤其当这台 NAS 想放进公司的时候。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/nas-pcdn-risk-ledger.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="NAS 跑 PCDN 的风险账">
+<meta property="og:description" content="带宽换钱这件事听起来很美：NAS 空着也是空着，跑个 PCDN 每月还能回点血。但把账摊开算一遍会发现，收益是小头，风险是大头——尤其当这台 NAS 想放进公司的时候。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/nas-pcdn-risk-ledger.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NAS 跑 PCDN 的风险账">
+<meta name="twitter:description" content="带宽换钱这件事听起来很美：NAS 空着也是空着，跑个 PCDN 每月还能回点血。但把账摊开算一遍会发现，收益是小头，风险是大头——尤其当这台 NAS 想放进公司的时候。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>NAS 跑 PCDN 的风险账</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">NAS</span><span class="tag">PCDN</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>带宽换钱这件事听起来很美：NAS 空着也是空着，跑个 PCDN 每月还能回点血。但把账摊开算一遍会发现，收益是小头，风险是大头——尤其当这台 NAS 想放进公司的时候。</p>
+  </blockquote>
+
+<p>带宽换钱这件事听起来很美：NAS 空着也是空着，跑个 PCDN 每月还能回点血。但把账摊开算一遍会发现，收益是小头，风险是大头——尤其当这台 NAS 想放进公司的时候。</p>
+<h2>📉 先算收益这头</h2>
+<p>家用宽带上行三五十兆，PCDN 的月收益也就几十块钱。公司网络通常是大内网出口，NAT 穿透差，收益更低，还可能白跑。也就是说，这事的最好结局是「一个月一顿早饭」。</p>
+<h2>⚠️ 再算风险那头</h2>
+<p>风险清单比收益单长得多。合规层面，用公司带宽、电费、磁盘赚私利，轻则被约谈，重则按侵占公司资源处理。安全层面，PCDN 的流量特征极其显眼——大量小包上传、跨地域连接，上网行为管理设备一查一个准。业务层面，上行带宽被持续占满，开会卡、传文件慢，投诉最后落到你头上。</p>
+<p>更重的是两条：运营商在严打 PCDN，企业宽带合同里同样禁止，被监测到轻则限速重则停机；PCDN 会把存储空间划给外部节点做缓存，等于给陌生人开了条通往你磁盘的路，NAS 里再存点工作文件，泄露了就是大事。</p>
+<h2>✅ 什么用法没问题</h2>
+<p>把结论反过来写就是安全区。纯内网用：文件共享、备份、相册，当一台内部文件服务器，基本没风险。红线就一条：别开任何形式的外网穿透——远程访问、动态域名、隧道，都等于在公司内网墙上开口子。数据上分好类，敏感材料放受管存储，别往私人设备塞。真想吃带宽收益，放自己家里、用自己宽带、拿独立硬盘，风险可控得多。</p>
+<h2>💡 一点观察</h2>
+<p>这类决策的本质是「不对称赌局」：赢是几十块，输是信任和合规记录。凡是收益封顶、风险不封顶的事，都值得先写一张这样的风险清单再动手。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

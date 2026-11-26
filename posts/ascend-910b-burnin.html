@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>昇腾 910B 到货第一件事：烤机 — 贵志的猫</title>
+<meta name="description" content="新服务器上架，业务跑起来之前有一段最枯燥也最值钱的时间：验收烤机。九腾，应为昇腾——先纠正自己：昇腾 910B 这类算力卡尤其如此——到货时一切正常，不代表七十二小时后还正常，问题要在质保期里暴露，而不是在业务高峰里。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ascend-910b-burnin.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="昇腾 910B 到货第一件事：烤机">
+<meta property="og:description" content="新服务器上架，业务跑起来之前有一段最枯燥也最值钱的时间：验收烤机。九腾，应为昇腾——先纠正自己：昇腾 910B 这类算力卡尤其如此——到货时一切正常，不代表七十二小时后还正常，问题要在质保期里暴露，而不是在业务高峰里。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ascend-910b-burnin.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="昇腾 910B 到货第一件事：烤机">
+<meta name="twitter:description" content="新服务器上架，业务跑起来之前有一段最枯燥也最值钱的时间：验收烤机。九腾，应为昇腾——先纠正自己：昇腾 910B 这类算力卡尤其如此——到货时一切正常，不代表七十二小时后还正常，问题要在质保期里暴露，而不是在业务高峰里。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>昇腾 910B 到货第一件事：烤机</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">NPU</span><span class="tag">昇腾</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>新服务器上架，业务跑起来之前有一段最枯燥也最值钱的时间：验收烤机。九腾，应为昇腾——先纠正自己：昇腾 910B 这类算力卡尤其如此——到货时一切正常，不代表七十二小时后还正常，问题要在质保期里暴露，而不是在业务高峰里。</p>
+  </blockquote>
+
+<p>新服务器上架，业务跑起来之前有一段最枯燥也最值钱的时间：验收烤机。九腾，应为昇腾——先纠正自己：昇腾 910B 这类算力卡尤其如此——到货时一切正常，不代表七十二小时后还正常，问题要在质保期里暴露，而不是在业务高峰里。</p>
+<h2>📐 先量峰值，再谈稳定</h2>
+<p>第一步是逐卡算力测试。用官方诊断工具逐卡跑 FP16 峰值，判定标准是实测不低于标称值的百分之九十五——不同子型号标称不同，要对着自己那批卡的规格来。INT8 同样逐卡过一遍。任何一张卡低于线，当场就报，不带病上架。</p>
+<p>第二步是业务级基准：拿经典视觉模型的训练吞吐和七参数级语言模型的推理性能各测一轮，单卡和八卡分布式都记录，留下吞吐和延迟两个数字当基线。以后性能有疑问，有基线可对照，而不是凭感觉说「变慢了」。</p>
+<h2>🔥 七十二小时双路压力</h2>
+<p>稳定性烤机的要点是双路施压：诊断工具的算力压测循环和真实训练任务同时跑，全程不得重启。每四小时巡检一次，看四样东西——掉卡、ECC 报错、内核日志异常、温度。风冷和液冷各有阈值，触到降频线就要查散热。</p>
+<p>最后是破坏性测试：自动脚本跑一百次重启加二十次交流断电，每次开机后验证自检正常、NPU 枚举顺序稳定。枚举顺序变了，上层挂载就会乱，这类问题只有断电测试能暴露。</p>
+<h2>💡 一点观察</h2>
+<p>烤机的价值在于把「随机故障」变成「有记录的确定性」：每张卡的峰值、每个温度阈值、每次断电后的枚举结果，都留下数字。硬件的信任不是 feel 出来的，是七十二小时烧出来的。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

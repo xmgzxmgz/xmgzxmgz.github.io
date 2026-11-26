@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>短信发不出去，因为这张卡的运营商没有 2G — 贵志的猫</title>
+<meta name="description" content="桌上的 4G 模块插了一张广电的卡，收不到短信也发不出去。数据上网一切正常，唯独短信这条路死了。查到最后发现根因特别「新时代」：这家运营商压根没有 2G 和 3G 网络，短信只剩一条路——IMS。而这条唯一的路，被一个配…">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/broadcast-sms-ims.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="短信发不出去，因为这张卡的运营商没有 2G">
+<meta property="og:description" content="桌上的 4G 模块插了一张广电的卡，收不到短信也发不出去。数据上网一切正常，唯独短信这条路死了。查到最后发现根因特别「新时代」：这家运营商压根没有 2G 和 3G 网络，短信只剩一条路——IMS。而这条唯一的路，被一个配…">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/broadcast-sms-ims.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="短信发不出去，因为这张卡的运营商没有 2G">
+<meta name="twitter:description" content="桌上的 4G 模块插了一张广电的卡，收不到短信也发不出去。数据上网一切正常，唯独短信这条路死了。查到最后发现根因特别「新时代」：这家运营商压根没有 2G 和 3G 网络，短信只剩一条路——IMS。而这条唯一的路，被一个配…">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>短信发不出去，因为这张卡的运营商没有 2G</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">LTE</span><span class="tag">AT 指令</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>桌上的 4G 模块插了一张广电的卡，收不到短信也发不出去。数据上网一切正常，唯独短信这条路死了。查到最后发现根因特别「新时代」：这家运营商压根没有 2G 和 3G 网络，短信只剩一条路——IMS。而这条唯一的路，被一个配置开关关着。</p>
+  </blockquote>
+
+<p>桌上的 4G 模块插了一张广电的卡，收不到短信也发不出去。数据上网一切正常，唯独短信这条路死了。查到最后发现根因特别「新时代」：这家运营商压根没有 2G 和 3G 网络，短信只剩一条路——IMS。而这条唯一的路，被一个配置开关关着。</p>
+<h2>🧪 先取证，再动手</h2>
+<p>短信在模块上走的是 AT 口，跟上网的数据通道不是一回事。第一步看应用层：短信库里历史消息都在，新发的状态是「未确认」——模块没确认提交成功，和「发不出去」吻合。历史短信全是别的卡留下的，这张卡一条新的都没收到过。</p>
+<p>收发全挂，最常见的根因是没注上网或短信中心号码缺失。直连 AT 口逐项核对：SIM 状态正常、信号满格、LTE 已注册、短信中心号码正确。四项全绿，但电路域注册被拒。</p>
+<h2>🧩 因果链闭环</h2>
+<p>电路域被拒在这里是正常现象：广电没有自己的 2G/3G 网，传统电路域短信无处落脚，短信必须走 IMS 承载。再查 IMS——承载定义了，但没拿到 IP，激活状态是未激活。最后一问模块的 IMS 配置开关：返回值明明白白，IMS 功能被关了。</p>
+<p>顺手还发现数据 APN 配的是另一家运营商的老接入点，改成广电正确的接入点一并处理。打开 IMS 开关、激活承载之后，短信立刻能收能发。</p>
+<h2>💡 一点观察</h2>
+<p>这个案例好玩在「正常现象」和「故障」长得一模一样：电路域被拒是网络架构决定的必然，不是故障；真正的故障藏在这条必然之路的开关上。排错时把「哪些失败是设计使然」先分拣出来，剩下的那一个才是真凶。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
