@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 的自主度，是个滑块不是开关 — 贵志的猫</title>
+<meta name="description" content="总有人问我：Agent 到底该给它多大的自主权？">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ai-agent-workflow-design.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="Agent 的自主度，是个滑块不是开关">
+<meta property="og:description" content="总有人问我：Agent 到底该给它多大的自主权？">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ai-agent-workflow-design.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent 的自主度，是个滑块不是开关">
+<meta name="twitter:description" content="总有人问我：Agent 到底该给它多大的自主权？">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>Agent 的自主度，是个滑块不是开关</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">AI Agent</span><span class="tag">工作流</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>总有人问我：Agent 到底该给它多大的自主权？</p>
+  </blockquote>
+
+<p>总有人问我：Agent 到底该给它多大的自主权？</p>
+<p>我现在的答案是，这个问题本身就问歪了。自主度不是开关，是个滑块，每一档都有明确的适用场景。</p>
+<h2>🐳 能写死就别放开</h2>
+<p>我踩过的第一个坑，是一上来就做全自动 Agent。</p>
+<p>后来想明白了：步骤能数得清的活儿，根本不需要自主决策。比如早报流程，抓取、摘要、推送三步写死，模型只负责中间摘要那格填空。可靠性高，出了问题一眼能定位。</p>
+<p>真正需要自主权的，是"调研这个课题再写份报告"这种路径没法预先枚举的任务。所以我的路线很实用主义：先写死流程跑通，再把变数最大的那一步交给模型。跑稳了，再交出下一步。可靠性和自主步数成反比，每多一步自由发挥，成功率就打一次折。</p>
+<h2>🐳 工具要小而钝</h2>
+<p>给了模型决策权，工具就是它的手脚。我给自己立了三条规矩：粒度小、语义清楚、返回可观察。"查询订单状态"就比"订单管理"好——前者模型不会猜错用途。工具描述把参数和返回写明白，返回值带结构化的错误信息，模型才有依据修正下一步。</p>
+<p>核心循环其实短得惊人：</p>
+<pre><code>while not done:
+    plan = llm(任务, 历史, 工具列表)   # 决策
+    result = run(plan.tool, plan.args) # 调用
+    历史.append(result)                # 观察
+    if plan.risky:
+        ask_human(plan)                # 闸门</code></pre>
+<p>复杂度不在循环里，在每一步失败之后怎么办。</p>
+<h2>🐳 失败要有台阶</h2>
+<p>这是我认为最值得花心思的部分，恢复路径我分三层设计：</p>
+<p>可重试的错误（超时、限流），指数退避重试，上限三次。工具报错了，把错误原文喂回模型让它自我修正，最多两轮。还不行，就停下来，带着完整的上下文去找人。</p>
+<p>别嫌这台阶矮。失控的 Agent 标准形态就是循环烧钱，所以我还加了预算：步数、token、时间，哪个上限先到就停。</p>
+<p>删除、支付、对外发送这类高危动作，不管前面跑得多顺，都留一道人工确认的闸门。自动化省的时间，不该拿来替人担责任。</p>
+<h2>💡 一点观察</h2>
+<p>自主度本质上是信任预算，而信任要靠数据挣。我的做法是攒二十个真实任务当考卷，每次调滑块就跑一遍通过率。拨一格，验一次，比"感觉它变聪明了"踏实得多。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

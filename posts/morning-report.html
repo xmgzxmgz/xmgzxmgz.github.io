@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每天早上七点半，一条消息替我看完整个互联网 — 贵志的猫</title>
+<meta name="description" content="我有一个雷打不动的习惯：每天早上七点半，手机会弹出一条消息，里面有今天的天气、日程、待办和几条我关心的资讯摘要。不到一分钟扫完，这一天的信息底就摸清了。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/morning-report.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="每天早上七点半，一条消息替我看完整个互联网">
+<meta property="og:description" content="我有一个雷打不动的习惯：每天早上七点半，手机会弹出一条消息，里面有今天的天气、日程、待办和几条我关心的资讯摘要。不到一分钟扫完，这一天的信息底就摸清了。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/morning-report.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="每天早上七点半，一条消息替我看完整个互联网">
+<meta name="twitter:description" content="我有一个雷打不动的习惯：每天早上七点半，手机会弹出一条消息，里面有今天的天气、日程、待办和几条我关心的资讯摘要。不到一分钟扫完，这一天的信息底就摸清了。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>每天早上七点半，一条消息替我看完整个互联网</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-27</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">自动化</span><span class="tag">早报</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>我有一个雷打不动的习惯：每天早上七点半，手机会弹出一条消息，里面有今天的天气、日程、待办和几条我关心的资讯摘要。不到一分钟扫完，这一天的信息底就摸清了。</p>
+  </blockquote>
+
+<p>我有一个雷打不动的习惯：每天早上七点半，手机会弹出一条消息，里面有今天的天气、日程、待办和几条我关心的资讯摘要。不到一分钟扫完，这一天的信息底就摸清了。</p>
+<p>它不是什么新闻 App 的推送，是我自己拼的一套小系统。通用新闻推送的问题是给别人看的，而早报这件事，应该自己定义。</p>
+<h2>📋 内容自己做主</h2>
+<p>我的早报就五个板块，每块数据源都有现成的免费接口。</p>
+<p>天气用免费天气 API，带穿衣建议；日程读日历订阅；待办从清单文件里抓；订阅源摘要来自 RSS；偶尔加一行汇率之类的自定义数据。</p>
+<p>设计原则只有一条：每块信息三秒可读完。早报是扫描品，不是阅读品，长内容一律只给标题加链接，不把全文塞进来。RSS 摘要只取标题和首行，防止早报变成文章合集——那还不如不推。</p>
+<h2>🧯 单源挂了，早报不能挂</h2>
+<p>系统上线后第一个教我做人的是：接口一定会挂。</p>
+<p>天气源超时、日历接口抽风，都是常事。所以我给采集层立了一条铁律——单个源失败，绝不影响整体早报。每个源单独捕获异常，失败的板块降级显示"源暂不可用"，其余照常出刊。</p>
+<pre><code>for name, fn in sources:
+    try:
+        results.append((name, fn(), None))
+    except Exception as e:
+        # 降级：该块显示&quot;源暂不可用&quot;
+        results.append((name, None, str(e)))</code></pre>
+<p>缺块好过缺席。宁可今天的天气栏写着暂不可用，也不能让整个早报静默失踪——因为一次失败的推送，用户就再也不敢信它了。</p>
+<h2>📡 双通道加心跳</h2>
+<p>推送通道我按到达率挑的：IM 群机器人当主力，消息直接弹在手机上；邮件当备胎，永不遗漏还能存档。双通道同发，一条消息两处落地。</p>
+<p>但还有个隐蔽的坑：任务本身挂了呢？没人推送，你也未必察觉。解法是心跳——早报之外，任务每天往另一个通道发一条极简的心跳消息。连续两天没收到心跳，就说明定时任务已经悄悄死了，该去查日志了。</p>
+<pre><code>7:30  并行采集各数据源（失败源降级）
+7:31  渲染 HTML 与纯文本两个版本
+7:32  双通道推送 + 心跳留痕</code></pre>
+<p>部署不复杂，定时任务跑在 NAS 上，或者用云函数的免费额度，搭建十分钟的量级。日志每次都记，周末扫一眼，哪个数据源在劣化一眼可见。</p>
+<p>我给自己定的迭代纪律是：先做到一百天不间断，再谈加功能。任何新数据源都要先稳定采集一个月才转正。这条系统的生命线不是功能多，而是准时——每一天都在。</p>
+<h2>💡 一点观察</h2>
+<p>个人自动化的乐趣常在加功能，而价值全在"从不出错"。早报这个系统教会我的事，说穿了就一句：稳定准时是天花板，功能只是地板上的摆设。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

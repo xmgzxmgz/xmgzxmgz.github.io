@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浏览器那把小锁，到底在信什么 — 贵志的猫</title>
+<meta name="description" content="给家里的自托管服务上 HTTPS，第一反应是"不就换个证书吗"。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/tls-certificates-explained.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="浏览器那把小锁，到底在信什么">
+<meta property="og:description" content="给家里的自托管服务上 HTTPS，第一反应是"不就换个证书吗"。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/tls-certificates-explained.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="浏览器那把小锁，到底在信什么">
+<meta name="twitter:description" content="给家里的自托管服务上 HTTPS，第一反应是"不就换个证书吗"。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>浏览器那把小锁，到底在信什么</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">HTTPS</span><span class="tag">TLS</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>给家里的自托管服务上 HTTPS，第一反应是"不就换个证书吗"。</p>
+  </blockquote>
+
+<p>给家里的自托管服务上 HTTPS，第一反应是"不就换个证书吗"。</p>
+<p>真配起来才发现，证书报错花样百出：这台设备正常那台报错、明明没过期却警告、换了证书还是红锁。搞不懂信任链，这些错就像玄学。</p>
+<h2>🐳 小锁背后是一条链</h2>
+<p>先说证书的本质：CA 拿自己的私钥，为"你的公钥 + 你的域名"做了一份担保签字。</p>
+<p>浏览器验的其实是三层：你访问的域名在不在证书的 SAN 列表里；这张证书能不能一路追溯到系统预置的根 CA；当前时间有没有落在有效期之内。三层缺一不可，任何一层不过关，就是那面红色警告页。</p>
+<p>这条链很关键：站点证书 → 中间 CA → 根 CA。根证书早就预置在操作系统里，是整个信任的锚点，中间环节则要服务器自己补齐——而事故恰恰最爱出在这。</p>
+<h2>🐳 只有手机打不开</h2>
+<p>最经典的故障是：电脑浏览器一切正常，手机一开就报错，curl 也不行。</p>
+<p>答案几乎是标准答案——服务器只发了站点证书，没带中间证书。桌面浏览器以前见过这张中间证书，缓存救了场；没见过的设备就直接断了链。</p>
+<p>验证很简单，一条命令看服务器到底发了什么：</p>
+<pre><code>openssl s_client -connect example.com:443 \
+  -servername example.com 2&gt;/dev/null \
+  | openssl x509 -noout -subject -dates</code></pre>
+<p>更省事的办法是丢给 SSL Labs 在线测评一下，链条不全当场现形，部署 fullchain 完整链就能修好。域名不匹配则注意一个细节：通配符证书罩得住子域名，罩不住裸域。</p>
+<h2>🐳 让证书自己续命</h2>
+<p>内网服务想上 HTTPS，自签是条路，但要明白边界：往系统里导入一个 CA，等于放行它能签发的一切。所以只导自己生成的，来路不明的抓包证书千万别长期残留。</p>
+<p>我现在走的是更省事的路：用 DNS 验证签一张通配符证书，内网域名统一走反代入口，所有设备零导入。配套的是 Let's Encrypt 的自动续期——它家证书只有九十天寿命，短到逼你必须自动化。续期脚本挂上定时任务，证书像呼吸一样自己完成代谢，我就再也不用管它了。</p>
+<h2>💡 一点观察</h2>
+<p>配了几年证书才想明白，HTTPS 验证的从来不是"这个网站可不可信"，而是"这个域名是不是它自称的那一个"。信任在网络上，永远始于身份核对。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

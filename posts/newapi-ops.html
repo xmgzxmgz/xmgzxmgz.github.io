@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试绿灯，调用红灯：自建中转站第一课 — 贵志的猫</title>
+<meta name="description" content="自建中转站的第一个月，我学会最重要的一课：后台测试一路绿灯，实际调用照样可以一片红。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/newapi-ops.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="测试绿灯，调用红灯：自建中转站第一课">
+<meta property="og:description" content="自建中转站的第一个月，我学会最重要的一课：后台测试一路绿灯，实际调用照样可以一片红。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/newapi-ops.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="测试绿灯，调用红灯：自建中转站第一课">
+<meta name="twitter:description" content="自建中转站的第一个月，我学会最重要的一课：后台测试一路绿灯，实际调用照样可以一片红。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>测试绿灯，调用红灯：自建中转站第一课</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">LLM 网关</span><span class="tag">运维</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>自建中转站的第一个月，我学会最重要的一课：后台测试一路绿灯，实际调用照样可以一片红。</p>
+  </blockquote>
+
+<p>自建中转站的第一个月，我学会最重要的一课：后台测试一路绿灯，实际调用照样可以一片红。</p>
+<h2>🐳 四张表</h2>
+<p>这类自建网关的运维，说复杂也复杂，说简单也就是四张表的事。</p>
+<p>渠道表管上游怎么接：官方、云厂商、其他中转、本地推理，各填各的。令牌表管下游怎么发：按工具或项目发独立令牌，配额度上限和可用模型范围，泄露时单独封禁不殃及全局。日志表管对账，用户表管额度。高频故障基本都出在前三张表的配合上。</p>
+<h2>🐳 三类故障</h2>
+<p>第一类：渠道测试通过，用户调用报 404。九成是模型映射没配——渠道里的模型列表管路由，模型重定向管改名，这是两个独立配置，改了列表不等于改了重定向。</p>
+<p>第二类：流式输出中断或卡死。排查顺序固定：先看网关的代理缓冲设置（流式响应要关 buffering），再看超时时间，最后查上游限流。特征也很明显：直连正常、走中转必断，问题就在中间层。</p>
+<p>第三类：额度对不上。去日志页拉消费明细逐条核对。有个容易忽略的坑：缓存 token 的计费倍率和普通 token 不一样，多模态输入里图片的换算也常有出入。更隐蔽的是上游涨价后没及时调自己的倍率——卖一份亏一份。之前写过一篇算 token 成本账的文章，账本意识是一样的。</p>
+<h2>🐳 例行功课</h2>
+<p>平时靠两条命令自检：</p>
+<pre><code>curl -s http://localhost:3000/api/status | python -m json.tool
+curl -s -H &quot;Authorization: Bearer $GATEWAY_TOKEN&quot; \
+  http://localhost:3000/v1/models | python -m json.tool</code></pre>
+<p>第一条看服务活着没，第二条用某个令牌查它实际可见的模型范围。</p>
+<p>例行项归四件事：日志设保留天数，别让日志表膨胀拖慢后台；每周把所有渠道测试跑一遍，上游悄悄换端点能及时发现；数据库定期备份，配置丢失后重建成本极高；升级前看变更说明，备份数据库再拉新镜像。</p>
+<p>还有一条底线：只要对外暴露，默认会话密钥必须改，注册要么审核要么关掉，管理后台走内网。上游密钥泄露，等于把钱包交出去。</p>
+<h2>💡 一点观察</h2>
+<p>中转站运维没有高深技术，拼的是「别相信单点验证」——测试绿灯只是第一关，真实的调用、真实的账单，才是系统的真相。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个 401，让我把换模型做成了换配置 — 贵志的猫</title>
+<meta name="description" content="那天下午我的编码 CLI 突然全线 401，报错末尾还挂着一句「你好」。查到最后发现，错的不是我的密钥，而是链路上有一环悄悄过时了。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ccswitch-api-gateway.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="一个 401，让我把换模型做成了换配置">
+<meta property="og:description" content="那天下午我的编码 CLI 突然全线 401，报错末尾还挂着一句「你好」。查到最后发现，错的不是我的密钥，而是链路上有一环悄悄过时了。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ccswitch-api-gateway.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="一个 401，让我把换模型做成了换配置">
+<meta name="twitter:description" content="那天下午我的编码 CLI 突然全线 401，报错末尾还挂着一句「你好」。查到最后发现，错的不是我的密钥，而是链路上有一环悄悄过时了。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>一个 401，让我把换模型做成了换配置</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">LLM 网关</span><span class="tag">排错</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>那天下午我的编码 CLI 突然全线 401，报错末尾还挂着一句「你好」。查到最后发现，错的不是我的密钥，而是链路上有一环悄悄过时了。</p>
+  </blockquote>
+
+<p>那天下午我的编码 CLI 突然全线 401，报错末尾还挂着一句「你好」。查到最后发现，错的不是我的密钥，而是链路上有一环悄悄过时了。</p>
+<h2>🐳 先说事故</h2>
+<p>现象很怪：CLI 走本地反代调用上游，所有模型一律 401。先怀疑密钥过期，登录态刷新过，文件时间戳是新的，重启也不解决。</p>
+<p>顺着链路一跳一跳查：CLI 到本地代理正常，代理到转换器正常，转换器到上游网关——401。看日志才发现，最后一次成功请求停在十几天前。</p>
+<p>根因有点哭笑不得：上游桌面客户端某次更新，把凭据文件里的令牌从明文改成了加密信封。链路上那个小小的转换器没有解密逻辑，把整个加密信封原样塞进请求头发了出去。网关看到一串乱码，当然回 401。至于「你好」，那只是 CLI 给会话起标题的小请求，跟着一起 401 而已。</p>
+<p>这件事的教训：401 不一定是「你的 key 错了」，可能是链路中间有人在转发它看不懂的东西。</p>
+<h2>🐳 为什么要网关</h2>
+<p>出事之前，我的供应商配置是散装的：每个工具各存一份地址和密钥，供应商一换全要改一遍。后来我搭了一层本地网关：所有应用只认本地地址，供应商信息全部收进网关的配置文件里。好处有三条——应用代码零改动；所有请求过网关，用量和失败率一处可查；换供应商变成换配置。</p>
+<h2>🐳 配置即切换</h2>
+<p>档案化的配置大概长这样：</p>
+<pre><code>profiles:
+  daily:      # 便宜渠道，日常跑
+    base_url: http://localhost:8080/v1
+    api_key: ${DAILY_KEY}
+  official:   # 高端模型才走
+    base_url: http://localhost:8080/v1
+    api_key: ${OFFICIAL_KEY}
+routing:
+  default: daily
+  fallback: [official]</code></pre>
+<p>日常手动一条命令切换，长期挂机的服务配健康检查自动落备用。有个细节值得记：探测别用模型列表接口，用最小请求去探，那才反映推理通道的真实可用性；连续失败几次才切换，避免抖动。</p>
+<p>那场 401 之后我又庆幸了一次：配置收在一处，排查链路只有几跳，临时切备用只要一条命令。</p>
+<h2>💡 一点观察</h2>
+<p>把「换模型」从改代码变成改配置，本质是把易变的东西和稳定的东西分开——模型和供应商永远在变，你的工作流不该陪着他们一起动。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

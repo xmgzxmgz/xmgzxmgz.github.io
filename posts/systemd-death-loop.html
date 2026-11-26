@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个服务重启了十七万次，没人知道 — 贵志的猫</title>
+<meta name="description" content="排查一个不相干的问题时，随手敲了句 `systemctl status`，看到一行数字：某个固件服务，累计重启十七万多次。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/systemd-death-loop.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="一个服务重启了十七万次，没人知道">
+<meta property="og:description" content="排查一个不相干的问题时，随手敲了句 `systemctl status`，看到一行数字：某个固件服务，累计重启十七万多次。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/systemd-death-loop.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="一个服务重启了十七万次，没人知道">
+<meta name="twitter:description" content="排查一个不相干的问题时，随手敲了句 `systemctl status`，看到一行数字：某个固件服务，累计重启十七万多次。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>一个服务重启了十七万次，没人知道</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">systemd</span><span class="tag">NAS</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>排查一个不相干的问题时，随手敲了句 <code>systemctl status</code>，看到一行数字：某个固件服务，累计重启十七万多次。</p>
+  </blockquote>
+
+<p>排查一个不相干的问题时，随手敲了句 <code>systemctl status</code>，看到一行数字：某个固件服务，累计重启十七万多次。</p>
+<p>按两秒一次的节奏，它在我的 NAS 上死循环了大半年，没有任何告警，机器看起来一切正常。</p>
+<h2>🌀 死循环是怎么转起来的</h2>
+<p>机理不复杂：unit 里写了 <code>Restart=always</code>，服务每次退出就被拉起，而它每次启动都失败，永远在「崩溃→重启」里打转。<code>RestartSec</code> 设得很小，循环转得飞快。</p>
+<p>后背发凉的是：这样的事，机器自己扛了大半年，没人听见。systemd 不会发消息，监控没盯重启计数，没有一条像样的告警。</p>
+<h2>🧨 三种写法把 systemd 逼疯</h2>
+<p>看它的 unit 文件，问题不少，三类最有代表性。</p>
+<p>第一类，<code>ExecStop</code> 里用了 <code>$MAINPID</code>。这个变量本该由 systemd 展开，但部分固件的 shell 环境里它就是空的，kill 收到空参数，每次停止都报错，服务关不掉又被拉起，循环加速。</p>
+<p>第二类，Type 判定失败。<code>Type=simple</code> 要求程序前台驻留，可有些二进制自带守护化参数，一启动父进程就退出，systemd 认为「起来就死了」，不停重试。</p>
+<p>第三类最隐蔽，循环依赖：父子 unit 互为绑定，任何一方状态变化都拖着重启对方，谁也停不下来。</p>
+<h2>🛠️ 自己写 unit 的防坑清单</h2>
+<p>处置就是止损：备份 unit 文件，stop 加 disable，让死循环停下来。动手前确认真正的业务进程是否独立在跑，别止住了死循环也停掉了服务；disable 软链的 unit 会把链接一起删掉，恢复脚本要先留底。</p>
+<p>自己写 unit 的话，防坑清单四条：</p>
+<pre><code>[Service]
+Type=simple          # 前台驻留；自守护化的程序去掉 -d
+Restart=on-failure
+StartLimitIntervalSec=300
+StartLimitBurst=5    # 五分钟内最多重启五次</code></pre>
+<p><code>ExecStop</code> 别手写 kill，留空让 systemd 按控制组收尾；依赖慎用「对方死我也死」的强绑定；上线前用 <code>systemd-analyze verify</code> 查一遍语法。</p>
+<p><code>StartLimitBurst</code> 是重点，是防止十七万次重启的那道闸：超限后 systemd 会放弃重启并标记失败——失败不可怕，安静地无限循环才可怕。</p>
+<h2>💡 一点观察</h2>
+<p><code>Restart=always</code> 给人可靠感，但重试没有上限、失败没有告警，可靠就变成了遮丑。真正的心跳监测不是「它还在重启」，而是「它有没有真的起来」。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

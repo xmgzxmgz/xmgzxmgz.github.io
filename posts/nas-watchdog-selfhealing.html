@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看门狗进化到第四代，才敢说真话 — 贵志的猫</title>
+<meta name="description" content="之前写过《docker ps 说它活着》，那回事故之后，我没停在把容器修好，而是回头把整套看门狗推倒重写。现在回头看，这套东西迭代了四代，每一代的漏洞都不是想出来的，是被真实事故打出来的。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/nas-watchdog-selfhealing.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="看门狗进化到第四代，才敢说真话">
+<meta property="og:description" content="之前写过《docker ps 说它活着》，那回事故之后，我没停在把容器修好，而是回头把整套看门狗推倒重写。现在回头看，这套东西迭代了四代，每一代的漏洞都不是想出来的，是被真实事故打出来的。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/nas-watchdog-selfhealing.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="看门狗进化到第四代，才敢说真话">
+<meta name="twitter:description" content="之前写过《docker ps 说它活着》，那回事故之后，我没停在把容器修好，而是回头把整套看门狗推倒重写。现在回头看，这套东西迭代了四代，每一代的漏洞都不是想出来的，是被真实事故打出来的。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>看门狗进化到第四代，才敢说真话</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">nas</span><span class="tag">docker</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>之前写过《docker ps 说它活着》，那回事故之后，我没停在把容器修好，而是回头把整套看门狗推倒重写。现在回头看，这套东西迭代了四代，每一代的漏洞都不是想出来的，是被真实事故打出来的。</p>
+  </blockquote>
+
+<p>之前写过《docker ps 说它活着》，那回事故之后，我没停在把容器修好，而是回头把整套看门狗推倒重写。现在回头看，这套东西迭代了四代，每一代的漏洞都不是想出来的，是被真实事故打出来的。</p>
+<h2>🐳 端口会撒谎</h2>
+<p>最早的版本很天真：定时去探服务的端口，通就当它活着。</p>
+<p>结果主进程死透了，端口转发层还挂着监听，端口照常应答，服务死了三天我才反应过来。于是加上容器状态检查，以为稳了——没过多久又漏报，状态栏写着 running，实际早假死了。</p>
+<p>两次被打脸，我才看清同一件事：用被监控者的表象去验证它自己，等于让它给自己开健康证明。它说活着，不算数。</p>
+<h2>🐳 再往下问一层</h2>
+<p>第三版绕过容器管理层，直接问底层运行时有没有这个容器的运行任务。这能发现「报了一个、实际零个」的假活，但只报数量，定位不到具体是谁。</p>
+<p>第四版干脆上白盒取证，认两条铁证：</p>
+<pre><code>task 缺失：运行时里没有该容器的运行中任务
+ns 失效：/proc/&lt;pid&gt;/ns/mnt 已不可读</code></pre>
+<p>两条同时成立才判假活，端口降级成辅助信号。误报率从每月几次降到零。</p>
+<p>还有个容易忽略的细节：有些定时任务型容器本来就是间歇运行的，直判会误杀。给它们一张白名单，再加一个「连续 N 次异常才动手」的迟滞窗口，看门狗才不至于好心办坏事。</p>
+<h2>🐳 谁来看着看门狗</h2>
+<p>自愈动作我分成三级：单次异常只记日志；连续两个周期才 restart；系统级服务的重启属于高危动作，必须白名单确认才准做。有些操作直接进禁项，比如对还在 running 的容器强杀进程——自愈变自毁，往往就一步。</p>
+<p>每次动作都留一行日志，事后能独立复盘：</p>
+<pre><code>[L2] svc fakealive=true task=0 ns=GONE action=restart rc=0
+[OK] svc task=1 ns=ok latency=2.1s</code></pre>
+<p>最后一步是承认看门狗自己也会死：日志时间戳断档超过两个周期就告警，每天向外发一条心跳，脚本每次修改都记版本、留备份。监督者不能只监督别人。</p>
+<h2>💡 一点观察</h2>
+<p>可靠的东西很少是一次设计出来的，多半是被事故一层层养出来的。验收标准也朴素：你敢不敢让它在你睡觉的时候动手。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

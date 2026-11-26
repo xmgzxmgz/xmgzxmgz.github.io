@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sudo cd 都会报错，我给 NAS 画了张权限地图 — 贵志的猫</title>
+<meta name="description" content="第一次 SSH 进 NAS，我信心满满敲了一行 `sudo echo x >> /root/test`，回车，Permission denied。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/ssh-sudo-map.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="sudo cd 都会报错，我给 NAS 画了张权限地图">
+<meta property="og:description" content="第一次 SSH 进 NAS，我信心满满敲了一行 `sudo echo x >> /root/test`，回车，Permission denied。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/ssh-sudo-map.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sudo cd 都会报错，我给 NAS 画了张权限地图">
+<meta name="twitter:description" content="第一次 SSH 进 NAS，我信心满满敲了一行 `sudo echo x >> /root/test`，回车，Permission denied。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>sudo cd 都会报错，我给 NAS 画了张权限地图</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">NAS</span><span class="tag">SSH</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>第一次 SSH 进 NAS，我信心满满敲了一行 <code>sudo echo x &gt;&gt; /root/test</code>，回车，Permission denied。</p>
+  </blockquote>
+
+<p>第一次 SSH 进 NAS，我信心满满敲了一行 <code>sudo echo x &gt;&gt; /root/test</code>，回车，Permission denied。</p>
+<p>明明带了 sudo。那一刻我意识到，这台机器的权限模型跟直觉不一样，得老老实实画张地图。</p>
+<h2>🗺️ 界面上的名字，都是别名</h2>
+<p>第一课是路径。前端界面里的「SATA 存储」「个人空间」，在 SSH 里根本不存在，那只是展示层的别名；真实路径藏在 zfuse 联合挂载点下，按物理卷和用户 ID 组织。</p>
+<p>更要命的是权限：这个挂载点是以 root 身份挂的，普通 SSH 用户对它只有读权限，想改文件必须 sudo。</p>
+<p>这张地图的第一层就是：界面别名 → 挂载点 → 真实路径。改配置前先 <code>ls -la</code> 确认站在哪，别被软链骗了。</p>
+<h2>🔑 sudo 的几个反直觉细节</h2>
+<p>用熟之后，我踩过的坑可以凑一张清单。</p>
+<p>密码喂法：非交互场景用 <code>sudo -S</code> 从 stdin 喂密码，脚本才不会卡住。</p>
+<p><code>sudo cd</code> 不存在。sudo 是按命令授权的，cd 是 shell 内建命令，sudo 根本找不到它。想看哪就 <code>sudo ls</code> 加绝对路径。</p>
+<p>重定向逃逸，就是开头那次的元凶：<code>sudo echo x &gt;&gt; file</code> 里，<code>&gt;&gt;</code> 是当前 shell 执行的，而当前 shell 没有写那个目录的权限。sudo 只保护了 echo，没保护重定向。正确写法是把整条命令包进 root 的 shell：</p>
+<pre><code>sudo bash -c &quot;echo x &gt;&gt; /root/test&quot;
+# 或者借道 tee
+echo x | sudo tee -a /root/test</code></pre>
+<p>SFTP 直写 root 拥有的文件也会失败，我的流程是先传到自己的 home，再 sudo cp 到位。</p>
+<h2>🗑️ 删除这件事，永远留后路</h2>
+<p>这张地图上最重要的一条红线：删文件不走 <code>rm</code>，走回收站路径。移到回收站目录，前端还能看到、还能反悔，这是数据安全的最后一道缓冲。</p>
+<p>另外：SSH 端口不是默认的 22；系统升级可能重置挂载结构，重要改动备份到 home 并记笔记。</p>
+<p>回头看，这些限制其实都指向同一个设计哲学：默认给你的，是刚好够用的权限。</p>
+<h2>💡 一点观察</h2>
+<p>最小放行不是麻烦，是 sane 默认。只读的挂载、按命令授权的 sudo、强制走回收站的删除，每一层都在替「手滑的我」兜底。权限地图画清楚之后，剩下的就是别跟系统对着干。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

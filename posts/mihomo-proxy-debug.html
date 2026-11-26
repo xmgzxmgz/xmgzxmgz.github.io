@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代理走不通，先别急着重启 — 贵志的猫</title>
+<meta name="description" content="网页转圈的时候，我的肌肉记忆是重启代理。直到有一次重启了三遍还是不通，才承认这条路不对——十次故障里大概有八次，重启只是把问题原样留给了我。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/mihomo-proxy-debug.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="代理走不通，先别急着重启">
+<meta property="og:description" content="网页转圈的时候，我的肌肉记忆是重启代理。直到有一次重启了三遍还是不通，才承认这条路不对——十次故障里大概有八次，重启只是把问题原样留给了我。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/mihomo-proxy-debug.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="代理走不通，先别急着重启">
+<meta name="twitter:description" content="网页转圈的时候，我的肌肉记忆是重启代理。直到有一次重启了三遍还是不通，才承认这条路不对——十次故障里大概有八次，重启只是把问题原样留给了我。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>代理走不通，先别急着重启</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">排障</span><span class="tag">代理</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>网页转圈的时候，我的肌肉记忆是重启代理。直到有一次重启了三遍还是不通，才承认这条路不对——十次故障里大概有八次，重启只是把问题原样留给了我。</p>
+  </blockquote>
+
+<p>网页转圈的时候，我的肌肉记忆是重启代理。直到有一次重启了三遍还是不通，才承认这条路不对——十次故障里大概有八次，重启只是把问题原样留给了我。</p>
+<p>于是我给这个代理内核（mihomo，Clash Meta 的内核）整理了一份排障笔记，核心就一句话：先分层，再动手。</p>
+<h2>🌲 三层里找问题</h2>
+<p>一个请求走不通，可能卡在三层的任何一层：</p>
+<p><strong>DNS 层</strong>，域名解析对不对。拿一个域名 nslookup 一下，如果返回的 IP 一眼假，那是解析被污染了，流量根本没到代理那一步。这也是 DNS 泄漏检测的思路：确认解析走的是哪条路。</p>
+<p><strong>路由层</strong>，流量有没有进内核。端口开着不等于流量在走，直接用代理端口发一个真实请求验证：</p>
+<pre><code>curl -x http://localhost:7890 -v https://example.com</code></pre>
+<p>能通，说明入口没问题，往下查；不通，问题在入口。</p>
+<p><strong>规则层</strong>，流量进了内核，但被分给了哪条规则、哪个出口。这一层最容易被忽略，因为大家默认「配过的规则都在工作」。</p>
+<h2>🧭 规则是从上往下匹配的</h2>
+<p>有个坑我踩得很典型：把 <code>GEOIP,CN,DIRECT</code> 写得太靠前，它把一大半流量就地截断，后面精心写的规则全成了摆设。表现就是「该走的没走」。</p>
+<p>内核自己提供了验证手段——查连接 API，能看到某个连接实际命中了哪条规则、从哪个出口出去。猜一百次，不如看一眼真实判卷结果。</p>
+<p>还有一类幽灵问题：切换模式之后客户端缓存着旧的 fake-ip 不放，怎么改配置都不生效。这时候该清的是客户端的 DNS 缓存，配置文件根本没病。</p>
+<h2>📜 日志要分层看</h2>
+<p>日志别一把梭。内核的启动日志管「起没起来」：规则加载失败、配置报错都在开头那几十行；连接日志管「走没走对」：每条连接的匹配和出口。</p>
+<p>容器化部署还有一层容易迷惑人的：退出码。137 是被 OOM 杀了，126、127 是权限或路径问题——比「服务挂了」精确得多。</p>
+<p>最后配一个 <code>restart: unless-stopped</code>，再给容器设个内存上限。长跑的内核偶发内存增长，被限制后体面重启，总好过把宿主机一起拖卡。</p>
+<h2>💡 一点观察</h2>
+<p>排障的进步不是多认识几个命令，而是养成一个习惯：在动手之前，先回答「问题在哪一层」。分层想清楚，重启就只留给真正需要它的时候。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

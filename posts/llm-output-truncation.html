@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>回答写一半就断，先别怪网络 — 贵志的猫</title>
+<meta name="description" content="让模型写篇长综述，写到一半戛然而止，JSON 都没闭合。第一反应是网络抖了，重试三次才想起来：先看看它是怎么「死」的。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/llm-output-truncation.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="回答写一半就断，先别怪网络">
+<meta property="og:description" content="让模型写篇长综述，写到一半戛然而止，JSON 都没闭合。第一反应是网络抖了，重试三次才想起来：先看看它是怎么「死」的。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/llm-output-truncation.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="回答写一半就断，先别怪网络">
+<meta name="twitter:description" content="让模型写篇长综述，写到一半戛然而止，JSON 都没闭合。第一反应是网络抖了，重试三次才想起来：先看看它是怎么「死」的。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>回答写一半就断，先别怪网络</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">LLM</span><span class="tag">排错</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>让模型写篇长综述，写到一半戛然而止，JSON 都没闭合。第一反应是网络抖了，重试三次才想起来：先看看它是怎么「死」的。</p>
+  </blockquote>
+
+<p>让模型写篇长综述，写到一半戛然而止，JSON 都没闭合。第一反应是网络抖了，重试三次才想起来：先看看它是怎么「死」的。</p>
+<h2>🐳 先看哨兵</h2>
+<p>每次响应里都藏着一个哨兵字段：finish_reason。它没说出口的话，比报错信息诚实得多。</p>
+<p>length，顶到了 max_tokens 上限被硬切；stop，正常结束，如果内容明显没写完却给了 stop，要查安全过滤；tool_calls，模型在等工具结果回填，根本不是截断；至于没有这个字段、连接直接断掉，那才是网络或网关层的事故。</p>
+<p>一个最小诊断请求：</p>
+<pre><code>curl -s http://localhost:8080/v1/chat/completions \
+  -H &quot;Authorization: Bearer $TOKEN&quot; -d &#x27;{
+  &quot;model&quot;: &quot;gpt-5&quot;, &quot;max_tokens&quot;: 16000,
+  &quot;messages&quot;: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;写一篇 8000 字综述&quot;}]
+}&#x27; | python -c &quot;import json,sys
+print(json.load(sys.stdin)[&#x27;choices&#x27;][0][&#x27;finish_reason&#x27;])&quot;</code></pre>
+<p>第一步永远是读它，别猜。</p>
+<h2>🐳 三层嫌疑</h2>
+<p>截断的嫌疑犯分三层。</p>
+<p>第一层是参数：模型输出上限就那么大，或者你把 max_tokens 设小了。第二层是网关：很多中转站会「好心」把 max_tokens 往下压，或对单次响应体有独立大小限制——特征是官方直连好好的，一走中转必断。第三层是流式：SSE 长连接被中间层缓冲或切断，修法是网关侧关缓冲，客户端做断点续传。</p>
+<p>最坑的是第二层：参数调到天上去也没用，限制根本不在我这头。</p>
+<h2>🐳 分段的艺术</h2>
+<p>后来我不再和 max_tokens 搏斗，改了生成结构。</p>
+<p>先大纲后分段：第一次调用只要大纲，之后逐节展开，每节输出上限各自独立，一段断了重试一段。续写协议：每段结尾放个标记，客户端看到就发「从上段结尾继续」。要结构化数据时用 JSON Lines，一行一个独立对象，断了只丢一行，不丢整篇。</p>
+<p>最后加一道校验：客户端解析失败就自动触发续写重试，不把残缺结果往下传。</p>
+<h2>💡 一点观察</h2>
+<p>截断不是 bug，是约束。把长任务设计成多段短输出加确定性拼接，比祈祷任何一次超长输出完整落地都可靠。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

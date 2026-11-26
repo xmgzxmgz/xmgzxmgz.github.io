@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>开机没进桌面，先进了一个要 48 位数字的蓝屏 — 贵志的猫</title>
+<meta name="description" content="开机没进桌面，先停在一片蓝色全屏上，向我要一串 48 位的恢复密钥。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/bitlocker-rescue.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="开机没进桌面，先进了一个要 48 位数字的蓝屏">
+<meta property="og:description" content="开机没进桌面，先停在一片蓝色全屏上，向我要一串 48 位的恢复密钥。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/bitlocker-rescue.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="开机没进桌面，先进了一个要 48 位数字的蓝屏">
+<meta name="twitter:description" content="开机没进桌面，先停在一片蓝色全屏上，向我要一串 48 位的恢复密钥。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>开机没进桌面，先进了一个要 48 位数字的蓝屏</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">BitLocker</span><span class="tag">磁盘加密</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>开机没进桌面，先停在一片蓝色全屏上，向我要一串 48 位的恢复密钥。</p>
+  </blockquote>
+
+<p>开机没进桌面，先停在一片蓝色全屏上，向我要一串 48 位的恢复密钥。</p>
+<p>那一刻最容易犯的错不是输入错，是慌。一慌就容易乱试、乱重启、甚至想着「要不重装吧」——最后一条才是真正的灾难，重装等于把没解密的数据一起扔了。</p>
+<h2>🔒 蓝屏不是坏了，是它太尽责</h2>
+<p>磁盘加密的逻辑说穿了就一句话：开机链路上任何一个环节跟上次不一样了，芯片就拒绝自动解密，转而要求那串 48 位数字证明「你还是你」。</p>
+<p>什么东西会让它觉得「不一样」？实测频率最高的几样：固件更新（品牌机自动推送那种最阴）、在固件设置里开关过安全启动、换过显卡或硬盘、关了又开过设备加密。动过这些，第二天开机蓝屏等着你。</p>
+<p>蓝屏不是加密坏了，是安全机制在正常工作。别对抗它，配合它。</p>
+<h2>🗝️ 先找 ID，再找钥匙</h2>
+<p>蓝屏上那串字符是恢复密钥 ID，不是密钥本身，作用是告诉你是哪把钥匙。正确动作：拍下 ID，按顺序翻地方。</p>
+<p>第一站是个人微软账户——设备加密开启时密钥默认自动备份在那里，登录网页就能看到。第二站是单位或学校账户，设备注册过组织目录的话，直接问 IT。第三站是当初选过的地方：打印件、存过密钥的 U 盘、手动存过文本的另一台设备。</p>
+<p>一个容易漏的点：系统重装过或登录过不同账户的话，个人和单位账户可能各有一把密钥，两边都要查。</p>
+<h2>🛟 进了门，先把门铃修好</h2>
+<p>输入时每组之间用空格分隔就行，别被格式吓住。进去之后别急着庆祝——度量值已经变了，下次重启很可能又来一遍。所以第一件事是处理根因或临时挂起保护，然后立刻把密钥导出来，顺手把所有盘查一遍——有些机器出厂就把数据盘也默认加密了，你只备份 C 盘，丢的可能是整个 D 盘。</p>
+<pre><code># 动固件、换硬件前先挂起，重启一次后自动恢复
+Suspend-BitLocker -MountPoint &quot;C:&quot; -RebootCount 1
+
+# 把所有盘的加密状态过一遍
+Get-BitLockerVolume | Format-Table MountPoint, ProtectionStatus</code></pre>
+<p>导出之后打印一份放抽屉、存一份进网盘，双保险。这事五分钟，但得在蓝屏出现之前做。</p>
+<h2>💡 一点观察</h2>
+<p>磁盘加密是标准的双刃：平时护你周全，丢钥匙那天砍你最深。备份的意义从来不是「存过」，是丢的那天你还能想起它放在哪。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

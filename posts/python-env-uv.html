@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四个工具的活，现在一个 uv 干完 — 贵志的猫</title>
+<meta name="description" content="我搭一个 Python 项目的老流程，要用到四个工具：管版本一个、建环境一个、装依赖一个、装命令行工具又一个。直到换了 uv，才发现这四件事其实是一件事。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/python-env-uv.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="四个工具的活，现在一个 uv 干完">
+<meta property="og:description" content="我搭一个 Python 项目的老流程，要用到四个工具：管版本一个、建环境一个、装依赖一个、装命令行工具又一个。直到换了 uv，才发现这四件事其实是一件事。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/python-env-uv.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="四个工具的活，现在一个 uv 干完">
+<meta name="twitter:description" content="我搭一个 Python 项目的老流程，要用到四个工具：管版本一个、建环境一个、装依赖一个、装命令行工具又一个。直到换了 uv，才发现这四件事其实是一件事。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>四个工具的活，现在一个 uv 干完</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-27</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">Python</span><span class="tag">uv</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>我搭一个 Python 项目的老流程，要用到四个工具：管版本一个、建环境一个、装依赖一个、装命令行工具又一个。直到换了 uv，才发现这四件事其实是一件事。</p>
+  </blockquote>
+
+<p>我搭一个 Python 项目的老流程，要用到四个工具：管版本一个、建环境一个、装依赖一个、装命令行工具又一个。直到换了 uv，才发现这四件事其实是一件事。</p>
+<p>速度快是 uv 最初吸引我的原因，但用下来让我留下的是别的东西——锁文件带来的可复现。</p>
+<h2>🐳 四合一</h2>
+<p>先数一下老一套各有各的痛点：版本管理工具装解释器，虚拟环境要建完再手动激活，依赖文件写着写着就和实际装出来的对不上，全局装的命令行工具还会互相打架。</p>
+<p>uv 把这四件事收进一个命令：</p>
+<pre><code>uv init myproj &amp;&amp; cd myproj
+uv add requests rich   # 依赖自动记进项目文件
+uv run main.py         # 直接跑，无需激活
+uv tool install ruff   # 命令行工具也是它管</code></pre>
+<p>最舒服的是 <code>uv run</code>：不用再想「激活了吗」，脚本自动跑在项目自己的环境里。依赖装到全局去了这种经典事故，第一步永远是看命令指向哪里——这个排障本能现在用上的机会少多了。</p>
+<h2>🐳 锁文件才是主角</h2>
+<p>快只是体验，锁文件才是可复现的保证。</p>
+<p><code>uv.lock</code> 记录的是整个依赖树被解析之后的精确状态。应用项目里我把它提交进版本库——今天能跑的代码，半年后在任何一台机器上装出来的是同一套东西。CI 里也用锁文件复现，不猜版本。</p>
+<p>但有个细节值得分情况：如果你发布的是给别人用的库，锁文件反而不该提交，只提交声明了版本范围的配置文件，把依赖组合的选择权留给使用者。</p>
+<p>老项目迁移也简单，把老的依赖清单批量导入一遍，校验锁文件之后，旧文件就可以留档退役了。</p>
+<h2>🐳 原理还是要懂的</h2>
+<p>工具再省心，隔离的原理还是值得懂一遍，不然出问题会两眼一抹黑。</p>
+<p>激活虚拟环境，本质只是把那个环境的目录放进 PATH，让命令指向环境内的解释器——懂了这一句，大部分环境灵异事件都能自己排障。剩下的高频坑也不神秘：编辑器没指向项目环境、个别包在过深的路径下装不上、二进制依赖和解释器版本不匹配，以及系统自带的 Python 不要硬灌。</p>
+<h2>💡 一点观察</h2>
+<p>从四个工具到一个工具，省下的不只是学习成本，更省的是「环境到底是谁说了算」的犹豫。可复现这件事平时没有存在感，出问题的时候，它是唯一的救生索。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

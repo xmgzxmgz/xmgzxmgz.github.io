@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>git 里最不该出现的东西，我让钩子替我拦 — 贵志的猫</title>
+<meta name="description" content="每个用过 git 的人心里都有几条红线：密钥不能进仓库、没审过的东西不能 push、reset --hard 前要看清楚。问题是，红线靠记，而记忆在赶时间的时候最不可靠。我后来想通了：守不住的纪律，就写进钩子里。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/git-safety-hooks.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="git 里最不该出现的东西，我让钩子替我拦">
+<meta property="og:description" content="每个用过 git 的人心里都有几条红线：密钥不能进仓库、没审过的东西不能 push、reset --hard 前要看清楚。问题是，红线靠记，而记忆在赶时间的时候最不可靠。我后来想通了：守不住的纪律，就写进钩子里。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/git-safety-hooks.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="git 里最不该出现的东西，我让钩子替我拦">
+<meta name="twitter:description" content="每个用过 git 的人心里都有几条红线：密钥不能进仓库、没审过的东西不能 push、reset --hard 前要看清楚。问题是，红线靠记，而记忆在赶时间的时候最不可靠。我后来想通了：守不住的纪律，就写进钩子里。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>git 里最不该出现的东西，我让钩子替我拦</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">git</span><span class="tag">安全</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>每个用过 git 的人心里都有几条红线：密钥不能进仓库、没审过的东西不能 push、reset --hard 前要看清楚。问题是，红线靠记，而记忆在赶时间的时候最不可靠。我后来想通了：守不住的纪律，就写进钩子里。</p>
+  </blockquote>
+
+<p>每个用过 git 的人心里都有几条红线：密钥不能进仓库、没审过的东西不能 push、reset --hard 前要看清楚。问题是，红线靠记，而记忆在赶时间的时候最不可靠。我后来想通了：守不住的纪律，就写进钩子里。</p>
+<h2>🐳 自觉是种概率</h2>
+<p>靠自觉守纪律的结局可以预测：九十九次都守住了，第一百次深夜赶工，顺手一个 <code>git add .</code> 加 <code>git push</code>，密钥进了历史。</p>
+<p>而 git 的历史是赖账的——文件删了，提交记录里还在，仓库只要被克隆过一次，就算彻底出去了。敏感信息入库不是「清理」能解决的问题，是只能在入口处拦的问题。</p>
+<p>于是我把红线分成三层：commit 前拦敏感信息，push 前拦未授权推送，高危命令在本地做二次确认。</p>
+<h2>🐳 pre-commit 当门卫</h2>
+<p>pre-commit 钩子的核心逻辑不复杂，对着暂存区的 diff 做模式匹配，命中就拦：</p>
+<pre><code>PATTERN=&#x27;(sk-[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH) PRIVATE KEY)&#x27;
+git diff --cached -U0 | grep -Ein &quot;$PATTERN&quot; &amp;&amp; exit 1</code></pre>
+<p>除了密钥形状，我也会拦隐私文件名，比如 <code>.env</code>、<code>.pem</code> 这类文件压根不该有进仓库的机会。真有误报，<code>--no-verify</code> 可以绕过，但那条路是有意的摩擦——绕过的人必须知道自己绕过了什么。</p>
+<p>钩子文件默认不随仓库走，配一句 <code>git config core.hooksPath hooks</code>，把钩子当源码放进仓库统一分发，每台机器一条命令生效。</p>
+<h2>🐳 push 之前多问一句</h2>
+<p>pre-push 我做成「白名单放行、其余确认」：个人知识库这类预授权仓库直接过，其他仓库一律先打印目标地址，问一句确认再推。</p>
+<p>高危命令是另一层。<code>reset --hard</code> 丢掉的提交其实还能在 reflog 里捞回来，真正的无底洞是 <code>clean</code>——未跟踪文件被清了就是真没了。所以我给危险别名内置了确认，clean 这种操作永远要多按一次 y。</p>
+<p>工具的办法说白了就一句话：让正确的事情容易做，让错误的事情做不成。</p>
+<h2>💡 一点观察</h2>
+<p>纪律和工程的区别，大概就是前者依赖当时的你，后者依赖提前设计好的系统。深夜的自己不值得信任，这一点越早承认越好。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超频之前，我先给自己泼了盆冷水 — 贵志的猫</title>
+<meta name="description" content="超频这个词听起来就很热血：免费的性能，谁不想要。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/overclock-feasibility.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="超频之前，我先给自己泼了盆冷水">
+<meta property="og:description" content="超频这个词听起来就很热血：免费的性能，谁不想要。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/overclock-feasibility.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="超频之前，我先给自己泼了盆冷水">
+<meta name="twitter:description" content="超频这个词听起来就很热血：免费的性能，谁不想要。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>超频之前，我先给自己泼了盆冷水</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-27</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">超频</span><span class="tag">性能</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>超频这个词听起来就很热血：免费的性能，谁不想要。</p>
+  </blockquote>
+
+<p>超频这个词听起来就很热血：免费的性能，谁不想要。</p>
+<p>但真坐下来算账的时候，我发现这件事的性价比排序，和直觉几乎是反的——最热血的 CPU 超频，恰恰是最不值得做的那个。</p>
+<h2>📊 先回答三个问题</h2>
+<p>动手之前，有三个问题得先过一遍。</p>
+<p>瓶颈在哪？游戏里开个监控看利用率：显卡长期 95% 以上，才是显卡瓶颈，超显卡或换卡才有意义；CPU 顶格而显卡只有六成，是 CPU 瓶颈；两个都空闲但帧数低，问题多半在内存或软件设置。没搞清瓶颈就开超，等于给不堵的车道修路。</p>
+<p>散热余量够吗？满载 CPU 80 度以下、显卡 75 度以下，才有超的空间。超频本质是压榨散热余量的行为，压不住就先换散热。</p>
+<p>电源够吗？超频会多一两成功耗，电源余量不足三成就别想了。</p>
+<h2>💰 三条线的账</h2>
+<p>算完账，收益排序很清晰。</p>
+<p>CPU 超频的典型收益不到 5%——现代 CPU 的出厂睿频已经贴着体质极限了，厂家早替你超好了。显卡拉频反而是零成本买卖，软件里拉两百兆核心、五百兆显存，稳定就白嫖五到八个点的帧数，不满意随时归零。内存才是收益主力，8% 到 15%，但稳定性验证最花时间。</p>
+<p>所以合理的顺序是：先显卡拉频，再开内存 XMP，内存小超，最后才轮到 CPU 倍频。前两步零风险，覆盖了大部分收益。</p>
+<h2>⏳ 稳定比快贵</h2>
+<p>超频真正的成本不在调参数，在验证。「跑得起来」和「跑得稳」之间隔着漫长测试：内存跑三轮压测零错误，CPU 混合压测一小时盯错误计数，显卡过基准测试再实机游戏两小时，最后还得日常用一周、几十次睡眠唤醒不蓝屏，才算过关。</p>
+<p>不稳的信号从轻到重：偶发崩溃、唤醒死机、冷启动要重启、蓝屏。出现任何一条，先回退一档再说。</p>
+<p>有几类情况我直接劝退：笔记本——散热墙比频率墙先到，能调的只有功耗；锁频的型号；以及一切用来干正事的机器，生产力设备崩溃一小时的损失，远超那 5% 的性能。</p>
+<h2>💡 一点观察</h2>
+<p>超频像极了很多技术折腾：快乐是真实的，但快乐主要来自过程而不是结果。想清楚自己要的是帧数还是手感，再决定花不花这个周末。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你以为的请求，和实际发出的请求 — 贵志的猫</title>
+<meta name="description" content="接口在文档里一切正常，curl 一打也通，一到浏览器里就是 401。这种时候最容易怀疑人生——后端说接口没问题，前端说代码没改过，双方都没说谎。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/http-api-debug-toolchain.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="你以为的请求，和实际发出的请求">
+<meta property="og:description" content="接口在文档里一切正常，curl 一打也通，一到浏览器里就是 401。这种时候最容易怀疑人生——后端说接口没问题，前端说代码没改过，双方都没说谎。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/http-api-debug-toolchain.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="你以为的请求，和实际发出的请求">
+<meta name="twitter:description" content="接口在文档里一切正常，curl 一打也通，一到浏览器里就是 401。这种时候最容易怀疑人生——后端说接口没问题，前端说代码没改过，双方都没说谎。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>你以为的请求，和实际发出的请求</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">api</span><span class="tag">调试</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>接口在文档里一切正常，curl 一打也通，一到浏览器里就是 401。这种时候最容易怀疑人生——后端说接口没问题，前端说代码没改过，双方都没说谎。</p>
+  </blockquote>
+
+<p>接口在文档里一切正常，curl 一打也通，一到浏览器里就是 401。这种时候最容易怀疑人生——后端说接口没问题，前端说代码没改过，双方都没说谎。</p>
+<p>真相通常很朴素：你以为发出去的请求，和实际发出的请求，不是同一个。</p>
+<h2>🧰 工具是分层的</h2>
+<p>我的工具链慢慢收敛成三层，各干各的活。</p>
+<p><strong>curl 是底座</strong>。可复现、可粘给别人、能进 CI 脚本。怀疑接口本身有没有问题时，先绕开一切壳子，用它直接打一遍：</p>
+<pre><code>curl -v https://api.example.com/v1/items \
+  -H &quot;Authorization: Bearer $TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;page&quot;:1}&#x27; | python -m json.tool</code></pre>
+<p><code>-v</code> 是精髓，握手、证书、响应头全在，证书问题一眼现形。</p>
+<p><strong>图形客户端管管理</strong>。接口多了以后，collection 和环境变量比命令行顺手，多套环境切换也不用满世界改地址。</p>
+<p><strong>抓包管真相</strong>。浏览器 DevTools 的 Network 面板、或 mitmproxy，负责回答那个终极问题：客户端到底发了什么。</p>
+<h2>🕵️ 对照是最快的路径</h2>
+<p>所以那个 401 的悬案，解法就是把两个请求摆在一起看：DevTools 里实际发出的，和你 curl 里预期发出的，逐字段对照。</p>
+<p>我经历过的案例，九成在对照后五分钟内破案：少了一个头，Content-Type 写错，或者 body 外面多包了一层。都不是什么高深的 bug，只是没人把两个请求并排放过。</p>
+<p>养成的习惯是：调不通时，第一动作不是改代码，是打开对照。</p>
+<h2>🔑 事故常在环境变量</h2>
+<p>还有几类经典事故，工具本身没错，错在环境。</p>
+<p>图形客户端里缓存着上个月的旧 token，刷新了也不重贴——401 事故的头号来源。所以环境隔离必须彻底：地址、凭证全走环境变量，dev、test、prod 三套配置，切换环境等于切配置，永远不手改。</p>
+<p>另外记住一条免责判定：curl 通而浏览器不通，不一定是后端的锅。CORS 是浏览器才有的行为，先去看网关有没有给响应头，别急着在后端翻日志。</p>
+<p>对了，抓包工具用完记得恢复系统代理。「断网玄学」的一大半，是代理设置残留在作祟。</p>
+<h2>💡 一点观察</h2>
+<p>调试 API 的核心能力不是记住多少工具，而是始终保持一个怀疑：我看到的，是不是我以为的那个请求。把「实际发生的事」和「以为发生的事」对齐，大部分玄学自动消失。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

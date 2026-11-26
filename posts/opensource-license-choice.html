@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>选开源协议，先想清楚你最怕什么 — 贵志的猫</title>
+<meta name="description" content="自己的项目选开源协议，很多人的做法是打开一个大项目，看它用什么，抄过来。我也这么干过。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/opensource-license-choice.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="选开源协议，先想清楚你最怕什么">
+<meta property="og:description" content="自己的项目选开源协议，很多人的做法是打开一个大项目，看它用什么，抄过来。我也这么干过。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/opensource-license-choice.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="选开源协议，先想清楚你最怕什么">
+<meta name="twitter:description" content="自己的项目选开源协议，很多人的做法是打开一个大项目，看它用什么，抄过来。我也这么干过。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>选开源协议，先想清楚你最怕什么</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-27</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">开源</span><span class="tag">协议</span>
+    <span class="sep">·</span>
+    <span>约 3 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>自己的项目选开源协议，很多人的做法是打开一个大项目，看它用什么，抄过来。我也这么干过。</p>
+  </blockquote>
+
+<p>自己的项目选开源协议，很多人的做法是打开一个大项目，看它用什么，抄过来。我也这么干过。</p>
+<p>后来才意识到这是本末倒置：协议不是身份标识，是一份防御方案。选型的第一步不是看别人，是问自己——我最怕别人拿我的代码做什么？</p>
+<h2>🐳 一个问题分两边</h2>
+<p>整件事的分歧点其实只有一个：你在乎别人闭源使用你的代码吗？</p>
+<p>不在乎，选 MIT 这类最宽松的协议，别人留个版权声明就什么都能干，换来最大范围的传播——工具类项目通常要的就是这个。</p>
+<p>在乎，就进入传染系：GPL 要求分发时衍生作品也开源。如果项目以后可能被人做成在线服务、而不是拿去分发，那 GPL 管不到这个场景，得用连网络服务都触发的 AGPL——不少存储和数据库项目改协议，防的就是「被云厂商白嫖做托管服务」这件事。</p>
+<p>中间还有个商用甜点：Apache 2.0，宽松度和 MIT 差不多，但把专利授权写明白了，企业项目偏爱它不是没有道理。</p>
+<h2>🐳 方向比协议本身重要</h2>
+<p>遇到传染性的坑，大多出在「往回装」的时候。</p>
+<p>闭源产品引入了传染性协议的依赖，链接过去的瞬间就可能被认定成衍生作品，闭源分发直接违约——商业上要么买商业授权，要么换实现，没有中间路线。</p>
+<p>兼容方向有个好记的口诀：宽松可以流进严格，严格不能倒回宽松。宽松协议的代码并进 GPL 项目没问题，反过来不行。所以引入依赖前先看协议，等于在给自己的整个项目预判命运。</p>
+<p>另外别以为违反协议没人管——开源协议在法院已被认定为有效合同，违反 GPL 被判赔偿是有判例的。引用代码时「顺手删掉协议头」，不是灰色操作，是实打实的违约。</p>
+<h2>🐳 公司代码开源四查</h2>
+<p>公司代码想开源，顾虑要多一层，四件事必须先查：权属——职务作品的代码归公司，个人无权擅自开源；依赖——盘点全部依赖的协议，传染性依赖会决定整个项目的协议；敏感信息——历史提交里的凭证和内网地址，开源即永久公开，必要时宁可重建仓库；商标与文档——产品名归属、内部链接、协议文件都要清理齐。最阴险的是第三条：代码可以删，历史删不干净——任何要见人的东西，先当所有人都能看到来准备。</p>
+<h2>💡 一点观察</h2>
+<p>协议选择的焦虑，本质是对「控制力边界」的焦虑。想清楚自己真正怕的那种损失，其余的宽松反而是资产——被用，才是开源项目的成功。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

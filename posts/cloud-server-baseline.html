@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新服务器开机的头十分钟，扫描器已经敲门了 — 贵志的猫</title>
+<meta name="description" content="一台新开的云服务器，从拿到公网 IP 到收到第一次扫描，往往只要几分钟。不夸张地说，加固的黄金窗口就是开机的头十分钟——晚一步，爆破日志已经刷屏了。">
+<meta name="author" content="贵志的猫">
+<link rel="canonical" href="https://xmgzxmgz.github.io/posts/cloud-server-baseline.html">
+<meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="贵志的猫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="新服务器开机的头十分钟，扫描器已经敲门了">
+<meta property="og:description" content="一台新开的云服务器，从拿到公网 IP 到收到第一次扫描，往往只要几分钟。不夸张地说，加固的黄金窗口就是开机的头十分钟——晚一步，爆破日志已经刷屏了。">
+<meta property="og:url" content="https://xmgzxmgz.github.io/posts/cloud-server-baseline.html">
+<meta property="og:image" content="https://xmgzxmgz.github.io/assets/og-cover.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="新服务器开机的头十分钟，扫描器已经敲门了">
+<meta name="twitter:description" content="一台新开的云服务器，从拿到公网 IP 到收到第一次扫描，往往只要几分钟。不夸张地说，加固的黄金窗口就是开机的头十分钟——晚一步，爆破日志已经刷屏了。">
+
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/prose.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span>贵志的猫</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html#work">项目</a>
+      <a href="../index.html#writing" class="is-active">文章</a>
+      <a href="../index.html#contact">联系</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article class="article">
+
+  <a href="../index.html" class="back">← 返回首页</a>
+
+  <h1>新服务器开机的头十分钟，扫描器已经敲门了</h1>
+
+  <div class="meta">
+    <span class="date">2026-11-26</span>
+    <span class="sep">·</span>
+    <span class="tag tag--accent">云服务器</span><span class="tag">安全</span>
+    <span class="sep">·</span>
+    <span>约 2 分钟</span>
+  </div>
+
+  <blockquote>
+    <p>一台新开的云服务器，从拿到公网 IP 到收到第一次扫描，往往只要几分钟。不夸张地说，加固的黄金窗口就是开机的头十分钟——晚一步，爆破日志已经刷屏了。</p>
+  </blockquote>
+
+<p>一台新开的云服务器，从拿到公网 IP 到收到第一次扫描，往往只要几分钟。不夸张地说，加固的黄金窗口就是开机的头十分钟——晚一步，爆破日志已经刷屏了。</p>
+<h2>🐳 裸奔的代价</h2>
+<p>裸机的日常是这样的：认证日志里每天几百上千条 Failed password，全世界的扫描器在轮流试弱口令。如果端口开得多一点，还有更经典的剧本——某个缓存服务开着默认端口无密码裸奔，几小时内就被写进挖矿定时任务。</p>
+<p>加固思路一句话就够了：不需要的服务不开，需要的服务收紧访问方式。</p>
+<h2>🐳 头十分钟清单</h2>
+<p>我现在的固定动作，按顺序来：</p>
+<pre><code>1. 密钥放好，新开窗口验证能登录
+2. sshd 禁密码、禁 root 直接登录
+3. 防火墙白名单只放必要端口
+4. fail2ban：连错 5 次自动封 1 小时
+5. 自动安全补丁 + 每周快照</code></pre>
+<p>性价比最高的是第 1、2 步。禁掉密码登录之后，那每天上千条爆破日志瞬间变成无害噪音——门都换成了锁，撬棍就没用了。改 SSH 端口也常被提起，它防的是扫描噪音，不是安全本质，属于可选项。</p>
+<p>防火墙有个常见误解：以为云控制台配了就不用管系统内，或者反过来。正确答案是两层都要配且保持一致——控制台是实例前的第一道过滤，系统内的防火墙兜底，防止哪天误开一个端口就直接裸露。</p>
+<h2>🐳 顺序错了会把自己锁外面</h2>
+<p>这套清单里唯一会「伤到自己」的就是 SSH 那步，顺序千万不能反：先把密钥放好、开个新窗口验证能登录，再去改配置，最后 reload。反过来的下场是把自己锁在门外。</p>
+<p>好在云厂商的控制台一般都有网页救援通道，锁死了还有救，但那体验谁试谁知道，不值得第二次。</p>
+<p>最后别忘开监控告警，盯两个信号：CPU 突增、出流量突增。机器被入侵挖矿，最先喊疼的就是这两项。</p>
+<h2>💡 一点观察</h2>
+<p>安全大多时候是减法：少开一个端口、少留一种登录方式、少一个默认密码。暴露面每减一寸，半夜被告警吵醒的概率就小一分。</p>
+
+  <div class="article-foot">
+    <span class="sigil">🐱</span>
+    © 2026 贵志的猫 · <a href="../index.html">返回首页</a> · <a href="../index.html#writing">更多文章</a>
+  </div>
+
+</article>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  function sync() {
+    var dark = root.dataset.theme === 'dark';
+    toggle.textContent = dark ? '☀' : '◐';
+    toggle.setAttribute('aria-label', dark ? '切换到亮色主题' : '切换到暗色主题');
+  }
+  toggle.addEventListener('click', function () {
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+  var header = document.querySelector('.site-header');
+  var bar = document.getElementById('progress');
+  var onScroll = function () {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
